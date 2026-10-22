@@ -146,7 +146,9 @@ function fadeMusic(target, ms, done) {
   const t0 = performance.now();
   /** @param {number} now */
   const step = (now) => {
-    const k = Math.min(1, (now - t0) / ms);
+    // rAF timestamps are the frame start, which can precede t0; a negative k would
+    // push the volume outside [0, 1], and the browser throws and leaves it stuck.
+    const k = Math.min(1, Math.max(0, (now - t0) / ms));
     audio.volume = from + (target - from) * k;
     if (k < 1) musicFadeId = requestAnimationFrame(step);
     else done?.();
