@@ -47,6 +47,19 @@ function createSecureStore({ dir, safeStorage }) {
       fs.renameSync(`${file}.tmp`, file);
       return true;
     },
+    /** Names of the stored secrets that start with `prefix`, sorted. @param {string} prefix */
+    list(prefix) {
+      /** @type {Set<string>} */
+      const names = new Set([...memoryOnly.keys()].filter((n) => n.startsWith(prefix)));
+      try {
+        for (const f of fs.readdirSync(dir)) {
+          if (f.endsWith('.bin') && f.startsWith(prefix)) names.add(f.slice(0, -'.bin'.length));
+        }
+      } catch (err) {
+        if (/** @type {NodeJS.ErrnoException} */ (err).code !== 'ENOENT') console.warn('Secrets folder unreadable:', err);
+      }
+      return [...names].sort();
+    },
     /** @param {string} name */
     delete(name) {
       memoryOnly.delete(name);

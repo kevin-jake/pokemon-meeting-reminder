@@ -14,7 +14,6 @@ const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const REVOKE_URL = 'https://oauth2.googleapis.com/revoke';
 const API = 'https://www.googleapis.com/calendar/v3';
 const SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
-const SECRET = 'google';
 const REFRESH_EARLY_MS = 60_000;
 const REQUEST_TIMEOUT_MS = 15_000;
 const EVENT_FIELDS =
@@ -71,19 +70,22 @@ function googleJoinUrl(item) {
 }
 
 /**
- * Google Calendar via OAuth 2.0 (installed-app loopback flow + PKCE) and raw
- * fetch. Tokens live in the secure store; the access token is refreshed when
- * it has less than a minute left. A rejected refresh (invalid_grant: revoked,
- * or the 7-day expiry of apps left in "Testing") switches to the reconnect
- * state.
+ * One Google account's calendar via OAuth 2.0 (installed-app loopback flow +
+ * PKCE) and raw fetch. Tokens live in the secure store under `secretName`;
+ * the access token is refreshed when it has less than a minute left. A
+ * rejected refresh (invalid_grant: revoked, or the 7-day expiry of apps left
+ * in "Testing") switches to the reconnect state. Several accounts are several
+ * instances (see google-accounts.js).
  * @param {object} deps
  * @param {() => { clientId: string, clientSecret: string, enabled: boolean, allCalendars: boolean }} deps.getConfig
  * @param {{ get(name: string): string | null, set(name: string, value: string): boolean, delete(name: string): void }} deps.store
  * @param {(url: string) => Promise<void>} deps.openExternal
  * @param {typeof fetch} [deps.fetchFn]
+ * @param {string} [deps.id]          source id, also stamped on every event (scheduler keys)
+ * @param {string} [deps.secretName]  secure-store entry holding this account's tokens
  * @returns {CalendarSource}
  */
-function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch }) {
+function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch, id = 'google', secretName = 'google' }) {
   /** @type {GoogleTokens | null} */
   let tokens = load();
   /** @type {SourceState} */
@@ -96,7 +98,7 @@ function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch })
   let connectAttempt = 0;
 
   function load() {
-    const raw = store.get(SECRET);
+    const raw = store.get(secretName);
     if (!raw) return null;
     try {
       const t = JSON.parse(raw);
@@ -109,7 +111,7 @@ function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch })
   /** @param {GoogleTokens} t */
   function save(t) {
     tokens = t;
-    store.set(SECRET, JSON.stringify(t));
+    store.set(secretName, JSON.stringify(t));
   }
 
   /**
@@ -194,11 +196,11 @@ function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch })
       maxResults: '50',
       fields: EVENT_FIELDS,
     });
-    return (json.items ?? []).map((/** @type {any} */ item) => normalizeGoogleEvent(item)).filter(Boolean);
+    return (json.items ?? []).map((/** @type {any} */ item) => normalizeGoogleEvent(item, id)).filter(Boolean);
   }
 
   return {
-    id: 'google',
+    id,
     name: 'Google',
     isConfigured: () => Boolean(getConfig().clientId),
     isEnabled: () => getConfig().enabled,
@@ -228,8 +230,12 @@ function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch })
           code_challenge_method: pkce.method,
           state: pkce.state,
           access_type: 'offline', // we need a refresh token
-          prompt: 'consent', // ...and Google only re-issues one with fresh consent
+          // Account chooser, so another account can be added; consent, because Google
+          // only re-issues a refresh token with fresh consent.
+          prompt: 'select_account consent',
         });
+        // Reconnecting: preselect the account whose sign-in expired.
+        if (tokens?.account) params.set('login_hint', tokens.account);
         await openExternal(`${AUTH_URL}?${params}`);
         const code = await loopback.waitForCode();
         const json = await tokenRequest({
@@ -268,7 +274,7 @@ function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch })
       const t = tokens;
       tokens = null;
       state = 'disconnected';
-      store.delete(SECRET);
+      store.delete(secretName);
       if (t?.refreshToken) {
         // Best effort: revoking also removes the app from the user's Google account.
         await fetchFn(`${REVOKE_URL}?${new URLSearchParams({ token: t.refreshToken })}`, {

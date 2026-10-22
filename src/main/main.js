@@ -8,7 +8,7 @@ const { createSettings } = require('./settings');
 const { mediaDir } = require('./media');
 const { pickSpecies, buildScene, speciesByGen } = require('./species');
 const { createSecureStore } = require('./secure-store');
-const { createGoogleSource } = require('./calendar/google');
+const { createGoogleAccounts } = require('./calendar/google-accounts');
 const { createRegistry } = require('./calendar/registry');
 const { createReminderScheduler } = require('../shared/reminder-scheduler');
 const { createPoller, mergeTitles } = require('./poller');
@@ -66,7 +66,7 @@ if (!app.requestSingleInstanceLock()) {
     const builtInClients = loadBuiltInClients();
     const store = createSecureStore({ dir: path.join(app.getPath('userData'), 'secrets'), safeStorage });
 
-    const google = createGoogleSource({
+    const google = createGoogleAccounts({
       getConfig: () => {
         const g = settings.get().google;
         return { ...g, ...resolveGoogleClient(g, process.env, builtInClients) };
@@ -74,7 +74,7 @@ if (!app.requestSingleInstanceLock()) {
       store,
       openExternal: (url) => shell.openExternal(url),
     });
-    const registry = createRegistry([google]);
+    const registry = createRegistry(() => google.sources());
     const scheduler = createReminderScheduler({ alertMinutes: settings.get().alertMinutesBefore });
 
     /**
@@ -103,9 +103,10 @@ if (!app.requestSingleInstanceLock()) {
     }
 
     function accounts() {
-      return registry.sources
+      return registry
+        .sources()
         .filter((s) => s.isEnabled())
-        .map((s) => ({ id: s.id, name: s.name, state: s.state(), label: s.accountLabel() }));
+        .map((s) => ({ id: s.id, provider: 'google', name: s.name, state: s.state(), label: s.accountLabel() }));
     }
     const syncAccounts = () => tray?.setAccounts(accounts());
 
@@ -116,8 +117,10 @@ if (!app.requestSingleInstanceLock()) {
       onStatus: (text) => tray?.setStatus(text),
       onSourcesChanged: () => {
         syncAccounts();
-        for (const s of registry.sources) {
-          if (s.state() === 'reconnect') tray?.notify(`${s.name} sign-in expired. Use "Reconnect ${s.name}…" in the tray menu.`);
+        for (const s of registry.sources()) {
+          if (s.state() === 'reconnect') {
+            tray?.notify(`${s.name} sign-in expired for ${s.accountLabel() ?? 'an account'}. Reconnect it from the tray menu.`);
+          }
         }
       },
       onReminders: (due, now) => {
@@ -139,16 +142,17 @@ if (!app.requestSingleInstanceLock()) {
       },
     });
 
-    /** @param {string} id */
-    async function connect(id) {
-      const source = registry.sources.find((s) => s.id === id);
-      if (!source) return;
-      if (!source.isConfigured()) {
+    /**
+     * Runs a browser sign-in (new account or reconnect) and reports the outcome.
+     * @param {(onStarted: () => void) => Promise<import('./calendar/types').CalendarSource | undefined>} signIn
+     */
+    async function runSignIn(signIn) {
+      if (!google.isConfigured()) {
         settings.update({}); // make sure settings.json exists before offering to open it
         const { response } = await dialog.showMessageBox({
           type: 'info',
-          title: `Connect ${source.name}`,
-          message: `${source.name} is not set up yet`,
+          title: 'Connect Google',
+          message: 'Google is not set up yet',
           detail: GOOGLE_SETUP,
           buttons: ['Open settings file', 'Close'],
           defaultId: 0,
@@ -157,17 +161,15 @@ if (!app.requestSingleInstanceLock()) {
         if (response === 0) void shell.openPath(settings.file);
         return;
       }
-      const pending = source.connect();
-      syncAccounts(); // shows "waiting for browser sign-in…"
       try {
-        await pending;
-        tray?.notify(`${source.name} connected${source.accountLabel() ? ` as ${source.accountLabel()}` : ''}.`);
+        // onStarted shows the "waiting for browser sign-in…" row.
+        const source = await signIn(syncAccounts);
+        const who = source?.accountLabel();
+        tray?.notify(`Google connected${who ? ` as ${who}` : ''}.`);
       } catch (err) {
-        console.warn(`${source.name} connect failed:`, err);
+        console.warn('Google sign-in failed:', err);
         const message = err instanceof Error ? err.message : String(err);
-        if (message !== 'Sign-in cancelled') {
-          dialog.showErrorBox(`Could not connect ${source.name}`, message);
-        }
+        if (message !== 'Sign-in cancelled') dialog.showErrorBox('Could not connect Google', message);
       }
       syncAccounts();
       void poller.pollNow();
@@ -175,9 +177,7 @@ if (!app.requestSingleInstanceLock()) {
 
     /** @param {string} id */
     async function disconnect(id) {
-      const source = registry.sources.find((s) => s.id === id);
-      if (!source) return;
-      await source.disconnect();
+      await google.remove(id);
       syncAccounts();
       void poller.pollNow();
     }
@@ -197,9 +197,14 @@ if (!app.requestSingleInstanceLock()) {
           settings.update({ forceShiny: on });
           syncPrefs();
         },
-        onConnect: (id) => void connect(id),
+        onAddAccount: () => void runSignIn((onStarted) => google.add(onStarted)),
+        onReconnect: (id) =>
+          void runSignIn(async (onStarted) => {
+            await google.reconnect(id, onStarted);
+            return google.find(id);
+          }),
         onDisconnect: (id) => void disconnect(id),
-        onCancelConnect: (id) => registry.sources.find((s) => s.id === id)?.cancelConnect(),
+        onCancelConnect: (id) => google.find(id)?.cancelConnect(),
         onQuit: () => app.quit(),
       },
       {

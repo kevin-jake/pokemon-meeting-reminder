@@ -25,11 +25,13 @@ function dedupeEvents(events) {
 
 /**
  * All calendar sources in one place. Fetching uses allSettled so one failing
- * source never blocks the others.
- * @param {CalendarSource[]} sources
+ * source never blocks the others. Accounts come and go at runtime, so the
+ * sources can be given as a function that returns the current list.
+ * @param {CalendarSource[] | (() => CalendarSource[])} sourcesOrGetter
  */
-function createRegistry(sources) {
-  const connected = () => sources.filter((s) => s.isEnabled() && s.isConnected());
+function createRegistry(sourcesOrGetter) {
+  const sources = typeof sourcesOrGetter === 'function' ? sourcesOrGetter : () => sourcesOrGetter;
+  const connected = () => sources().filter((s) => s.isEnabled() && s.isConnected());
   return {
     sources,
     connected,

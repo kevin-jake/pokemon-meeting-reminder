@@ -93,7 +93,7 @@ function createPoller({ registry, scheduler, getSettings, onReminders, onStatus,
         if (error instanceof ReconnectNeededError) changed = true;
         console.warn(`Calendar ${source.name} fetch failed:`, error);
       }
-      failed = result.errors.filter((e) => !(e.error instanceof ReconnectNeededError)).map((e) => e.source.name);
+      failed = result.errors.filter((e) => !(e.error instanceof ReconnectNeededError)).map((e) => e.source.accountLabel() ?? e.source.name);
       if (result.polled === 0) {
         events = [];
       } else if (result.errors.length === result.polled && failed.length) {
