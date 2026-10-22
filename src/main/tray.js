@@ -12,7 +12,19 @@ const { app, Tray, Menu, nativeImage } = require('electron');
  * @property {() => void} onDismiss
  * @property {(key: string | null) => void} onPickFavorite  null = random Pokémon
  * @property {(on: boolean) => void} onToggleShiny
+ * @property {(sourceId: string) => void} onConnect
+ * @property {(sourceId: string) => void} onDisconnect
+ * @property {(sourceId: string) => void} onCancelConnect
  * @property {() => void} onQuit
+ */
+
+/**
+ * One calendar account row in the menu.
+ * @typedef {object} TrayAccount
+ * @property {string} id
+ * @property {string} name
+ * @property {import('./calendar/types').SourceState} state
+ * @property {string | null} label  signed-in account, e.g. an email address
  */
 
 /**
@@ -33,6 +45,34 @@ function loadTrayIcon() {
 /** @param {ManifestEntry} e */
 function speciesLabel(e) {
   return `#${String(e.dex).padStart(3, '0')} ${e.name}${e.isFlyer ? ' (flies)' : ''}`;
+}
+
+/**
+ * Connect / Disconnect rows for one calendar source.
+ * @param {TrayAccount} a
+ * @param {TrayHandlers} handlers
+ * @returns {Electron.MenuItemConstructorOptions[]}
+ */
+function accountItems(a, handlers) {
+  switch (a.state) {
+    case 'connected':
+      return [
+        { label: `${a.name}: Connected${a.label ? ` as ${a.label}` : ''}`, enabled: false },
+        { label: `Disconnect ${a.name}`, click: () => handlers.onDisconnect(a.id) },
+      ];
+    case 'connecting':
+      return [
+        { label: `${a.name}: waiting for browser sign-in…`, enabled: false },
+        { label: `Cancel ${a.name} sign-in`, click: () => handlers.onCancelConnect(a.id) },
+      ];
+    case 'reconnect':
+      return [
+        { label: `Reconnect ${a.name}… (sign-in expired)`, click: () => handlers.onConnect(a.id) },
+        { label: `Disconnect ${a.name}`, click: () => handlers.onDisconnect(a.id) },
+      ];
+    default:
+      return [{ label: `Connect ${a.name}…`, click: () => handlers.onConnect(a.id) }];
+  }
 }
 
 /**
@@ -77,19 +117,23 @@ function favoriteSubmenu(speciesByGen, prefs, handlers) {
 /**
  * Creates the tray icon. The menu is rebuilt whenever state changes.
  * @param {TrayHandlers} handlers
- * @param {{ speciesByGen: Array<[number, ManifestEntry[]]>, prefs: TrayPrefs }} init
+ * @param {{ speciesByGen: Array<[number, ManifestEntry[]]>, prefs: TrayPrefs, accounts: TrayAccount[] }} init
  */
 function createTray(handlers, init) {
   const tray = new Tray(loadTrayIcon());
   tray.setToolTip('Pokémon Meeting Reminder');
   let status = 'Starting…';
   let prefs = init.prefs;
+  /** @type {TrayAccount[]} */
+  let accounts = init.accounts;
 
   function rebuild() {
     const favorite = init.speciesByGen.flatMap(([, list]) => list).find((e) => e.key === prefs.favoriteSpecies);
     tray.setContextMenu(
       Menu.buildFromTemplate([
         { label: status, enabled: false },
+        { type: 'separator' },
+        ...accounts.flatMap((a) => accountItems(a, handlers)),
         { type: 'separator' },
         { label: 'Dismiss reminder', click: handlers.onDismiss },
         { type: 'separator' },
@@ -118,6 +162,11 @@ function createTray(handlers, init) {
     /** @param {TrayPrefs} next */
     setPrefs(next) {
       prefs = next;
+      rebuild();
+    },
+    /** @param {TrayAccount[]} next */
+    setAccounts(next) {
+      accounts = next;
       rebuild();
     },
     /** @param {string} content */
