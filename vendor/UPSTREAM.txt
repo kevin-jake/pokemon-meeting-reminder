@@ -1,0 +1,4 @@
+https://github.com/jakobhoeg/vscode-pokemon.git
+commit bc761cd4582d5d22072c42bd00f9f18900d464aa
+fetched 2026-10-22T11:29:37.704Z
+files: media/gen1..gen5 -> media/, src/common/{pokemon-data.ts,types.ts} -> vendor/

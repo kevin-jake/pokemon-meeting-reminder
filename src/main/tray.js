@@ -3,12 +3,22 @@
 const path = require('node:path');
 const { app, Tray, Menu, nativeImage } = require('electron');
 
+/** @typedef {import('../../scripts/build-manifest').ManifestEntry} ManifestEntry */
+
 /**
  * @typedef {object} TrayHandlers
  * @property {() => void} onTestReminder      5-minute warning scene
  * @property {() => void} onTestMeetingNow    meeting-start scene (loops until dismissed)
  * @property {() => void} onDismiss
+ * @property {(key: string | null) => void} onPickFavorite  null = random Pokémon
+ * @property {(on: boolean) => void} onToggleShiny
  * @property {() => void} onQuit
+ */
+
+/**
+ * @typedef {object} TrayPrefs
+ * @property {string | null} favoriteSpecies
+ * @property {boolean} forceShiny
  */
 
 /** Builds the 16 px tray image with a 32 px representation for 200% scaling. */
@@ -20,16 +30,63 @@ function loadTrayIcon() {
   return icon;
 }
 
+/** @param {ManifestEntry} e */
+function speciesLabel(e) {
+  return `#${String(e.dex).padStart(3, '0')} ${e.name}${e.isFlyer ? ' (flies)' : ''}`;
+}
+
+/**
+ * Favorite Pokémon ▸ (•) Random | Always shiny | Gen 1 ▸ … Gen 5 ▸
+ * Radio items in different submenus don't uncheck each other, but the whole
+ * menu is rebuilt on every change, so `checked` is always computed fresh.
+ * @param {Array<[number, ManifestEntry[]]>} speciesByGen
+ * @param {TrayPrefs} prefs
+ * @param {TrayHandlers} handlers
+ * @returns {Electron.MenuItemConstructorOptions[]}
+ */
+function favoriteSubmenu(speciesByGen, prefs, handlers) {
+  return [
+    {
+      label: 'Random',
+      type: 'radio',
+      checked: !prefs.favoriteSpecies,
+      click: () => handlers.onPickFavorite(null),
+    },
+    {
+      label: 'Always shiny',
+      type: 'checkbox',
+      checked: prefs.forceShiny,
+      click: (item) => handlers.onToggleShiny(item.checked),
+    },
+    { type: 'separator' },
+    ...speciesByGen.map(([gen, list]) => {
+      const pinned = list.some((e) => e.key === prefs.favoriteSpecies);
+      return /** @type {Electron.MenuItemConstructorOptions} */ ({
+        label: `Gen ${gen}${pinned ? ' •' : ''}`,
+        submenu: list.map((e) => ({
+          label: speciesLabel(e),
+          type: /** @type {const} */ ('radio'),
+          checked: e.key === prefs.favoriteSpecies,
+          click: () => handlers.onPickFavorite(e.key),
+        })),
+      });
+    }),
+  ];
+}
+
 /**
  * Creates the tray icon. The menu is rebuilt whenever state changes.
  * @param {TrayHandlers} handlers
+ * @param {{ speciesByGen: Array<[number, ManifestEntry[]]>, prefs: TrayPrefs }} init
  */
-function createTray(handlers) {
+function createTray(handlers, init) {
   const tray = new Tray(loadTrayIcon());
   tray.setToolTip('Pokémon Meeting Reminder');
   let status = 'Starting…';
+  let prefs = init.prefs;
 
   function rebuild() {
+    const favorite = init.speciesByGen.flatMap(([, list]) => list).find((e) => e.key === prefs.favoriteSpecies);
     tray.setContextMenu(
       Menu.buildFromTemplate([
         { label: status, enabled: false },
@@ -38,6 +95,10 @@ function createTray(handlers) {
         { type: 'separator' },
         { label: 'Test reminder (5 min warning)', click: handlers.onTestReminder },
         { label: 'Test reminder (meeting now)', click: handlers.onTestMeetingNow },
+        {
+          label: `Favorite Pokémon: ${favorite ? favorite.name : 'Random'}${prefs.forceShiny ? ' ✨' : ''}`,
+          submenu: favoriteSubmenu(init.speciesByGen, prefs, handlers),
+        },
         { type: 'separator' },
         { label: 'Quit', click: handlers.onQuit },
       ]),
@@ -52,6 +113,11 @@ function createTray(handlers) {
     /** @param {string} text */
     setStatus(text) {
       status = text;
+      rebuild();
+    },
+    /** @param {TrayPrefs} next */
+    setPrefs(next) {
+      prefs = next;
       rebuild();
     },
     /** @param {string} content */

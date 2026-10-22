@@ -1,0 +1,6322 @@
+[
+ {
+  "key": "bulbasaur",
+  "name": "Bulbasaur",
+  "gen": 1,
+  "dex": 1,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ivysaur",
+  "name": "Ivysaur",
+  "gen": 1,
+  "dex": 2,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "venusaur",
+  "name": "Venusaur",
+  "gen": 1,
+  "dex": 3,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "venusaur_female",
+  "name": "Venusaur (Female)",
+  "gen": 1,
+  "dex": 3,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "charmander",
+  "name": "Charmander",
+  "gen": 1,
+  "dex": 4,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "charmeleon",
+  "name": "Charmeleon",
+  "gen": 1,
+  "dex": 5,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "charizard",
+  "name": "Charizard",
+  "gen": 1,
+  "dex": 6,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "squirtle",
+  "name": "Squirtle",
+  "gen": 1,
+  "dex": 7,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wartortle",
+  "name": "Wartortle",
+  "gen": 1,
+  "dex": 8,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "blastoise",
+  "name": "Blastoise",
+  "gen": 1,
+  "dex": 9,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "caterpie",
+  "name": "Caterpie",
+  "gen": 1,
+  "dex": 10,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "metapod",
+  "name": "Metapod",
+  "gen": 1,
+  "dex": 11,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "butterfree",
+  "name": "Butterfree",
+  "gen": 1,
+  "dex": 12,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "weedle",
+  "name": "Weedle",
+  "gen": 1,
+  "dex": 13,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kakuna",
+  "name": "Kakuna",
+  "gen": 1,
+  "dex": 14,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "beedrill",
+  "name": "Beedrill",
+  "gen": 1,
+  "dex": 15,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "pidgey",
+  "name": "Pidgey",
+  "gen": 1,
+  "dex": 16,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "pidgeotto",
+  "name": "Pidgeotto",
+  "gen": 1,
+  "dex": 17,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "pidgeot",
+  "name": "Pidgeot",
+  "gen": 1,
+  "dex": 18,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "rattata",
+  "name": "Rattata",
+  "gen": 1,
+  "dex": 19,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "raticate",
+  "name": "Raticate",
+  "gen": 1,
+  "dex": 20,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "spearow",
+  "name": "Spearow",
+  "gen": 1,
+  "dex": 21,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "fearow",
+  "name": "Fearow",
+  "gen": 1,
+  "dex": 22,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "ekans",
+  "name": "Ekans",
+  "gen": 1,
+  "dex": 23,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arbok",
+  "name": "Arbok",
+  "gen": 1,
+  "dex": 24,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pikachu",
+  "name": "Pikachu",
+  "gen": 1,
+  "dex": 25,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pikachu_female",
+  "name": "Pikachu (Female)",
+  "gen": 1,
+  "dex": 25,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "raichu",
+  "name": "Raichu",
+  "gen": 1,
+  "dex": 26,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sandshrew",
+  "name": "Sandshrew",
+  "gen": 1,
+  "dex": 27,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sandslash",
+  "name": "Sandslash",
+  "gen": 1,
+  "dex": 28,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "nidoran_female",
+  "name": "Nidoran♀",
+  "gen": 1,
+  "dex": 29,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "nidorina",
+  "name": "Nidorina",
+  "gen": 1,
+  "dex": 30,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "nidoqueen",
+  "name": "Nidoqueen",
+  "gen": 1,
+  "dex": 31,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "nidoran_male",
+  "name": "Nidoran♂",
+  "gen": 1,
+  "dex": 32,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "nidorino",
+  "name": "Nidorino",
+  "gen": 1,
+  "dex": 33,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "nidoking",
+  "name": "Nidoking",
+  "gen": 1,
+  "dex": 34,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "clefairy",
+  "name": "Clefairy",
+  "gen": 1,
+  "dex": 35,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "clefable",
+  "name": "Clefable",
+  "gen": 1,
+  "dex": 36,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "vulpix",
+  "name": "Vulpix",
+  "gen": 1,
+  "dex": 37,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ninetales",
+  "name": "Ninetales",
+  "gen": 1,
+  "dex": 38,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "jigglypuff",
+  "name": "Jigglypuff",
+  "gen": 1,
+  "dex": 39,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wigglytuff",
+  "name": "Wigglytuff",
+  "gen": 1,
+  "dex": 40,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "zubat",
+  "name": "Zubat",
+  "gen": 1,
+  "dex": 41,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "golbat",
+  "name": "Golbat",
+  "gen": 1,
+  "dex": 42,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "oddish",
+  "name": "Oddish",
+  "gen": 1,
+  "dex": 43,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gloom",
+  "name": "Gloom",
+  "gen": 1,
+  "dex": 44,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "vileplume",
+  "name": "Vileplume",
+  "gen": 1,
+  "dex": 45,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "paras",
+  "name": "Paras",
+  "gen": 1,
+  "dex": 46,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "parasect",
+  "name": "Parasect",
+  "gen": 1,
+  "dex": 47,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "venonat",
+  "name": "Venonat",
+  "gen": 1,
+  "dex": 48,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "venomoth",
+  "name": "Venomoth",
+  "gen": 1,
+  "dex": 49,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "diglett",
+  "name": "Diglett",
+  "gen": 1,
+  "dex": 50,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dugtrio",
+  "name": "Dugtrio",
+  "gen": 1,
+  "dex": 51,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "meowth",
+  "name": "Meowth",
+  "gen": 1,
+  "dex": 52,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "persian",
+  "name": "Persian",
+  "gen": 1,
+  "dex": 53,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "psyduck",
+  "name": "Psyduck",
+  "gen": 1,
+  "dex": 54,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "golduck",
+  "name": "Golduck",
+  "gen": 1,
+  "dex": 55,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mankey",
+  "name": "Mankey",
+  "gen": 1,
+  "dex": 56,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "primeape",
+  "name": "Primeape",
+  "gen": 1,
+  "dex": 57,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "growlithe",
+  "name": "Growlithe",
+  "gen": 1,
+  "dex": 58,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arcanine",
+  "name": "Arcanine",
+  "gen": 1,
+  "dex": 59,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "poliwag",
+  "name": "Poliwag",
+  "gen": 1,
+  "dex": 60,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "poliwhirl",
+  "name": "Poliwhirl",
+  "gen": 1,
+  "dex": 61,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "poliwrath",
+  "name": "Poliwrath",
+  "gen": 1,
+  "dex": 62,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "abra",
+  "name": "Abra",
+  "gen": 1,
+  "dex": 63,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kadabra",
+  "name": "Kadabra",
+  "gen": 1,
+  "dex": 64,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "alakazam",
+  "name": "Alakazam",
+  "gen": 1,
+  "dex": 65,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "machop",
+  "name": "Machop",
+  "gen": 1,
+  "dex": 66,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "machoke",
+  "name": "Machoke",
+  "gen": 1,
+  "dex": 67,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "machamp",
+  "name": "Machamp",
+  "gen": 1,
+  "dex": 68,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bellsprout",
+  "name": "Bellsprout",
+  "gen": 1,
+  "dex": 69,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "weepinbell",
+  "name": "Weepinbell",
+  "gen": 1,
+  "dex": 70,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "victreebel",
+  "name": "Victreebel",
+  "gen": 1,
+  "dex": 71,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "tentacool",
+  "name": "Tentacool",
+  "gen": 1,
+  "dex": 72,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "tentacruel",
+  "name": "Tentacruel",
+  "gen": 1,
+  "dex": 73,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "geodude",
+  "name": "Geodude",
+  "gen": 1,
+  "dex": 74,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "graveler",
+  "name": "Graveler",
+  "gen": 1,
+  "dex": 75,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "golem",
+  "name": "Golem",
+  "gen": 1,
+  "dex": 76,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ponyta",
+  "name": "Ponyta",
+  "gen": 1,
+  "dex": 77,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rapidash",
+  "name": "Rapidash",
+  "gen": 1,
+  "dex": 78,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "slowpoke",
+  "name": "Slowpoke",
+  "gen": 1,
+  "dex": 79,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "slowbro",
+  "name": "Slowbro",
+  "gen": 1,
+  "dex": 80,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "magnemite",
+  "name": "Magnemite",
+  "gen": 1,
+  "dex": 81,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "magneton",
+  "name": "Magneton",
+  "gen": 1,
+  "dex": 82,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "farfetchd",
+  "name": "Farfetch'd",
+  "gen": 1,
+  "dex": 83,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "doduo",
+  "name": "Doduo",
+  "gen": 1,
+  "dex": 84,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dodrio",
+  "name": "Dodrio",
+  "gen": 1,
+  "dex": 85,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "seel",
+  "name": "Seel",
+  "gen": 1,
+  "dex": 86,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dewgong",
+  "name": "Dewgong",
+  "gen": 1,
+  "dex": 87,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "grimer",
+  "name": "Grimer",
+  "gen": 1,
+  "dex": 88,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "muk",
+  "name": "Muk",
+  "gen": 1,
+  "dex": 89,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shellder",
+  "name": "Shellder",
+  "gen": 1,
+  "dex": 90,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cloyster",
+  "name": "Cloyster",
+  "gen": 1,
+  "dex": 91,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gastly",
+  "name": "Gastly",
+  "gen": 1,
+  "dex": 92,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "haunter",
+  "name": "Haunter",
+  "gen": 1,
+  "dex": 93,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gengar",
+  "name": "Gengar",
+  "gen": 1,
+  "dex": 94,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "onix",
+  "name": "Onix",
+  "gen": 1,
+  "dex": 95,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "drowzee",
+  "name": "Drowzee",
+  "gen": 1,
+  "dex": 96,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hypno",
+  "name": "Hypno",
+  "gen": 1,
+  "dex": 97,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "krabby",
+  "name": "Krabby",
+  "gen": 1,
+  "dex": 98,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kingler",
+  "name": "Kingler",
+  "gen": 1,
+  "dex": 99,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "voltorb",
+  "name": "Voltorb",
+  "gen": 1,
+  "dex": 100,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "electrode",
+  "name": "Electrode",
+  "gen": 1,
+  "dex": 101,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "exeggcute",
+  "name": "Exeggcute",
+  "gen": 1,
+  "dex": 102,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "exeggutor",
+  "name": "Exeggutor",
+  "gen": 1,
+  "dex": 103,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cubone",
+  "name": "Cubone",
+  "gen": 1,
+  "dex": 104,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "marowak",
+  "name": "Marowak",
+  "gen": 1,
+  "dex": 105,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hitmonlee",
+  "name": "Hitmonlee",
+  "gen": 1,
+  "dex": 106,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hitmonchan",
+  "name": "Hitmonchan",
+  "gen": 1,
+  "dex": 107,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lickitung",
+  "name": "Lickitung",
+  "gen": 1,
+  "dex": 108,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "koffing",
+  "name": "Koffing",
+  "gen": 1,
+  "dex": 109,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "weezing",
+  "name": "Weezing",
+  "gen": 1,
+  "dex": 110,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rhyhorn",
+  "name": "Rhyhorn",
+  "gen": 1,
+  "dex": 111,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rhydon",
+  "name": "Rhydon",
+  "gen": 1,
+  "dex": 112,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "chansey",
+  "name": "Chansey",
+  "gen": 1,
+  "dex": 113,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "tangela",
+  "name": "Tangela",
+  "gen": 1,
+  "dex": 114,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kangaskhan",
+  "name": "Kangaskhan",
+  "gen": 1,
+  "dex": 115,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "horsea",
+  "name": "Horsea",
+  "gen": 1,
+  "dex": 116,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "seadra",
+  "name": "Seadra",
+  "gen": 1,
+  "dex": 117,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "goldeen",
+  "name": "Goldeen",
+  "gen": 1,
+  "dex": 118,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "seaking",
+  "name": "Seaking",
+  "gen": 1,
+  "dex": 119,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "staryu",
+  "name": "Staryu",
+  "gen": 1,
+  "dex": 120,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "starmie",
+  "name": "Starmie",
+  "gen": 1,
+  "dex": 121,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mrmime",
+  "name": "Mr. Mime",
+  "gen": 1,
+  "dex": 122,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "scyther",
+  "name": "Scyther",
+  "gen": 1,
+  "dex": 123,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "jynx",
+  "name": "Jynx",
+  "gen": 1,
+  "dex": 124,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "electabuzz",
+  "name": "Electabuzz",
+  "gen": 1,
+  "dex": 125,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "magmar",
+  "name": "Magmar",
+  "gen": 1,
+  "dex": 126,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pinsir",
+  "name": "Pinsir",
+  "gen": 1,
+  "dex": 127,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "tauros",
+  "name": "Tauros",
+  "gen": 1,
+  "dex": 128,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "magikarp",
+  "name": "Magikarp",
+  "gen": 1,
+  "dex": 129,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gyarados",
+  "name": "Gyarados",
+  "gen": 1,
+  "dex": 130,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lapras",
+  "name": "Lapras",
+  "gen": 1,
+  "dex": 131,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ditto",
+  "name": "Ditto",
+  "gen": 1,
+  "dex": 132,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "eevee",
+  "name": "Eevee",
+  "gen": 1,
+  "dex": 133,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "vaporeon",
+  "name": "Vaporeon",
+  "gen": 1,
+  "dex": 134,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "jolteon",
+  "name": "Jolteon",
+  "gen": 1,
+  "dex": 135,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "flareon",
+  "name": "Flareon",
+  "gen": 1,
+  "dex": 136,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "porygon",
+  "name": "Porygon",
+  "gen": 1,
+  "dex": 137,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "omanyte",
+  "name": "Omanyte",
+  "gen": 1,
+  "dex": 138,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "omastar",
+  "name": "Omastar",
+  "gen": 1,
+  "dex": 139,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kabuto",
+  "name": "Kabuto",
+  "gen": 1,
+  "dex": 140,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kabutops",
+  "name": "Kabutops",
+  "gen": 1,
+  "dex": 141,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "aerodactyl",
+  "name": "Aerodactyl",
+  "gen": 1,
+  "dex": 142,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "snorlax",
+  "name": "Snorlax",
+  "gen": 1,
+  "dex": 143,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "articuno",
+  "name": "Articuno",
+  "gen": 1,
+  "dex": 144,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "zapdos",
+  "name": "Zapdos",
+  "gen": 1,
+  "dex": 145,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "moltres",
+  "name": "Moltres",
+  "gen": 1,
+  "dex": 146,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "dratini",
+  "name": "Dratini",
+  "gen": 1,
+  "dex": 147,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dragonair",
+  "name": "Dragonair",
+  "gen": 1,
+  "dex": 148,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dragonite",
+  "name": "Dragonite",
+  "gen": 1,
+  "dex": 149,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "mewtwo",
+  "name": "Mewtwo",
+  "gen": 1,
+  "dex": 150,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mew",
+  "name": "Mew",
+  "gen": 1,
+  "dex": 151,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "chikorita",
+  "name": "Chikorita",
+  "gen": 2,
+  "dex": 152,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bayleef",
+  "name": "Bayleef",
+  "gen": 2,
+  "dex": 153,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "meganium",
+  "name": "Meganium",
+  "gen": 2,
+  "dex": 154,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "meganium_female",
+  "name": "Meganium (Female)",
+  "gen": 2,
+  "dex": 154,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cyndaquil",
+  "name": "Cyndaquil",
+  "gen": 2,
+  "dex": 155,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "quilava",
+  "name": "Quilava",
+  "gen": 2,
+  "dex": 156,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "typhlosion",
+  "name": "Typhlosion",
+  "gen": 2,
+  "dex": 157,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "totodile",
+  "name": "Totodile",
+  "gen": 2,
+  "dex": 158,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "croconaw",
+  "name": "Croconaw",
+  "gen": 2,
+  "dex": 159,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "feraligatr",
+  "name": "Feraligatr",
+  "gen": 2,
+  "dex": 160,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sentret",
+  "name": "Sentret",
+  "gen": 2,
+  "dex": 161,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "furret",
+  "name": "Furret",
+  "gen": 2,
+  "dex": 162,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hoothoot",
+  "name": "Hoothoot",
+  "gen": 2,
+  "dex": 163,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "noctowl",
+  "name": "Noctowl",
+  "gen": 2,
+  "dex": 164,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "ledyba",
+  "name": "Ledyba",
+  "gen": 2,
+  "dex": 165,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "ledian",
+  "name": "Ledian",
+  "gen": 2,
+  "dex": 166,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "spinarak",
+  "name": "Spinarak",
+  "gen": 2,
+  "dex": 167,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ariados",
+  "name": "Ariados",
+  "gen": 2,
+  "dex": 168,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "crobat",
+  "name": "Crobat",
+  "gen": 2,
+  "dex": 169,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "chinchou",
+  "name": "Chinchou",
+  "gen": 2,
+  "dex": 170,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lanturn",
+  "name": "Lanturn",
+  "gen": 2,
+  "dex": 171,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pichu",
+  "name": "Pichu",
+  "gen": 2,
+  "dex": 172,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pichu_spiky_eared",
+  "name": "Pichu (Spiky-eared)",
+  "gen": 2,
+  "dex": 172,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cleffa",
+  "name": "Cleffa",
+  "gen": 2,
+  "dex": 173,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "igglybuff",
+  "name": "Igglybuff",
+  "gen": 2,
+  "dex": 174,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "togepi",
+  "name": "Togepi",
+  "gen": 2,
+  "dex": 175,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "togetic",
+  "name": "Togetic",
+  "gen": 2,
+  "dex": 176,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "natu",
+  "name": "Natu",
+  "gen": 2,
+  "dex": 177,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "xatu",
+  "name": "Xatu",
+  "gen": 2,
+  "dex": 178,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "mareep",
+  "name": "Mareep",
+  "gen": 2,
+  "dex": 179,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "flaaffy",
+  "name": "Flaaffy",
+  "gen": 2,
+  "dex": 180,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ampharos",
+  "name": "Ampharos",
+  "gen": 2,
+  "dex": 181,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bellossom",
+  "name": "Bellossom",
+  "gen": 2,
+  "dex": 182,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "marill",
+  "name": "Marill",
+  "gen": 2,
+  "dex": 183,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "azumarill",
+  "name": "Azumarill",
+  "gen": 2,
+  "dex": 184,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sudowoodo",
+  "name": "Sudowoodo",
+  "gen": 2,
+  "dex": 185,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "politoed",
+  "name": "Politoed",
+  "gen": 2,
+  "dex": 186,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hoppip",
+  "name": "Hoppip",
+  "gen": 2,
+  "dex": 187,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "skiploom",
+  "name": "Skiploom",
+  "gen": 2,
+  "dex": 188,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "jumpluff",
+  "name": "Jumpluff",
+  "gen": 2,
+  "dex": 189,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "aipom",
+  "name": "Aipom",
+  "gen": 2,
+  "dex": 190,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sunkern",
+  "name": "Sunkern",
+  "gen": 2,
+  "dex": 191,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sunflora",
+  "name": "Sunflora",
+  "gen": 2,
+  "dex": 192,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "yanma",
+  "name": "Yanma",
+  "gen": 2,
+  "dex": 193,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "wooper",
+  "name": "Wooper",
+  "gen": 2,
+  "dex": 194,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "quagsire",
+  "name": "Quagsire",
+  "gen": 2,
+  "dex": 195,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "espeon",
+  "name": "Espeon",
+  "gen": 2,
+  "dex": 196,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "umbreon",
+  "name": "Umbreon",
+  "gen": 2,
+  "dex": 197,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "murkrow",
+  "name": "Murkrow",
+  "gen": 2,
+  "dex": 198,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "slowking",
+  "name": "Slowking",
+  "gen": 2,
+  "dex": 199,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "misdreavus",
+  "name": "Misdreavus",
+  "gen": 2,
+  "dex": 200,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_a",
+  "name": "Unown A",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_b",
+  "name": "Unown B",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_c",
+  "name": "Unown C",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_d",
+  "name": "Unown D",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_e",
+  "name": "Unown E",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_exclamation",
+  "name": "Unown !",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_f",
+  "name": "Unown F",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_g",
+  "name": "Unown G",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_h",
+  "name": "Unown H",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_i",
+  "name": "Unown I",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_j",
+  "name": "Unown J",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_k",
+  "name": "Unown K",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_l",
+  "name": "Unown L",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_m",
+  "name": "Unown M",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_n",
+  "name": "Unown N",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_o",
+  "name": "Unown O",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_p",
+  "name": "Unown P",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_q",
+  "name": "Unown Q",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_question",
+  "name": "Unown ?",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_r",
+  "name": "Unown R",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_s",
+  "name": "Unown S",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_t",
+  "name": "Unown T",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_u",
+  "name": "Unown U",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_v",
+  "name": "Unown V",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_w",
+  "name": "Unown W",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_x",
+  "name": "Unown X",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_y",
+  "name": "Unown Y",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "unown_z",
+  "name": "Unown Z",
+  "gen": 2,
+  "dex": 201,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wobbuffet_female",
+  "name": "Wobbuffet (Female)",
+  "gen": 2,
+  "dex": 202,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wobbuffet_male",
+  "name": "Wobbuffet (Male)",
+  "gen": 2,
+  "dex": 202,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "girafarig",
+  "name": "Girafarig",
+  "gen": 2,
+  "dex": 203,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pineco",
+  "name": "Pineco",
+  "gen": 2,
+  "dex": 204,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "forretress",
+  "name": "Forretress",
+  "gen": 2,
+  "dex": 205,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dunsparce",
+  "name": "Dunsparce",
+  "gen": 2,
+  "dex": 206,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gligar",
+  "name": "Gligar",
+  "gen": 2,
+  "dex": 207,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "steelix",
+  "name": "Steelix",
+  "gen": 2,
+  "dex": 208,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "steelix_female",
+  "name": "Steelix (Female)",
+  "gen": 2,
+  "dex": 208,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "snubbull",
+  "name": "Snubbull",
+  "gen": 2,
+  "dex": 209,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "granbull",
+  "name": "Granbull",
+  "gen": 2,
+  "dex": 210,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "qwilfish",
+  "name": "Qwilfish",
+  "gen": 2,
+  "dex": 211,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "scizor",
+  "name": "Scizor",
+  "gen": 2,
+  "dex": 212,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shuckle",
+  "name": "Shuckle",
+  "gen": 2,
+  "dex": 213,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "heracross_female",
+  "name": "Heracross (Female)",
+  "gen": 2,
+  "dex": 214,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "heracross_male",
+  "name": "Heracross (Male)",
+  "gen": 2,
+  "dex": 214,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sneasel",
+  "name": "Sneasel",
+  "gen": 2,
+  "dex": 215,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "teddiursa",
+  "name": "Teddiursa",
+  "gen": 2,
+  "dex": 216,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ursaring",
+  "name": "Ursaring",
+  "gen": 2,
+  "dex": 217,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "slugma",
+  "name": "Slugma",
+  "gen": 2,
+  "dex": 218,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "magcargo",
+  "name": "Magcargo",
+  "gen": 2,
+  "dex": 219,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "swinub",
+  "name": "Swinub",
+  "gen": 2,
+  "dex": 220,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "piloswine",
+  "name": "Piloswine",
+  "gen": 2,
+  "dex": 221,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "corsola",
+  "name": "Corsola",
+  "gen": 2,
+  "dex": 222,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "remoraid",
+  "name": "Remoraid",
+  "gen": 2,
+  "dex": 223,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "octillery",
+  "name": "Octillery",
+  "gen": 2,
+  "dex": 224,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "delibird",
+  "name": "Delibird",
+  "gen": 2,
+  "dex": 225,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "mantine",
+  "name": "Mantine",
+  "gen": 2,
+  "dex": 226,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "skarmory",
+  "name": "Skarmory",
+  "gen": 2,
+  "dex": 227,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "houndour",
+  "name": "Houndour",
+  "gen": 2,
+  "dex": 228,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "houndoom",
+  "name": "Houndoom",
+  "gen": 2,
+  "dex": 229,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kingdra",
+  "name": "Kingdra",
+  "gen": 2,
+  "dex": 230,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "phanpy",
+  "name": "Phanpy",
+  "gen": 2,
+  "dex": 231,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "donphan",
+  "name": "Donphan",
+  "gen": 2,
+  "dex": 232,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "porygon2",
+  "name": "Porygon2",
+  "gen": 2,
+  "dex": 233,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "stantler",
+  "name": "Stantler",
+  "gen": 2,
+  "dex": 234,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "smeargle",
+  "name": "Smeargle",
+  "gen": 2,
+  "dex": 235,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "tyrogue",
+  "name": "Tyrogue",
+  "gen": 2,
+  "dex": 236,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hitmontop",
+  "name": "Hitmontop",
+  "gen": 2,
+  "dex": 237,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "smoochum",
+  "name": "Smoochum",
+  "gen": 2,
+  "dex": 238,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "elekid",
+  "name": "Elekid",
+  "gen": 2,
+  "dex": 239,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "magby",
+  "name": "Magby",
+  "gen": 2,
+  "dex": 240,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "miltank",
+  "name": "Miltank",
+  "gen": 2,
+  "dex": 241,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "blissey",
+  "name": "Blissey",
+  "gen": 2,
+  "dex": 242,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "raikou",
+  "name": "Raikou",
+  "gen": 2,
+  "dex": 243,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "entei",
+  "name": "Entei",
+  "gen": 2,
+  "dex": 244,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "suicune",
+  "name": "Suicune",
+  "gen": 2,
+  "dex": 245,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "larvitar",
+  "name": "Larvitar",
+  "gen": 2,
+  "dex": 246,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pupitar",
+  "name": "Pupitar",
+  "gen": 2,
+  "dex": 247,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "tyranitar",
+  "name": "Tyranitar",
+  "gen": 2,
+  "dex": 248,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lugia",
+  "name": "Lugia",
+  "gen": 2,
+  "dex": 249,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "hooh",
+  "name": "Ho-Oh",
+  "gen": 2,
+  "dex": 250,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "celebi",
+  "name": "Celebi",
+  "gen": 2,
+  "dex": 251,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "treecko",
+  "name": "Treecko",
+  "gen": 3,
+  "dex": 252,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "grovyle",
+  "name": "Grovyle",
+  "gen": 3,
+  "dex": 253,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sceptile",
+  "name": "Sceptile",
+  "gen": 3,
+  "dex": 254,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "torchic",
+  "name": "Torchic",
+  "gen": 3,
+  "dex": 255,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "combusken",
+  "name": "Combusken",
+  "gen": 3,
+  "dex": 256,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "blaziken",
+  "name": "Blaziken",
+  "gen": 3,
+  "dex": 257,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mudkip",
+  "name": "Mudkip",
+  "gen": 3,
+  "dex": 258,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "marshtomp",
+  "name": "Marshtomp",
+  "gen": 3,
+  "dex": 259,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "swampert",
+  "name": "Swampert",
+  "gen": 3,
+  "dex": 260,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "poochyena",
+  "name": "Poochyena",
+  "gen": 3,
+  "dex": 261,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mightyena",
+  "name": "Mightyena",
+  "gen": 3,
+  "dex": 262,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "zigzagoon",
+  "name": "Zigzagoon",
+  "gen": 3,
+  "dex": 263,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "linoone",
+  "name": "Linoone",
+  "gen": 3,
+  "dex": 264,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wurmple",
+  "name": "Wurmple",
+  "gen": 3,
+  "dex": 265,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "silcoon",
+  "name": "Silcoon",
+  "gen": 3,
+  "dex": 266,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "beautifly",
+  "name": "Beautifly",
+  "gen": 3,
+  "dex": 267,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "cascoon",
+  "name": "Cascoon",
+  "gen": 3,
+  "dex": 268,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dustox",
+  "name": "Dustox",
+  "gen": 3,
+  "dex": 269,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "lotad",
+  "name": "Lotad",
+  "gen": 3,
+  "dex": 270,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lombre",
+  "name": "Lombre",
+  "gen": 3,
+  "dex": 271,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ludicolo",
+  "name": "Ludicolo",
+  "gen": 3,
+  "dex": 272,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "seedot",
+  "name": "Seedot",
+  "gen": 3,
+  "dex": 273,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "nuzleaf",
+  "name": "Nuzleaf",
+  "gen": 3,
+  "dex": 274,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shiftry",
+  "name": "Shiftry",
+  "gen": 3,
+  "dex": 275,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "taillow",
+  "name": "Taillow",
+  "gen": 3,
+  "dex": 276,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "swellow",
+  "name": "Swellow",
+  "gen": 3,
+  "dex": 277,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "wingull",
+  "name": "Wingull",
+  "gen": 3,
+  "dex": 278,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "pelipper",
+  "name": "Pelipper",
+  "gen": 3,
+  "dex": 279,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "ralts",
+  "name": "Ralts",
+  "gen": 3,
+  "dex": 280,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kirlia",
+  "name": "Kirlia",
+  "gen": 3,
+  "dex": 281,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gardevoir",
+  "name": "Gardevoir",
+  "gen": 3,
+  "dex": 282,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "surskit",
+  "name": "Surskit",
+  "gen": 3,
+  "dex": 283,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "masquerain",
+  "name": "Masquerain",
+  "gen": 3,
+  "dex": 284,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "shroomish",
+  "name": "Shroomish",
+  "gen": 3,
+  "dex": 285,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "breloom",
+  "name": "Breloom",
+  "gen": 3,
+  "dex": 286,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "slakoth",
+  "name": "Slakoth",
+  "gen": 3,
+  "dex": 287,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "vigoroth",
+  "name": "Vigoroth",
+  "gen": 3,
+  "dex": 288,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "slaking",
+  "name": "Slaking",
+  "gen": 3,
+  "dex": 289,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "nincada",
+  "name": "Nincada",
+  "gen": 3,
+  "dex": 290,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ninjask",
+  "name": "Ninjask",
+  "gen": 3,
+  "dex": 291,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shedinja",
+  "name": "Shedinja",
+  "gen": 3,
+  "dex": 292,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "whismur",
+  "name": "Whismur",
+  "gen": 3,
+  "dex": 293,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "loudred",
+  "name": "Loudred",
+  "gen": 3,
+  "dex": 294,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "exploud",
+  "name": "Exploud",
+  "gen": 3,
+  "dex": 295,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "makuhita",
+  "name": "Makuhita",
+  "gen": 3,
+  "dex": 296,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hariyama",
+  "name": "Hariyama",
+  "gen": 3,
+  "dex": 297,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "azurill",
+  "name": "Azurill",
+  "gen": 3,
+  "dex": 298,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "nosepass",
+  "name": "Nosepass",
+  "gen": 3,
+  "dex": 299,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "skitty",
+  "name": "Skitty",
+  "gen": 3,
+  "dex": 300,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "delcatty",
+  "name": "Delcatty",
+  "gen": 3,
+  "dex": 301,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sableye",
+  "name": "Sableye",
+  "gen": 3,
+  "dex": 302,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mawile",
+  "name": "Mawile",
+  "gen": 3,
+  "dex": 303,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "aron",
+  "name": "Aron",
+  "gen": 3,
+  "dex": 304,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lairon",
+  "name": "Lairon",
+  "gen": 3,
+  "dex": 305,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "aggron",
+  "name": "Aggron",
+  "gen": 3,
+  "dex": 306,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "meditite",
+  "name": "Meditite",
+  "gen": 3,
+  "dex": 307,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "medicham",
+  "name": "Medicham",
+  "gen": 3,
+  "dex": 308,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "electrike",
+  "name": "Electrike",
+  "gen": 3,
+  "dex": 309,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "manectric",
+  "name": "Manectric",
+  "gen": 3,
+  "dex": 310,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "plusle",
+  "name": "Plusle",
+  "gen": 3,
+  "dex": 311,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "minun",
+  "name": "Minun",
+  "gen": 3,
+  "dex": 312,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "volbeat",
+  "name": "Volbeat",
+  "gen": 3,
+  "dex": 313,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "illumise",
+  "name": "Illumise",
+  "gen": 3,
+  "dex": 314,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "roselia",
+  "name": "Roselia",
+  "gen": 3,
+  "dex": 315,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gulpin",
+  "name": "Gulpin",
+  "gen": 3,
+  "dex": 316,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "swalot",
+  "name": "Swalot",
+  "gen": 3,
+  "dex": 317,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "carvanha",
+  "name": "Carvanha",
+  "gen": 3,
+  "dex": 318,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sharpedo",
+  "name": "Sharpedo",
+  "gen": 3,
+  "dex": 319,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wailmer",
+  "name": "Wailmer",
+  "gen": 3,
+  "dex": 320,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wailord",
+  "name": "Wailord",
+  "gen": 3,
+  "dex": 321,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "numel",
+  "name": "Numel",
+  "gen": 3,
+  "dex": 322,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "camerupt",
+  "name": "Camerupt",
+  "gen": 3,
+  "dex": 323,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "torkoal",
+  "name": "Torkoal",
+  "gen": 3,
+  "dex": 324,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "spoink",
+  "name": "Spoink",
+  "gen": 3,
+  "dex": 325,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "grumpig",
+  "name": "Grumpig",
+  "gen": 3,
+  "dex": 326,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "spinda",
+  "name": "Spinda",
+  "gen": 3,
+  "dex": 327,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "trapinch",
+  "name": "Trapinch",
+  "gen": 3,
+  "dex": 328,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "vibrava",
+  "name": "Vibrava",
+  "gen": 3,
+  "dex": 329,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "flygon",
+  "name": "Flygon",
+  "gen": 3,
+  "dex": 330,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "cacnea",
+  "name": "Cacnea",
+  "gen": 3,
+  "dex": 331,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cacturne",
+  "name": "Cacturne",
+  "gen": 3,
+  "dex": 332,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "swablu",
+  "name": "Swablu",
+  "gen": 3,
+  "dex": 333,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "altaria",
+  "name": "Altaria",
+  "gen": 3,
+  "dex": 334,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "zangoose",
+  "name": "Zangoose",
+  "gen": 3,
+  "dex": 335,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "seviper",
+  "name": "Seviper",
+  "gen": 3,
+  "dex": 336,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lunatone",
+  "name": "Lunatone",
+  "gen": 3,
+  "dex": 337,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "solrock",
+  "name": "Solrock",
+  "gen": 3,
+  "dex": 338,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "barboach",
+  "name": "Barboach",
+  "gen": 3,
+  "dex": 339,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "whiscash",
+  "name": "Whiscash",
+  "gen": 3,
+  "dex": 340,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "corphish",
+  "name": "Corphish",
+  "gen": 3,
+  "dex": 341,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "crawdaunt",
+  "name": "Crawdaunt",
+  "gen": 3,
+  "dex": 342,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "baltoy",
+  "name": "Baltoy",
+  "gen": 3,
+  "dex": 343,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "claydol",
+  "name": "Claydol",
+  "gen": 3,
+  "dex": 344,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lileep",
+  "name": "Lileep",
+  "gen": 3,
+  "dex": 345,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cradily",
+  "name": "Cradily",
+  "gen": 3,
+  "dex": 346,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "anorith",
+  "name": "Anorith",
+  "gen": 3,
+  "dex": 347,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "armaldo",
+  "name": "Armaldo",
+  "gen": 3,
+  "dex": 348,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "feebas",
+  "name": "Feebas",
+  "gen": 3,
+  "dex": 349,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "milotic",
+  "name": "Milotic",
+  "gen": 3,
+  "dex": 350,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "castform",
+  "name": "Castform",
+  "gen": 3,
+  "dex": 351,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kecleon",
+  "name": "Kecleon",
+  "gen": 3,
+  "dex": 352,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shuppet",
+  "name": "Shuppet",
+  "gen": 3,
+  "dex": 353,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "banette",
+  "name": "Banette",
+  "gen": 3,
+  "dex": 354,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "duskull",
+  "name": "Duskull",
+  "gen": 3,
+  "dex": 355,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dusclops",
+  "name": "Dusclops",
+  "gen": 3,
+  "dex": 356,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "tropius",
+  "name": "Tropius",
+  "gen": 3,
+  "dex": 357,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "chimecho",
+  "name": "Chimecho",
+  "gen": 3,
+  "dex": 358,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "absol",
+  "name": "Absol",
+  "gen": 3,
+  "dex": 359,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wynaut",
+  "name": "Wynaut",
+  "gen": 3,
+  "dex": 360,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "snorunt",
+  "name": "Snorunt",
+  "gen": 3,
+  "dex": 361,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "glalie",
+  "name": "Glalie",
+  "gen": 3,
+  "dex": 362,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "spheal",
+  "name": "Spheal",
+  "gen": 3,
+  "dex": 363,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sealeo",
+  "name": "Sealeo",
+  "gen": 3,
+  "dex": 364,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "walrein",
+  "name": "Walrein",
+  "gen": 3,
+  "dex": 365,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "clamperl",
+  "name": "Clamperl",
+  "gen": 3,
+  "dex": 366,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "huntail",
+  "name": "Huntail",
+  "gen": 3,
+  "dex": 367,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gorebyss",
+  "name": "Gorebyss",
+  "gen": 3,
+  "dex": 368,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "relicanth",
+  "name": "Relicanth",
+  "gen": 3,
+  "dex": 369,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "luvdisc",
+  "name": "Luvdisc",
+  "gen": 3,
+  "dex": 370,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bagon",
+  "name": "Bagon",
+  "gen": 3,
+  "dex": 371,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shelgon",
+  "name": "Shelgon",
+  "gen": 3,
+  "dex": 372,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "salamence",
+  "name": "Salamence",
+  "gen": 3,
+  "dex": 373,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "beldum",
+  "name": "Beldum",
+  "gen": 3,
+  "dex": 374,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "metang",
+  "name": "Metang",
+  "gen": 3,
+  "dex": 375,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "metagross",
+  "name": "Metagross",
+  "gen": 3,
+  "dex": 376,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "regirock",
+  "name": "Regirock",
+  "gen": 3,
+  "dex": 377,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "regice",
+  "name": "Regice",
+  "gen": 3,
+  "dex": 378,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "registeel",
+  "name": "Registeel",
+  "gen": 3,
+  "dex": 379,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "latias",
+  "name": "Latias",
+  "gen": 3,
+  "dex": 380,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "latios",
+  "name": "Latios",
+  "gen": 3,
+  "dex": 381,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "kyogre",
+  "name": "Kyogre",
+  "gen": 3,
+  "dex": 382,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "groudon",
+  "name": "Groudon",
+  "gen": 3,
+  "dex": 383,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rayquaza",
+  "name": "Rayquaza",
+  "gen": 3,
+  "dex": 384,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "jirachi",
+  "name": "Jirachi",
+  "gen": 3,
+  "dex": 385,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "deoxys",
+  "name": "Deoxys",
+  "gen": 3,
+  "dex": 386,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "deoxys_attack",
+  "name": "Deoxys (Attack)",
+  "gen": 3,
+  "dex": 386,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "deoxys_defense",
+  "name": "Deoxys (Defense)",
+  "gen": 3,
+  "dex": 386,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "deoxys_speed",
+  "name": "Deoxys (Speed)",
+  "gen": 3,
+  "dex": 386,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "turtwig",
+  "name": "Turtwig",
+  "gen": 4,
+  "dex": 387,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "grotle",
+  "name": "Grotle",
+  "gen": 4,
+  "dex": 388,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "torterra",
+  "name": "Torterra",
+  "gen": 4,
+  "dex": 389,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "chimchar",
+  "name": "Chimchar",
+  "gen": 4,
+  "dex": 390,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "monferno",
+  "name": "Monferno",
+  "gen": 4,
+  "dex": 391,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "infernape",
+  "name": "Infernape",
+  "gen": 4,
+  "dex": 392,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "piplup",
+  "name": "Piplup",
+  "gen": 4,
+  "dex": 393,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "prinplup",
+  "name": "Prinplup",
+  "gen": 4,
+  "dex": 394,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "empoleon",
+  "name": "Empoleon",
+  "gen": 4,
+  "dex": 395,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "starly",
+  "name": "Starly",
+  "gen": 4,
+  "dex": 396,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "staravia",
+  "name": "Staravia",
+  "gen": 4,
+  "dex": 397,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "staraptor",
+  "name": "Staraptor",
+  "gen": 4,
+  "dex": 398,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "bidoof",
+  "name": "Bidoof",
+  "gen": 4,
+  "dex": 399,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bibarel",
+  "name": "Bibarel",
+  "gen": 4,
+  "dex": 400,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "kricketot",
+  "name": "Kricketot",
+  "gen": 4,
+  "dex": 401,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "kricketune",
+  "name": "Kricketune",
+  "gen": 4,
+  "dex": 402,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "shinx",
+  "name": "Shinx",
+  "gen": 4,
+  "dex": 403,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "luxio",
+  "name": "Luxio",
+  "gen": 4,
+  "dex": 404,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "luxray",
+  "name": "Luxray",
+  "gen": 4,
+  "dex": 405,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "budew",
+  "name": "Budew",
+  "gen": 4,
+  "dex": 406,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "roserade",
+  "name": "Roserade",
+  "gen": 4,
+  "dex": 407,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "cranidos",
+  "name": "Cranidos",
+  "gen": 4,
+  "dex": 408,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rampardos",
+  "name": "Rampardos",
+  "gen": 4,
+  "dex": 409,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shieldon",
+  "name": "Shieldon",
+  "gen": 4,
+  "dex": 410,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bastiodon",
+  "name": "Bastiodon",
+  "gen": 4,
+  "dex": 411,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "burmy_plant",
+  "name": "Burmy (Plant)",
+  "gen": 4,
+  "dex": 412,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "burmy_sandy",
+  "name": "Burmy (Sandy)",
+  "gen": 4,
+  "dex": 412,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "burmy_trash",
+  "name": "Burmy (Trash)",
+  "gen": 4,
+  "dex": 412,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wormadam_plant",
+  "name": "Wormadam (Plant)",
+  "gen": 4,
+  "dex": 413,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wormadam_sandy",
+  "name": "Wormadam (Sandy)",
+  "gen": 4,
+  "dex": 413,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "wormadam_trash",
+  "name": "Wormadam (Trash)",
+  "gen": 4,
+  "dex": 413,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mothim",
+  "name": "Mothim",
+  "gen": 4,
+  "dex": 414,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "combee_female",
+  "name": "Combee (Female)",
+  "gen": 4,
+  "dex": 415,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "combee_male",
+  "name": "Combee (Male)",
+  "gen": 4,
+  "dex": 415,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "vespiquen",
+  "name": "Vespiquen",
+  "gen": 4,
+  "dex": 416,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pachirisu",
+  "name": "Pachirisu",
+  "gen": 4,
+  "dex": 417,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "buizel",
+  "name": "Buizel",
+  "gen": 4,
+  "dex": 418,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "floatzel",
+  "name": "Floatzel",
+  "gen": 4,
+  "dex": 419,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cherubi",
+  "name": "Cherubi",
+  "gen": 4,
+  "dex": 420,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cherrim",
+  "name": "Cherrim",
+  "gen": 4,
+  "dex": 421,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shellos_east",
+  "name": "Shellos (East)",
+  "gen": 4,
+  "dex": 422,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shellos_west",
+  "name": "Shellos (West)",
+  "gen": 4,
+  "dex": 422,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gastrodon_east",
+  "name": "Gastrodon (East)",
+  "gen": 4,
+  "dex": 423,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gastrodon_west",
+  "name": "Gastrodon (West)",
+  "gen": 4,
+  "dex": 423,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ambipom",
+  "name": "Ambipom",
+  "gen": 4,
+  "dex": 424,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "drifloon",
+  "name": "Drifloon",
+  "gen": 4,
+  "dex": 425,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "drifblim",
+  "name": "Drifblim",
+  "gen": 4,
+  "dex": 426,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "buneary",
+  "name": "Buneary",
+  "gen": 4,
+  "dex": 427,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "lopunny",
+  "name": "Lopunny",
+  "gen": 4,
+  "dex": 428,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mismagius",
+  "name": "Mismagius",
+  "gen": 4,
+  "dex": 429,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "honchkrow",
+  "name": "Honchkrow",
+  "gen": 4,
+  "dex": 430,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "glameow",
+  "name": "Glameow",
+  "gen": 4,
+  "dex": 431,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "purugly",
+  "name": "Purugly",
+  "gen": 4,
+  "dex": 432,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "chingling",
+  "name": "Chingling",
+  "gen": 4,
+  "dex": 433,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "stunky",
+  "name": "Stunky",
+  "gen": 4,
+  "dex": 434,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "skuntank",
+  "name": "Skuntank",
+  "gen": 4,
+  "dex": 435,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bronzor",
+  "name": "Bronzor",
+  "gen": 4,
+  "dex": 436,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bronzong",
+  "name": "Bronzong",
+  "gen": 4,
+  "dex": 437,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bonsly",
+  "name": "Bonsly",
+  "gen": 4,
+  "dex": 438,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mimeJr",
+  "name": "Mime Jr.",
+  "gen": 4,
+  "dex": 439,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "happiny",
+  "name": "Happiny",
+  "gen": 4,
+  "dex": 440,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "chatot",
+  "name": "Chatot",
+  "gen": 4,
+  "dex": 441,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "spiritomb",
+  "name": "Spiritomb",
+  "gen": 4,
+  "dex": 442,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gible",
+  "name": "Gible",
+  "gen": 4,
+  "dex": 443,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "gible_female",
+  "name": "Gible (Female)",
+  "gen": 4,
+  "dex": 443,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "gabite",
+  "name": "Gabite",
+  "gen": 4,
+  "dex": 444,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gabite_female",
+  "name": "Gabite (Female)",
+  "gen": 4,
+  "dex": 444,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "garchomp",
+  "name": "Garchomp",
+  "gen": 4,
+  "dex": 445,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "garchomp_female",
+  "name": "Garchomp (Female)",
+  "gen": 4,
+  "dex": 445,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "munchlax",
+  "name": "Munchlax",
+  "gen": 4,
+  "dex": 446,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "riolu",
+  "name": "Riolu",
+  "gen": 4,
+  "dex": 447,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "lucario",
+  "name": "Lucario",
+  "gen": 4,
+  "dex": 448,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hippopotas_female",
+  "name": "Hippopotas (Female)",
+  "gen": 4,
+  "dex": 449,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hippopotas_male",
+  "name": "Hippopotas (Male)",
+  "gen": 4,
+  "dex": 449,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hippowdon_female",
+  "name": "Hippowdon (Female)",
+  "gen": 4,
+  "dex": 450,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "hippowdon_male",
+  "name": "Hippowdon (Male)",
+  "gen": 4,
+  "dex": 450,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "skorupi",
+  "name": "Skorupi",
+  "gen": 4,
+  "dex": 451,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "drapion",
+  "name": "Drapion",
+  "gen": 4,
+  "dex": 452,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "croagunk",
+  "name": "Croagunk",
+  "gen": 4,
+  "dex": 453,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "toxicroak",
+  "name": "Toxicroak",
+  "gen": 4,
+  "dex": 454,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "carnivine",
+  "name": "Carnivine",
+  "gen": 4,
+  "dex": 455,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "finneon",
+  "name": "Finneon",
+  "gen": 4,
+  "dex": 456,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lumineon",
+  "name": "Lumineon",
+  "gen": 4,
+  "dex": 457,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mantyke",
+  "name": "Mantyke",
+  "gen": 4,
+  "dex": 458,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "snover",
+  "name": "Snover",
+  "gen": 4,
+  "dex": 459,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "abomasnow",
+  "name": "Abomasnow",
+  "gen": 4,
+  "dex": 460,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "weavile",
+  "name": "Weavile",
+  "gen": 4,
+  "dex": 461,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "magnezone",
+  "name": "Magnezone",
+  "gen": 4,
+  "dex": 462,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "lickilicky",
+  "name": "Lickilicky",
+  "gen": 4,
+  "dex": 463,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rhyperior",
+  "name": "Rhyperior",
+  "gen": 4,
+  "dex": 464,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "tangrowth",
+  "name": "Tangrowth",
+  "gen": 4,
+  "dex": 465,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "electivire",
+  "name": "Electivire",
+  "gen": 4,
+  "dex": 466,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "magmortar",
+  "name": "Magmortar",
+  "gen": 4,
+  "dex": 467,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "togekiss",
+  "name": "Togekiss",
+  "gen": 4,
+  "dex": 468,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": true
+ },
+ {
+  "key": "yanmega",
+  "name": "Yanmega",
+  "gen": 4,
+  "dex": 469,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "leafeon",
+  "name": "Leafeon",
+  "gen": 4,
+  "dex": 470,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "glaceon",
+  "name": "Glaceon",
+  "gen": 4,
+  "dex": 471,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gliscor",
+  "name": "Gliscor",
+  "gen": 4,
+  "dex": 472,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "mamoswine",
+  "name": "Mamoswine",
+  "gen": 4,
+  "dex": 473,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "porygonZ",
+  "name": "Porygon-Z",
+  "gen": 4,
+  "dex": 474,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gallade",
+  "name": "Gallade",
+  "gen": 4,
+  "dex": 475,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "probopass",
+  "name": "Probopass",
+  "gen": 4,
+  "dex": 476,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dusknoir",
+  "name": "Dusknoir",
+  "gen": 4,
+  "dex": 477,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "froslass",
+  "name": "Froslass",
+  "gen": 4,
+  "dex": 478,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rotom",
+  "name": "Rotom",
+  "gen": 4,
+  "dex": 479,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rotom_fan",
+  "name": "Rotom (Fan Form)",
+  "gen": 4,
+  "dex": 479,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rotom_frost",
+  "name": "Rotom (Frost Form)",
+  "gen": 4,
+  "dex": 479,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rotom_heat",
+  "name": "Rotom (Heat Form)",
+  "gen": 4,
+  "dex": 479,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rotom_mow",
+  "name": "Rotom (Mow Form)",
+  "gen": 4,
+  "dex": 479,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "rotom_wash",
+  "name": "Rotom (Wash Form)",
+  "gen": 4,
+  "dex": 479,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "uxie",
+  "name": "Uxie",
+  "gen": 4,
+  "dex": 480,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "mesprit",
+  "name": "Mesprit",
+  "gen": 4,
+  "dex": 481,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "azelf",
+  "name": "Azelf",
+  "gen": 4,
+  "dex": 482,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "dialga",
+  "name": "Dialga",
+  "gen": 4,
+  "dex": 483,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "palkia",
+  "name": "Palkia",
+  "gen": 4,
+  "dex": 484,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "heatran",
+  "name": "Heatran",
+  "gen": 4,
+  "dex": 485,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "regigigas",
+  "name": "Regigigas",
+  "gen": 4,
+  "dex": 486,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "giratina",
+  "name": "Giratina",
+  "gen": 4,
+  "dex": 487,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "giratina_origin",
+  "name": "Giratina (Origin Form)",
+  "gen": 4,
+  "dex": 487,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cresselia",
+  "name": "Cresselia",
+  "gen": 4,
+  "dex": 488,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "phione",
+  "name": "Phione",
+  "gen": 4,
+  "dex": 489,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "manaphy",
+  "name": "Manaphy",
+  "gen": 4,
+  "dex": 490,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "darkrai",
+  "name": "Darkrai",
+  "gen": 4,
+  "dex": 491,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shaymin",
+  "name": "Shaymin",
+  "gen": 4,
+  "dex": 492,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shaymin_sky",
+  "name": "Shaymin (Sky Form)",
+  "gen": 4,
+  "dex": 492,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus",
+  "name": "Arceus",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_bug",
+  "name": "Arceus (Bug)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 32,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_dark",
+  "name": "Arceus (Dark)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_dragon",
+  "name": "Arceus (Dragon)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_electric",
+  "name": "Arceus (Electric)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_fighting",
+  "name": "Arceus (Fighting)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_fire",
+  "name": "Arceus (Fire)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_flying",
+  "name": "Arceus (Flying)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_ghost",
+  "name": "Arceus (Ghost)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_grass",
+  "name": "Arceus (Grass)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_ground",
+  "name": "Arceus (Ground)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_ice",
+  "name": "Arceus (Ice)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_poison",
+  "name": "Arceus (Poison)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_psychic",
+  "name": "Arceus (Psychic)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_rock",
+  "name": "Arceus (Rock)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_steel",
+  "name": "Arceus (Steel)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "arceus_water",
+  "name": "Arceus (Water)",
+  "gen": 4,
+  "dex": 493,
+  "spriteSize": 64,
+  "hasShiny": true,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "victini",
+  "name": "Victini",
+  "gen": 5,
+  "dex": 494,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "patrat",
+  "name": "Patrat",
+  "gen": 5,
+  "dex": 504,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "watchog",
+  "name": "Watchog",
+  "gen": 5,
+  "dex": 505,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "herdier",
+  "name": "Herdier",
+  "gen": 5,
+  "dex": 507,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "liepard",
+  "name": "Liepard",
+  "gen": 5,
+  "dex": 510,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pansage",
+  "name": "Pansage",
+  "gen": 5,
+  "dex": 511,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pansear",
+  "name": "Pansear",
+  "gen": 5,
+  "dex": 513,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "panpour",
+  "name": "Panpour",
+  "gen": 5,
+  "dex": 515,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "munna",
+  "name": "Munna",
+  "gen": 5,
+  "dex": 517,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "musharna",
+  "name": "Musharna",
+  "gen": 5,
+  "dex": 518,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pidove",
+  "name": "Pidove",
+  "gen": 5,
+  "dex": 519,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "zebstrika",
+  "name": "Zebstrika",
+  "gen": 5,
+  "dex": 523,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "boldore",
+  "name": "Boldore",
+  "gen": 5,
+  "dex": 525,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "woobat",
+  "name": "Woobat",
+  "gen": 5,
+  "dex": 527,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "drilbur",
+  "name": "Drilbur",
+  "gen": 5,
+  "dex": 529,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "audino",
+  "name": "Audino",
+  "gen": 5,
+  "dex": 531,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "gurdurr",
+  "name": "Gurdurr",
+  "gen": 5,
+  "dex": 533,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "tympole",
+  "name": "Tympole",
+  "gen": 5,
+  "dex": 535,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "throh",
+  "name": "Throh",
+  "gen": 5,
+  "dex": 538,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sawk",
+  "name": "Sawk",
+  "gen": 5,
+  "dex": 539,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "leavanny",
+  "name": "Leavanny",
+  "gen": 5,
+  "dex": 542,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "scolipede",
+  "name": "Scolipede",
+  "gen": 5,
+  "dex": 545,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cottonee",
+  "name": "Cottonee",
+  "gen": 5,
+  "dex": 546,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "petilil",
+  "name": "Petilil",
+  "gen": 5,
+  "dex": 548,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "basculin_blue_striped",
+  "name": "Basculin (Blue-Striped Form)",
+  "gen": 5,
+  "dex": 550,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "basculin_red_striped",
+  "name": "Basculin (Red-Striped Form)",
+  "gen": 5,
+  "dex": 550,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "krokorok",
+  "name": "Krokorok",
+  "gen": 5,
+  "dex": 552,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "krookodile",
+  "name": "Krookodile",
+  "gen": 5,
+  "dex": 553,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "maractus",
+  "name": "Maractus",
+  "gen": 5,
+  "dex": 556,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "crustle",
+  "name": "Crustle",
+  "gen": 5,
+  "dex": 558,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "scraggy",
+  "name": "Scraggy",
+  "gen": 5,
+  "dex": 559,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "sigilyph",
+  "name": "Sigilyph",
+  "gen": 5,
+  "dex": 561,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "tirtouga",
+  "name": "Tirtouga",
+  "gen": 5,
+  "dex": 564,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "garbodor",
+  "name": "Garbodor",
+  "gen": 5,
+  "dex": 569,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "zorua",
+  "name": "Zorua",
+  "gen": 5,
+  "dex": 570,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "minccino",
+  "name": "Minccino",
+  "gen": 5,
+  "dex": 572,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "duosion",
+  "name": "Duosion",
+  "gen": 5,
+  "dex": 578,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "ducklett",
+  "name": "Ducklett",
+  "gen": 5,
+  "dex": 580,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "vanillish",
+  "name": "Vanillish",
+  "gen": 5,
+  "dex": 583,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "deerling_autumn",
+  "name": "Deerling (Autumn Form)",
+  "gen": 5,
+  "dex": 585,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "deerling_spring",
+  "name": "Deerling (Spring Form)",
+  "gen": 5,
+  "dex": 585,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "deerling_summer",
+  "name": "Deerling (Summer Form)",
+  "gen": 5,
+  "dex": 585,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "deerling_winter",
+  "name": "Deerling (Winter Form)",
+  "gen": 5,
+  "dex": 585,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "emolga",
+  "name": "Emolga",
+  "gen": 5,
+  "dex": 587,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "karrablast",
+  "name": "Karrablast",
+  "gen": 5,
+  "dex": 588,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "alomomola",
+  "name": "Alomomola",
+  "gen": 5,
+  "dex": 594,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "galvantula",
+  "name": "Galvantula",
+  "gen": 5,
+  "dex": 596,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "klang",
+  "name": "Klang",
+  "gen": 5,
+  "dex": 600,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "elgyem",
+  "name": "Elgyem",
+  "gen": 5,
+  "dex": 605,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "litwick",
+  "name": "Litwick",
+  "gen": 5,
+  "dex": 607,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "axew",
+  "name": "Axew",
+  "gen": 5,
+  "dex": 610,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cubchoo",
+  "name": "Cubchoo",
+  "gen": 5,
+  "dex": 613,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "shelmet",
+  "name": "Shelmet",
+  "gen": 5,
+  "dex": 616,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "stunfisk",
+  "name": "Stunfisk",
+  "gen": 5,
+  "dex": 618,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "druddigon",
+  "name": "Druddigon",
+  "gen": 5,
+  "dex": 621,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "golett",
+  "name": "Golett",
+  "gen": 5,
+  "dex": 622,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "pawniard",
+  "name": "Pawniard",
+  "gen": 5,
+  "dex": 624,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "bouffalant",
+  "name": "Bouffalant",
+  "gen": 5,
+  "dex": 626,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "braviary",
+  "name": "Braviary",
+  "gen": 5,
+  "dex": 628,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "mandibuzz",
+  "name": "Mandibuzz",
+  "gen": 5,
+  "dex": 630,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": true
+ },
+ {
+  "key": "heatmor",
+  "name": "Heatmor",
+  "gen": 5,
+  "dex": 631,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ },
+ {
+  "key": "durant",
+  "name": "Durant",
+  "gen": 5,
+  "dex": 632,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "cobalion",
+  "name": "Cobalion",
+  "gen": 5,
+  "dex": 638,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "terrakion",
+  "name": "Terrakion",
+  "gen": 5,
+  "dex": 639,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "virizion",
+  "name": "Virizion",
+  "gen": 5,
+  "dex": 640,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "keldeo",
+  "name": "Keldeo",
+  "gen": 5,
+  "dex": 647,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": false,
+  "isFlyer": false
+ },
+ {
+  "key": "meloetta",
+  "name": "Meloetta",
+  "gen": 5,
+  "dex": 648,
+  "spriteSize": 32,
+  "hasShiny": false,
+  "hasLeftFacing": true,
+  "isFlyer": false
+ }
+]

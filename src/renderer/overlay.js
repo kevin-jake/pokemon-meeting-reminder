@@ -1,17 +1,30 @@
 // @ts-check
 'use strict';
 /**
- * Overlay renderer for one monitor. Main sends a `scene:play` per pass: the
- * Pokémon walks in along the bottom of the work area and either walks straight
- * through, or (on the monitor under the cursor) pauses mid-screen on the idle
- * GIF while the banner pops and the cry plays. A time-based rAF loop drives
- * the motion; CSS only handles the final opacity fade. The same window may be
- * asked to play several passes, so every play call resets the state.
+ * Overlay renderer for one monitor. Main sends a `scene:play` per pass:
+ *  - walkers walk in along the bottom of the work area with the banner above
+ *    their head;
+ *  - flyers cross the upper half on a sine path (walk GIF, wings flap) with
+ *    the banner trailing behind them.
+ * Either one goes straight through, or (on the monitor under the cursor)
+ * pauses mid-screen on the idle GIF while the banner pops and the cry plays.
+ * A time-based rAF loop drives the motion (math in shared/scene-math.js); CSS
+ * only handles the final opacity fade. The same window may be asked to play
+ * several passes, so every play call resets the state.
  */
 
 /** @typedef {import('../main/overlay').PassPayload} PassPayload */
 
+/** @type {typeof import('../shared/scene-math')} */
+const sceneMath = /** @type {any} */ (window).sceneMath;
+
 const WALK_PX_PER_SEC = 200;
+const FLY_PX_PER_SEC = 280;
+const FLY_CYCLES = 2;
+const FLY_AMPLITUDE_PX = 40;
+const HOVER_AMPLITUDE_PX = 8;
+const HOVER_PERIOD_MS = 1250; // PAUSE_MS is a whole number of periods, so the bob ends where it began
+const TILT_SMOOTHING = 0.15; // per frame, so tilt eases in and out of the hover instead of snapping
 const PAUSE_MS = 2500;
 const BANNER_GAP_PX = 10;
 const TITLE_MAX = 40;
@@ -45,7 +58,7 @@ const api = /** @type {any} */ (window).overlayApi;
 let rafId = 0;
 let finishing = false;
 
-api.onScene((payload) => playWalker(payload));
+api.onScene((payload) => (payload.isFlyer ? playFlyer(payload) : playWalker(payload)));
 api.onStop(() => finish(true));
 api.onMusic(({ url, loop }) => startMusic(url, loop));
 api.onMusicStop(() => stopMusic());
@@ -77,6 +90,9 @@ function renderBanner(p) {
   const when = p.minutesUntil <= 0 ? 'starting now' : `in ${p.minutesUntil} min`;
   bannerText.append(name, `${truncate(p.meetingTitle)} · ${when}`);
   banner.classList.toggle('urgent', p.urgent);
+  // Flyers tow the banner behind them; its tail points forward at the sprite.
+  banner.classList.toggle('trail-left', p.isFlyer && p.direction === 'ltr');
+  banner.classList.toggle('trail-right', p.isFlyer && p.direction === 'rtl');
   dismissBtn.hidden = !p.urgent;
   banner.hidden = false;
 }
@@ -164,31 +180,58 @@ function stopMusic() {
   });
 }
 
-/** @param {PassPayload} p */
-function playWalker(p) {
+/**
+ * Resets the shared state at the start of a pass and returns the sprite size.
+ * @param {PassPayload} p
+ */
+function startPass(p) {
   cancelAnimationFrame(rafId);
   finishing = false;
   stage.classList.remove('fade');
-
-  const W = window.innerWidth;
-  const H = window.innerHeight;
   const size = p.spriteSize * p.spriteScale;
   sprite.width = size;
   sprite.height = size;
+  sprite.style.setProperty('--tilt', '0deg');
   setSprite(p, 'walk');
   renderBanner(p);
+  return size;
+}
 
-  const ltr = p.direction === 'ltr';
-  const startX = ltr ? -size : W;
-  const endX = ltr ? W : -size;
+/**
+ * The pause beat shared by both scenes: idle GIF, banner pop, cry.
+ * @param {PassPayload} p
+ */
+function beginPause(p) {
+  setSprite(p, 'idle');
+  banner.classList.remove('pop');
+  void banner.offsetWidth; // restart the animation
+  banner.classList.add('pop');
+  if (p.playCry) playCry(p.cry);
+}
+
+/** Pauses mid-screen somewhere in the middle 30 % so repeat reminders don't look identical. */
+function randomStopFraction() {
+  return 0.35 + Math.random() * 0.3;
+}
+
+/** @param {PassPayload} p */
+function playWalker(p) {
+  const size = startPass(p);
+  const W = window.innerWidth;
+  const H = window.innerHeight;
   // Without a pause the sprite walks straight through to the far edge.
-  const stopX = p.pause ? W * (0.35 + Math.random() * 0.3) - size / 2 : endX;
-  const pauseMs = p.pause ? PAUSE_MS : 0;
-  const walkInMs = (Math.abs(stopX - startX) / WALK_PX_PER_SEC) * 1000;
-  const walkOutMs = (Math.abs(endX - stopX) / WALK_PX_PER_SEC) * 1000;
+  const plan = sceneMath.walkPlan({
+    W,
+    spriteW: size,
+    pxPerSec: WALK_PX_PER_SEC,
+    pauseMs: PAUSE_MS,
+    direction: p.direction,
+    pause: p.pause,
+    stopFraction: randomStopFraction(),
+  });
   const y = H - size;
 
-  /** @type {'walkIn' | 'pause' | 'walkOut'} */
+  /** @type {string} */
   let phase = 'walkIn';
   const t0 = performance.now();
   if (p.playCry && !p.pause) playCry(p.cry);
@@ -206,36 +249,95 @@ function playWalker(p) {
 
   /** @param {number} now */
   function frame(now) {
-    const t = now - t0;
-    let x;
-    if (t < walkInMs) {
-      x = startX + (stopX - startX) * (t / walkInMs);
-    } else if (t < walkInMs + pauseMs) {
-      x = stopX;
-      if (phase !== 'pause') {
-        phase = 'pause';
-        setSprite(p, 'idle');
-        banner.classList.remove('pop');
-        void banner.offsetWidth; // restart the animation
-        banner.classList.add('pop');
-        if (p.playCry) playCry(p.cry);
-      }
-    } else if (t < walkInMs + pauseMs + walkOutMs) {
-      if (phase !== 'walkOut') {
-        phase = 'walkOut';
-        setSprite(p, 'walk');
-      }
-      x = stopX + (endX - stopX) * ((t - walkInMs - pauseMs) / walkOutMs);
-    } else {
-      place(endX);
+    const pos = sceneMath.walkPosition(plan, now - t0);
+    if (pos.phase !== phase) {
+      phase = pos.phase;
+      if (phase === 'pause') beginPause(p);
+      else if (phase === 'walkOut') setSprite(p, 'walk');
+    }
+    place(pos.x);
+    if (phase === 'done') {
       finish(p.fadeOut);
       return;
     }
-    place(x);
     rafId = requestAnimationFrame(frame);
   }
 
-  place(startX);
+  place(plan.startX);
+  rafId = requestAnimationFrame(frame);
+}
+
+/**
+ * Flyers have no fly animation: the walk GIF (wings flap for birds and
+ * dragons) moves along a sine path through the upper half of the screen.
+ * On a paused pass the flyer hovers mid-screen, bobbing on its idle GIF.
+ * @param {PassPayload} p
+ */
+function playFlyer(p) {
+  const size = startPass(p);
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const bannerW = banner.offsetWidth;
+  const geometry = {
+    W,
+    spriteW: size,
+    bannerW,
+    bannerGap: BANNER_GAP_PX,
+    direction: p.direction,
+    cycles: FLY_CYCLES,
+    amplitude: FLY_AMPLITUDE_PX,
+    // altitude is the sprite centre as a fraction of the height; keep the whole curve on screen.
+    baseY: Math.min(Math.max(p.altitude * H - size / 2, FLY_AMPLITUDE_PX), H - size - FLY_AMPLITUDE_PX),
+  };
+  const plan = sceneMath.flightPlan({
+    ...geometry,
+    pxPerSec: FLY_PX_PER_SEC,
+    pauseMs: PAUSE_MS,
+    pause: p.pause,
+    stopFraction: randomStopFraction(),
+  });
+  const ltr = p.direction === 'ltr';
+
+  /** @type {string} */
+  let phase = 'flyIn';
+  let tilt = 0;
+  const t0 = performance.now();
+  if (p.playCry && !p.pause) playCry(p.cry);
+
+  /** @param {number} x @param {number} y */
+  function place(x, y) {
+    actor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    sprite.style.setProperty('--tilt', `${tilt.toFixed(2)}deg`);
+    const bh = banner.offsetHeight;
+    // The banner trails behind, vertically centred on the sprite.
+    const bx = ltr ? x - BANNER_GAP_PX - bannerW : x + size + BANNER_GAP_PX;
+    const by = y + size / 2 - bh / 2;
+    banner.style.transform = `translate3d(${bx}px, ${by}px, 0)`;
+  }
+
+  /** @param {number} now */
+  function frame(now) {
+    const prog = sceneMath.flightProgress(plan, now - t0);
+    if (prog.phase !== phase) {
+      phase = prog.phase;
+      if (phase === 'pause') beginPause(p);
+      else if (phase === 'flyOut') setSprite(p, 'walk');
+    }
+    const pose = sceneMath.flightPose(prog.u, geometry);
+    const hovering = phase === 'pause';
+    const bob = hovering ? HOVER_AMPLITUDE_PX * Math.sin((2 * Math.PI * prog.pauseT) / HOVER_PERIOD_MS) : 0;
+    tilt += ((hovering ? 0 : pose.tilt) - tilt) * TILT_SMOOTHING;
+    place(pose.x, pose.y + bob);
+    if (phase === 'done') {
+      finish(p.fadeOut);
+      return;
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+
+  const start = sceneMath.flightPose(0, geometry);
+  tilt = start.tilt;
+  place(start.x, start.y);
   rafId = requestAnimationFrame(frame);
 }
 

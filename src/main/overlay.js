@@ -15,18 +15,18 @@ const { BrowserWindow, ipcMain, screen } = require('electron');
  * @property {string | null} cry   file:// URL of the Pokémon's cry, or null
  * @property {string | null} music file:// URL of the background track, or null (battle theme when urgent)
  * @property {'ltr' | 'rtl'} direction
+ * @property {number} altitude     flyers: sprite centre as a fraction of the work-area height
  * @property {string} meetingTitle
  * @property {number} minutesUntil  0 = meeting starts now
  * @property {boolean} urgent       loop across the monitors until dismissed
  */
 
 /**
- * What one overlay window is told to play for one pass over its monitor.
- * @typedef {ScenePayload & {
- *   pause: boolean,    stop mid-screen, show idle sprite and pop the banner
- *   playCry: boolean,  play the cry on this window during this pass
- *   fadeOut: boolean,  fade the stage once the sprite leaves this monitor
- * }} PassPayload
+ * What one overlay window is told to play for one pass over its monitor:
+ *  - pause:   stop mid-screen, show idle sprite and pop the banner
+ *  - playCry: play the cry on this window during this pass
+ *  - fadeOut: fade the stage once the sprite leaves this monitor
+ * @typedef {ScenePayload & { pause: boolean, playCry: boolean, fadeOut: boolean }} PassPayload
  */
 
 const PASS_TIMEOUT_MS = 40_000;
