@@ -41,7 +41,7 @@ const GOOGLE_SETUP = [
   '4. Paste its client ID and secret into settings.json under "google" (clientId, clientSecret), then Connect Google again.',
   '',
   'Or set PMR_GOOGLE_CLIENT_ID / PMR_GOOGLE_CLIENT_SECRET in the environment.',
-  'To build it into the app for everyone you share it with, put them in src/main/oauth-clients.local.json instead (see oauth-clients.example.json).',
+  'To build it into the app for everyone you share it with, put them in src/main/oauth-clients.local.json instead (format documented in oauth-clients.js).',
 ].join('\n');
 
 const MICROSOFT_SETUP = [
@@ -55,7 +55,7 @@ const MICROSOFT_SETUP = [
   '4. Paste the Application (client) ID into settings.json under "microsoft" (clientId), then Connect Microsoft 365 again.',
   '',
   'Or set PMR_MS_CLIENT_ID in the environment.',
-  'To build it into the app for everyone you share it with, put it in src/main/oauth-clients.local.json instead (see oauth-clients.example.json).',
+  'To build it into the app for everyone you share it with, put it in src/main/oauth-clients.local.json instead (format documented in oauth-clients.js).',
   'Work accounts may need an admin to approve the app the first time.',
 ].join('\n');
 

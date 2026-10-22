@@ -7,7 +7,12 @@ const path = require('node:path');
  * Built-in OAuth clients, so people the app is shared with can "Connect
  * Google…" / "Connect Microsoft 365…" without registering their own. The
  * values live in the git-ignored oauth-clients.local.json next to this file
- * (see oauth-clients.example.json) and are bundled into the packaged app. For
+ * and are bundled into the packaged app:
+ *
+ *   { "google": { "clientId": "<id>.apps.googleusercontent.com", "clientSecret": "<secret>" },
+ *     "microsoft": { "clientId": "<azure-app-guid>" } }
+ *
+ * For
  * a Google "Desktop app" client the secret is not confidential (PKCE protects
  * the sign-in), but keeping it out of the public repo avoids leaked-credential
  * scanners revoking it. An Azure public client has no secret at all.

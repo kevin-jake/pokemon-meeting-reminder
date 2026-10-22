@@ -39,8 +39,11 @@ test('built-in clients load from the local file, or are empty without it', () =>
   fs.rmSync(dir, { recursive: true, force: true });
 });
 
-test('the example file has the shape the loader expects', () => {
-  const example = loadBuiltInClients(path.join(__dirname, '..', 'src', 'main', 'oauth-clients.example.json'));
+const EXAMPLE_FILE = path.join(__dirname, '..', 'src', 'main', 'oauth-clients.example.json');
+const noExample = !fs.existsSync(EXAMPLE_FILE) && 'oauth-clients.example.json is git-ignored and not present';
+
+test('the example file has the shape the loader expects', { skip: noExample }, () => {
+  const example = loadBuiltInClients(EXAMPLE_FILE);
   assert.match(example.google.clientId, /\.apps\.googleusercontent\.com$/);
 });
 
@@ -50,7 +53,7 @@ test('Microsoft client precedence: env, then settings.json, then built-in', () =
   assert.equal(resolveMicrosoftClient({ clientId: 'mine' }, { PMR_MS_CLIENT_ID: 'env' }, builtIn), 'env');
 });
 
-test('the example file carries a Microsoft client id too', () => {
-  const example = loadBuiltInClients(path.join(__dirname, '..', 'src', 'main', 'oauth-clients.example.json'));
+test('the example file carries a Microsoft client id too', { skip: noExample }, () => {
+  const example = loadBuiltInClients(EXAMPLE_FILE);
   assert.match(example.microsoft.clientId, /^[0-9a-f-]{36}$/);
 });
