@@ -29,6 +29,7 @@
  * @property {() => Promise<void>} connect      interactive browser sign-in
  * @property {() => Promise<void>} disconnect
  * @property {() => void} cancelConnect         abandons a sign-in that is still waiting on the browser
+ * @property {() => string | null} [signInUrl] the browser sign-in link while connecting, for copying by hand
  * @property {() => boolean} isConnected
  * @property {() => boolean} isConfigured       false until a client id is in settings
  * @property {() => boolean} isEnabled          false when switched off in settings

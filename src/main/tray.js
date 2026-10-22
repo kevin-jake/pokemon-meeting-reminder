@@ -16,6 +16,7 @@ const { app, Tray, Menu, nativeImage } = require('electron');
  * @property {(sourceId: string) => void} onReconnect
  * @property {(sourceId: string) => void} onDisconnect
  * @property {(sourceId: string) => void} onCancelConnect
+ * @property {(sourceId: string) => void} onCopySignInLink  pending browser sign-in URL → clipboard
  * @property {() => void} onCopyPairingCode       browser extension pairing code → clipboard
  * @property {() => void} onOpenExtensionFolder   for "Load unpacked" in Edge / Chrome
  * @property {() => void} onClearBrowserMeetings
@@ -71,7 +72,10 @@ function accountItem(a, handlers) {
     case 'connecting':
       return {
         label: `${a.name}: waiting for browser sign-in…`,
-        submenu: [{ label: 'Cancel sign-in', click: () => handlers.onCancelConnect(a.id) }],
+        submenu: [
+          { label: 'Copy sign-in link', click: () => handlers.onCopySignInLink(a.id) },
+          { label: 'Cancel sign-in', click: () => handlers.onCancelConnect(a.id) },
+        ],
       };
     case 'reconnect': {
       const isLink = a.provider === 'ical';
@@ -89,15 +93,17 @@ function accountItem(a, handlers) {
 }
 
 /**
- * Account rows, then each provider's "Connect…" (none yet) or "Add another…" item.
+ * One section per provider: its account rows, then its "Connect…" (none yet)
+ * or "Add another…" item. Sections are separated from each other.
  * @param {TrayAccount[]} accounts
  * @param {TrayHandlers} handlers
  * @returns {Electron.MenuItemConstructorOptions[]}
  */
 function accountItems(accounts, handlers) {
-  return PROVIDERS.flatMap((p) => {
+  return PROVIDERS.flatMap((p, i) => {
     const mine = accounts.filter((a) => a.provider === p.id);
     return [
+      ...(i > 0 ? [{ type: /** @type {const} */ ('separator') }] : []),
       ...mine.map((a) => accountItem(a, handlers)),
       {
         label: mine.length ? p.addLabel : p.connectLabel,
@@ -116,6 +122,7 @@ function accountItems(accounts, handlers) {
 function browserBridgeItems(label, handlers) {
   if (!label) return [];
   return [
+    { type: 'separator' },
     {
       label,
       submenu: [

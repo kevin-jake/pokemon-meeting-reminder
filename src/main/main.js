@@ -7,7 +7,7 @@ const { createOverlayQueue } = require('./overlay');
 const { createSettings } = require('./settings');
 const { mediaDir } = require('./media');
 const { pickSpecies, buildScene, speciesByGen } = require('./species');
-const { createSecureStore } = require('./secure-store');
+const { openSecureStore } = require('./secure-store');
 const { createGoogleAccounts } = require('./calendar/google-accounts');
 const { createIcalAccounts } = require('./calendar/ical-accounts');
 const { normalizeFeedUrl, maskFeedUrl } = require('./calendar/ical');
@@ -83,11 +83,19 @@ if (!app.requestSingleInstanceLock()) {
   // when the last overlay window is destroyed.
   app.on('window-all-closed', () => {});
 
-  app.whenReady().then(() => {
+  app.whenReady().then(async () => {
     const settings = createSettings();
     const overlays = createOverlayQueue({ openDevTools });
     const builtInClients = loadBuiltInClients();
-    const store = createSecureStore({ dir: path.join(app.getPath('userData'), 'secrets'), safeStorage });
+    const store = await openSecureStore({ dir: path.join(app.getPath('userData'), 'secrets'), safeStorage });
+    // Secrets are written in the background: hold the quit until they are on disk.
+    let flushed = false;
+    app.on('before-quit', (e) => {
+      if (flushed) return;
+      e.preventDefault();
+      flushed = true;
+      void store.flush().finally(() => app.quit());
+    });
 
     const google = createGoogleAccounts({
       getConfig: () => {
@@ -287,6 +295,14 @@ if (!app.requestSingleInstanceLock()) {
               })),
         onDisconnect: (id) => void disconnect(id),
         onCancelConnect: (id) => google.find(id)?.cancelConnect(),
+        onCopySignInLink: (id) => {
+          const url = google.find(id)?.signInUrl?.();
+          if (!url) return;
+          clipboard
+            .writeText(url)
+            .then(() => tray?.notify('Sign-in link copied. Paste it into the browser where you want to sign in to Google.'))
+            .catch((err) => dialog.showErrorBox('Could not copy the sign-in link', err instanceof Error ? err.message : String(err)));
+        },
         onCopyPairingCode: () => {
           clipboard
             .writeText(pairingCode(bridge.port(), settings.get().browserBridge.token))

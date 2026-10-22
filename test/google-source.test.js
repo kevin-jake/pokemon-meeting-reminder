@@ -141,6 +141,25 @@ test('cancelling a sign-in restores the previous state; disconnect revokes and f
   assert.equal(calls[0].url.searchParams.get('token'), 'rt');
 });
 
+test('the sign-in link can be copied only while the sign-in is waiting', async () => {
+  /** @type {string | null} */
+  let seen = null;
+  const g = createGoogleSource({
+    getConfig: config,
+    store: memoryStore(),
+    openExternal: async () =>
+      void setImmediate(() => {
+        seen = g.signInUrl?.() ?? null;
+        g.cancelConnect();
+      }),
+  });
+  assert.equal(g.signInUrl?.(), null);
+  await assert.rejects(g.connect(), /cancelled/);
+  assert.ok(seen && /** @type {string} */ (seen).startsWith('https://accounts.google.com/'));
+  assert.equal(new URL(/** @type {string} */ (seen)).searchParams.get('client_id'), 'cid');
+  assert.equal(g.signInUrl?.(), null);
+});
+
 test('connect refuses without a client id', async () => {
   const g = createGoogleSource({ getConfig: () => ({ ...config(), clientId: '' }), store: memoryStore(), openExternal: async () => {} });
   assert.equal(g.isConfigured(), false);

@@ -8,12 +8,19 @@ const path = require('node:path');
  * Electron safeStorage (DPAPI on Windows) at <dir>/<name>.bin. If encryption
  * is unavailable the secret is kept in memory for this session only and
  * never written in plaintext.
- * @param {{ dir: string, safeStorage: Pick<Electron.SafeStorage, 'isEncryptionAvailable' | 'encryptString' | 'decryptString'> }} opts
+ *
+ * safeStorage is only async now, so every secret is decrypted once up front
+ * and reads are served from memory; writes go to disk in the background, in
+ * order. `flush()` waits for them (call it before quitting).
+ * @param {{ dir: string, safeStorage: Pick<Electron.SafeStorage, 'isAsyncEncryptionAvailable' | 'encryptStringAsync' | 'decryptStringAsync'> }} opts
  */
-function createSecureStore({ dir, safeStorage }) {
-  /** @type {Map<string, string>} */
-  const memoryOnly = new Map();
-  let warned = false;
+async function openSecureStore({ dir, safeStorage }) {
+  /** Decrypted secrets; null = the file exists but no longer decrypts. @type {Map<string, string | null>} */
+  const cache = new Map();
+  const available = await safeStorage.isAsyncEncryptionAvailable().catch(() => false);
+  if (!available) console.warn('safeStorage encryption unavailable: credentials will not survive a restart.');
+  /** Disk writes and deletes, chained so they land in the order they were made. */
+  let queue = Promise.resolve();
 
   /** @param {string} name */
   const fileOf = (name) => {
@@ -21,51 +28,68 @@ function createSecureStore({ dir, safeStorage }) {
     return path.join(dir, `${name}.bin`);
   };
 
+  /** @param {string} name @param {string} value */
+  async function write(name, value) {
+    const file = fileOf(name);
+    const encrypted = await safeStorage.encryptStringAsync(value);
+    await fs.promises.mkdir(dir, { recursive: true });
+    await fs.promises.writeFile(`${file}.tmp`, encrypted);
+    await fs.promises.rename(`${file}.tmp`, file);
+  }
+
+  /** @param {() => Promise<void>} job @param {string} what */
+  function enqueue(job, what) {
+    queue = queue.then(job).catch((err) => console.warn(`Secret ${what} failed:`, err));
+  }
+
+  /** @type {string[]} */
+  let files = [];
+  try {
+    files = (await fs.promises.readdir(dir)).filter((f) => f.endsWith('.bin'));
+  } catch (err) {
+    if (/** @type {NodeJS.ErrnoException} */ (err).code !== 'ENOENT') console.warn('Secrets folder unreadable:', err);
+  }
+  await Promise.all(
+    files.map(async (f) => {
+      const name = f.slice(0, -'.bin'.length);
+      try {
+        const { result, shouldReEncrypt } = await safeStorage.decryptStringAsync(await fs.promises.readFile(path.join(dir, f)));
+        cache.set(name, result);
+        // The OS key was rotated: store it again under the current key.
+        if (shouldReEncrypt && available) enqueue(() => write(name, result), `"${name}" re-encrypt`);
+      } catch (err) {
+        console.warn(`Secret "${name}" unreadable:`, err);
+        cache.set(name, null);
+      }
+    }),
+  );
+
   return {
     /** @param {string} name @returns {string | null} */
     get(name) {
-      if (memoryOnly.has(name)) return /** @type {string} */ (memoryOnly.get(name));
-      try {
-        return safeStorage.decryptString(fs.readFileSync(fileOf(name)));
-      } catch (err) {
-        if (/** @type {NodeJS.ErrnoException} */ (err).code !== 'ENOENT') console.warn(`Secret "${name}" unreadable:`, err);
-        return null;
-      }
+      fileOf(name);
+      return cache.get(name) ?? null;
     },
-    /** @param {string} name @param {string} value @returns {boolean} true when persisted to disk */
+    /** @param {string} name @param {string} value @returns {boolean} true when it will be persisted to disk */
     set(name, value) {
-      if (!safeStorage.isEncryptionAvailable()) {
-        if (!warned) console.warn('safeStorage encryption unavailable: credentials will not survive a restart.');
-        warned = true;
-        memoryOnly.set(name, value);
-        return false;
-      }
-      memoryOnly.delete(name);
-      const file = fileOf(name);
-      fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(`${file}.tmp`, safeStorage.encryptString(value));
-      fs.renameSync(`${file}.tmp`, file);
-      return true;
+      fileOf(name);
+      cache.set(name, value);
+      if (available) enqueue(() => write(name, value), `"${name}" save`);
+      return available;
     },
     /** Names of the stored secrets that start with `prefix`, sorted. @param {string} prefix */
     list(prefix) {
-      /** @type {Set<string>} */
-      const names = new Set([...memoryOnly.keys()].filter((n) => n.startsWith(prefix)));
-      try {
-        for (const f of fs.readdirSync(dir)) {
-          if (f.endsWith('.bin') && f.startsWith(prefix)) names.add(f.slice(0, -'.bin'.length));
-        }
-      } catch (err) {
-        if (/** @type {NodeJS.ErrnoException} */ (err).code !== 'ENOENT') console.warn('Secrets folder unreadable:', err);
-      }
-      return [...names].sort();
+      return [...cache.keys()].filter((n) => n.startsWith(prefix)).sort();
     },
     /** @param {string} name */
     delete(name) {
-      memoryOnly.delete(name);
-      fs.rmSync(fileOf(name), { force: true });
+      const file = fileOf(name);
+      cache.delete(name);
+      enqueue(() => fs.promises.rm(file, { force: true }), `"${name}" delete`);
     },
+    /** Resolves once every save and delete so far has reached the disk. */
+    flush: () => queue,
   };
 }
 
-module.exports = { createSecureStore };
+module.exports = { openSecureStore };

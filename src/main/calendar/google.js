@@ -92,6 +92,9 @@ function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch, i
   let state = tokens ? 'connected' : 'disconnected';
   /** @type {(() => void) | null} */
   let cancelPending = null;
+  /** The browser sign-in URL while a connect() is waiting on it, so it can be copied. */
+  /** @type {string | null} */
+  let pendingUrl = null;
   /** @type {Promise<string> | null} */
   let refreshing = null;
   /** Bumped per connect() so a cancelled attempt never overwrites a newer one's state. */
@@ -236,7 +239,8 @@ function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch, i
         });
         // Reconnecting: preselect the account whose sign-in expired.
         if (tokens?.account) params.set('login_hint', tokens.account);
-        await openExternal(`${AUTH_URL}?${params}`);
+        pendingUrl = `${AUTH_URL}?${params}`;
+        await openExternal(pendingUrl);
         const code = await loopback.waitForCode();
         const json = await tokenRequest({
           grant_type: 'authorization_code',
@@ -259,7 +263,10 @@ function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch, i
         if (mine === connectAttempt) state = previous;
         throw err;
       } finally {
-        if (mine === connectAttempt) cancelPending = null;
+        if (mine === connectAttempt) {
+          cancelPending = null;
+          pendingUrl = null;
+        }
       }
     },
 
@@ -267,10 +274,13 @@ function createGoogleSource({ getConfig, store, openExternal, fetchFn = fetch, i
       cancelPending?.();
     },
 
+    signInUrl: () => (state === 'connecting' ? pendingUrl : null),
+
     async disconnect() {
       connectAttempt += 1; // an in-flight sign-in must not restore its old state
       cancelPending?.();
       cancelPending = null;
+      pendingUrl = null;
       const t = tokens;
       tokens = null;
       state = 'disconnected';
