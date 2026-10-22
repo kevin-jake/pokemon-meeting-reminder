@@ -3,6 +3,7 @@
 const { createPkce } = require('./pkce');
 const { startLoopback } = require('./loopback');
 const { ReconnectNeededError } = require('./types');
+const { findJoinUrlInText, safeHttpsUrl } = require('./meeting-links');
 
 /** @typedef {import('./types').CalendarEvent} CalendarEvent */
 /** @typedef {import('./types').CalendarSource} CalendarSource */
@@ -16,7 +17,9 @@ const SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
 const SECRET = 'google';
 const REFRESH_EARLY_MS = 60_000;
 const REQUEST_TIMEOUT_MS = 15_000;
-const EVENT_FIELDS = 'items(id,summary,start,end,status,eventType,attendees(self,responseStatus))';
+const EVENT_FIELDS =
+  'items(id,summary,start,end,status,eventType,attendees(self,responseStatus),' +
+  'htmlLink,hangoutLink,location,description,conferenceData(entryPoints(entryPointType,uri)))';
 /** Calendar blocks that are not meetings. */
 const SKIPPED_EVENT_TYPES = new Set(['workingLocation', 'outOfOffice', 'focusTime']);
 
@@ -45,7 +48,26 @@ function normalizeGoogleEvent(item, source = 'google') {
   const start = new Date(item.start.dateTime);
   if (Number.isNaN(start.getTime())) return null;
   const end = item.end?.dateTime ? new Date(item.end.dateTime) : start;
-  return { id: String(item.id), title: String(item.summary ?? '').trim() || '(No title)', start, end, source };
+  return {
+    id: String(item.id),
+    title: String(item.summary ?? '').trim() || '(No title)',
+    start,
+    end,
+    source,
+    joinUrl: googleJoinUrl(item),
+    link: safeHttpsUrl(item.htmlLink),
+  };
+}
+
+/**
+ * Join link: Google's conference data (Meet, or Zoom/Teams add-ons), then the
+ * legacy hangoutLink, then a known link pasted into the location/description.
+ * @param {any} item
+ */
+function googleJoinUrl(item) {
+  const entryPoints = Array.isArray(item.conferenceData?.entryPoints) ? item.conferenceData.entryPoints : [];
+  const video = entryPoints.find((/** @type {any} */ e) => e.entryPointType === 'video' && safeHttpsUrl(e.uri));
+  return safeHttpsUrl(video?.uri) ?? safeHttpsUrl(item.hangoutLink) ?? findJoinUrlInText([item.location, item.description]);
 }
 
 /**

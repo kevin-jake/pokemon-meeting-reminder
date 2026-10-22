@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
 const path = require('node:path');
-const { app, dialog, shell, safeStorage, powerMonitor, Notification } = require('electron');
+const { app, dialog, shell, safeStorage, powerMonitor } = require('electron');
 const { createTray } = require('./tray');
 const { createOverlayQueue } = require('./overlay');
 const { createSettings } = require('./settings');
@@ -13,6 +13,7 @@ const { createRegistry } = require('./calendar/registry');
 const { createReminderScheduler } = require('../shared/reminder-scheduler');
 const { createPoller, mergeTitles } = require('./poller');
 const { loadBuiltInClients, resolveGoogleClient } = require('./oauth-clients');
+const { createMeetingNotifier } = require('./notifications');
 
 const APP_ID = 'com.kevinc.pokemon-meeting-reminder';
 const openDevTools = process.argv.includes('--devtools');
@@ -77,12 +78,23 @@ if (!app.requestSingleInstanceLock()) {
       overlays.enqueue(buildScene(pick, { meetingTitle, minutesUntil, mediaDir: mediaDir() }));
     }
 
+    const notifier = createMeetingNotifier((url) => shell.openExternal(url));
+    /** @param {Parameters<typeof notifier.show>[0]} meeting */
+    const notify = (meeting) => {
+      if (settings.get().nativeNotification) notifier.show(meeting);
+    };
+
     /** @param {number} minutesUntil */
     const playTest = (minutesUntil) => playReminder('Test meeting', minutesUntil, forcedSpecies);
+    /** Test menu items also send a toast; clicking it opens Google Calendar. @param {number} minutesUntil */
+    const testReminder = (minutesUntil) => {
+      playTest(minutesUntil);
+      notify({ title: 'Test meeting', minutesUntil, link: 'https://calendar.google.com/' });
+    };
 
     function syncPrefs() {
-      const { favoriteSpecies, forceShiny } = settings.get();
-      tray?.setPrefs({ favoriteSpecies, forceShiny });
+      const { favoriteSpecies, forceShiny, nativeNotification } = settings.get();
+      tray?.setPrefs({ favoriteSpecies, forceShiny, nativeNotification });
     }
 
     function accounts() {
@@ -112,11 +124,10 @@ if (!app.requestSingleInstanceLock()) {
           const minutesUntil =
             kind === 'start' ? 0 : Math.max(1, Math.round((group[0].event.start.getTime() - now) / 60_000));
           playReminder(title, minutesUntil);
-          if (settings.get().nativeNotification && Notification.isSupported()) {
-            new Notification({
-              title: kind === 'start' ? `${title} is starting now` : `${title} in ${minutesUntil} min`,
-              silent: true,
-            }).show();
+          // One toast per meeting, so each one opens its own join link.
+          for (const { event } of group) {
+            const mins = kind === 'start' ? 0 : Math.max(1, Math.round((event.start.getTime() - now) / 60_000));
+            notify({ title: event.title, minutesUntil: mins, joinUrl: event.joinUrl, link: event.link });
           }
         }
       },
@@ -167,8 +178,8 @@ if (!app.requestSingleInstanceLock()) {
 
     tray = createTray(
       {
-        onTestReminder: () => playTest(5),
-        onTestMeetingNow: () => playTest(0),
+        onTestReminder: () => testReminder(5),
+        onTestMeetingNow: () => testReminder(0),
         onDismiss: () => overlays.dismiss(),
         onPickFavorite: (key) => {
           settings.update({ favoriteSpecies: key });
@@ -180,6 +191,10 @@ if (!app.requestSingleInstanceLock()) {
           settings.update({ forceShiny: on });
           syncPrefs();
         },
+        onToggleNotification: (on) => {
+          settings.update({ nativeNotification: on });
+          syncPrefs();
+        },
         onConnect: (id) => void connect(id),
         onDisconnect: (id) => void disconnect(id),
         onCancelConnect: (id) => registry.sources.find((s) => s.id === id)?.cancelConnect(),
@@ -187,7 +202,11 @@ if (!app.requestSingleInstanceLock()) {
       },
       {
         speciesByGen: speciesByGen(),
-        prefs: { favoriteSpecies: settings.get().favoriteSpecies, forceShiny: settings.get().forceShiny },
+        prefs: {
+          favoriteSpecies: settings.get().favoriteSpecies,
+          forceShiny: settings.get().forceShiny,
+          nativeNotification: settings.get().nativeNotification,
+        },
         accounts: accounts(),
       },
     );

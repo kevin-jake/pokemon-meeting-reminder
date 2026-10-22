@@ -23,7 +23,7 @@ const DEFAULTS = {
   favoriteSpecies: null,
   forceShiny: false,
   launchAtStartup: false,
-  nativeNotification: false,
+  nativeNotification: true,
   pollIntervalSec: 60,
   lookaheadMinutes: 60,
   google: { clientId: '', clientSecret: '', enabled: true, allCalendars: false },

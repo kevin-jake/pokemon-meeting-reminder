@@ -9,6 +9,8 @@
  * @property {Date} start
  * @property {Date} end
  * @property {string} source  CalendarSource id, e.g. 'google'
+ * @property {string | null} [joinUrl]  video-call link (Meet, Zoom, Teams, Webex), https only
+ * @property {string | null} [link]     the event's page in the provider's calendar UI, https only
  */
 
 /**
