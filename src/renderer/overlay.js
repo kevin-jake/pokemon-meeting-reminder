@@ -38,7 +38,8 @@ const CRY_VOLUME = 0.5;
 const MUSIC_VOLUME = 1;
 const MUSIC_DUCK_VOLUME = 0.2; // while the cry plays, so it stays audible
 const MUSIC_FADE_MS = 600;
-// media/pokeball_sprite_sheet.png: 6 stacked 64 px frames, closed ball (0) to open with the red beam (5).
+// media/all_balls_atlas.png: one column per ball type, each 6 stacked 64 px frames,
+// closed ball (0) to open with the red beam (5). Main picks the column per pass.
 const BALL_FRAME_PX = 64;
 const BALL_FRAMES = 6;
 const BALL_SCALE = 3;
@@ -95,7 +96,6 @@ let returning = null;
 const BALL_BOX_PX = BALL_FRAME_PX * BALL_SCALE;
 ball.style.width = `${BALL_BOX_PX}px`;
 ball.style.height = `${BALL_BOX_PX}px`;
-ball.style.backgroundSize = `${BALL_BOX_PX}px ${BALL_BOX_PX * BALL_FRAMES}px`;
 
 api.onScene((payload) => (payload.isFlyer ? playFlyer(payload) : playWalker(payload)));
 api.onStop(() => finish(true));
@@ -177,9 +177,12 @@ joinBtn.addEventListener('click', () => {
   api.join();
 });
 
+/** Column of the ball atlas used by the current recall. */
+let ballColumn = 0;
+
 /** @param {number} frame */
 function ballFrame(frame) {
-  return `0 ${-frame * BALL_BOX_PX}px`;
+  return `${-ballColumn * BALL_BOX_PX}px ${-frame * BALL_BOX_PX}px`;
 }
 
 /** Freezes the pass and starts the return-to-ball animation. */
@@ -203,7 +206,9 @@ async function playRecall(p) {
   // Keep the ball on screen even when the sprite is half off an edge.
   const cx = Math.min(Math.max(x + size / 2, BALL_RADIUS_PX), W - BALL_RADIUS_PX);
   const cy = p.isFlyer ? y + size / 2 : y + size - BALL_RADIUS_PX;
-  ball.style.backgroundImage = `url("${p.pokeball}")`;
+  ballColumn = p.pokeball.column;
+  ball.style.backgroundImage = `url("${p.pokeball.url}")`;
+  ball.style.backgroundSize = `${BALL_BOX_PX * p.pokeball.columns}px ${BALL_BOX_PX * BALL_FRAMES}px`;
   ball.style.backgroundPosition = ballFrame(BALL_FRAMES - 1);
   // left/top rather than a transform, so the pop and wobble below pivot on the ball itself.
   ball.style.left = `${cx - BALL_BOX_PX / 2}px`;

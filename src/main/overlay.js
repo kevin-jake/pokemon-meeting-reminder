@@ -13,7 +13,8 @@ const { BrowserWindow, ipcMain, screen } = require('electron');
  * @property {number} spriteScale  integer upscale factor
  * @property {{ walk: string, idle: string, walkLeft: string | null }} sprites  file:// URLs
  * @property {string | null} cry   file:// URL of the Pokémon's cry, or null
- * @property {string} pokeball     file:// URL of the Poké Ball sheet, for the return animation on Dismiss / Join
+ * @property {{ url: string, column: number, columns: number }} pokeball  file:// URL of the ball atlas and which
+ *   column (ball type) to use, for the return animation on Dismiss / Join
  * @property {string | null} music file:// URL of the background track, or null (battle theme when urgent)
  * @property {'ltr' | 'rtl'} direction
  * @property {number} altitude     flyers: sprite centre as a fraction of the work-area height

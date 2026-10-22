@@ -12,6 +12,35 @@ const MANIFEST = /** @type {ManifestEntry[]} */ (require('../shared/species-mani
 
 const SHINY_ODDS = 1 / 10;
 
+/** media/all_balls_atlas.png: one 64 px column per ball type (column 0 is the plain Poké Ball). */
+const BALL_ATLAS_COLUMNS = 27;
+
+/** Atlas columns with their own odds; every other column shares OTHER_BALL_ODDS evenly. */
+const BALL_ODDS = [
+  { column: 0, odds: 0.55 }, // Poké Ball
+  { column: 8, odds: 0.2 }, // Great Ball
+  { column: 26, odds: 0.13 }, // Ultra Ball
+  { column: 15, odds: 0.02 }, // Master Ball
+];
+const OTHER_BALL_ODDS = 0.1;
+
+/**
+ * Which atlas column (ball type) the Pokémon is recalled into.
+ * @param {() => number} [rng]
+ */
+function pickBallColumn(rng = Math.random) {
+  const r = rng();
+  // Compare against running totals rather than subtracting, so 0.75 lands on the Ultra Ball, not float noise.
+  let upTo = 0;
+  for (const { column, odds } of BALL_ODDS) {
+    upTo += odds;
+    if (r < upTo) return column;
+  }
+  const special = new Set(BALL_ODDS.map((b) => b.column));
+  const others = [...Array(BALL_ATLAS_COLUMNS).keys()].filter((c) => !special.has(c));
+  return others[Math.min(Math.floor(((r - upTo) / OTHER_BALL_ODDS) * others.length), others.length - 1)];
+}
+
 /** Most favorites the Settings page lets you pin. */
 const MAX_FAVORITES = 6;
 
@@ -69,7 +98,12 @@ function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, m
     spriteScale: entry.spriteSize === 64 ? 2 : 4,
     sprites: { walk: sprite('walk'), idle: sprite('idle'), walkLeft: entry.hasLeftFacing ? sprite('walk_left') : null },
     cry: fs.existsSync(cryFile) ? pathToFileURL(cryFile).href : null,
-    pokeball: pathToFileURL(path.join(mediaDir, 'pokeball_sprite_sheet.png')).href,
+    // A ball type by rarity each time, for the return animation.
+    pokeball: {
+      url: pathToFileURL(path.join(mediaDir, 'all_balls_atlas.png')).href,
+      column: pickBallColumn(rng),
+      columns: BALL_ATLAS_COLUMNS,
+    },
     // Battle theme only for the meeting-start alarm; the warning gets a calm track.
     music: pickTrack(mediaDir, urgent ? 'battle' : 'normal', rng),
     direction,
@@ -94,4 +128,4 @@ function speciesByGen(manifest = MANIFEST) {
   return [...groups.entries()].sort(([a], [b]) => a - b);
 }
 
-module.exports = { MANIFEST, MAX_FAVORITES, pickSpecies, spriteUrl, buildScene, speciesByGen };
+module.exports = { MANIFEST, BALL_ATLAS_COLUMNS, pickBallColumn, MAX_FAVORITES, pickSpecies, spriteUrl, buildScene, speciesByGen };

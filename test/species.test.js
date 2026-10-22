@@ -4,7 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const { fileURLToPath } = require('node:url');
-const { pickSpecies, buildScene, speciesByGen, MANIFEST } = require('../src/main/species');
+const { pickSpecies, buildScene, speciesByGen, MANIFEST, BALL_ATLAS_COLUMNS, pickBallColumn } = require('../src/main/species');
 
 const mediaDir = path.join(__dirname, '..', 'media');
 
@@ -66,6 +66,7 @@ test('buildScene scales giants x2 and others x4, and wires left-facing GIFs and 
   );
   assert.equal(togekiss.spriteScale, 4);
   assert.equal(togekiss.urgent, true);
+  assert.match(togekiss.pokeball.url, /all_balls_atlas.png$/);
   assert.match(/** @type {string} */ (togekiss.sprites.walkLeft), /gen4\/togekiss\/default_walk_left_8fps\.gif$/);
 });
 
@@ -90,4 +91,38 @@ test('buildScene carries the meeting link for the banner button', () => {
   const meetingLink = { url: 'https://meet.google.com/abc-defg-hij', kind: /** @type {const} */ ('join') };
   assert.deepEqual(buildScene(pick, { meetingTitle: 'x', minutesUntil: 5, mediaDir, meetingLink }).meetingLink, meetingLink);
   assert.equal(buildScene(pick, { meetingTitle: 'x', minutesUntil: 5, mediaDir }).meetingLink, null);
+});
+
+test('pickBallColumn: Poké 55 %, Great 20 %, Ultra 13 %, Master 2 %, the rest share 10 %', () => {
+  /** @param {number} r */
+  const at = (r) => pickBallColumn(() => r);
+  assert.equal(at(0), 0);
+  assert.equal(at(0.5499), 0);
+  assert.equal(at(0.55), 8);
+  assert.equal(at(0.7499), 8);
+  assert.equal(at(0.75), 26);
+  assert.equal(at(0.8799), 26);
+  assert.equal(at(0.88), 15);
+  assert.equal(at(0.8999), 15);
+  assert.equal(at(0.9), 1);
+  assert.equal(at(0.99999), 25);
+
+  /** @type {Map<number, number>} */
+  const counts = new Map();
+  const N = 100000;
+  for (let i = 0; i < N; i++) {
+    const c = at(i / N);
+    counts.set(c, (counts.get(c) ?? 0) + 1);
+  }
+  assert.equal(counts.size, BALL_ATLAS_COLUMNS);
+  assert.ok(Math.abs((counts.get(0) ?? 0) / N - 0.55) < 0.001);
+  assert.ok(Math.abs((counts.get(15) ?? 0) / N - 0.02) < 0.001);
+  for (const c of [1, 2, 14, 16, 25]) assert.ok(Math.abs((counts.get(c) ?? 0) / N - 0.1 / 23) < 0.001);
+});
+
+test('buildScene recalls into a ball from the atlas', () => {
+  const pick = { entry: manifest[0], shiny: false, direction: /** @type {const} */ ('ltr') };
+  const ball = buildScene(pick, { meetingTitle: 'x', minutesUntil: 5, mediaDir, rng: () => 0 }).pokeball;
+  assert.deepEqual(ball.column, 0);
+  assert.equal(ball.columns, BALL_ATLAS_COLUMNS);
 });
