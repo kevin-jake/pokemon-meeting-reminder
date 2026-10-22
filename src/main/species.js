@@ -53,6 +53,7 @@ function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, m
     spriteScale: entry.spriteSize === 64 ? 2 : 4,
     sprites: { walk: sprite('walk'), idle: sprite('idle'), walkLeft: entry.hasLeftFacing ? sprite('walk_left') : null },
     cry: fs.existsSync(cryFile) ? pathToFileURL(cryFile).href : null,
+    pokeball: pathToFileURL(path.join(mediaDir, 'pokeball_sprite_sheet.png')).href,
     // Battle theme only for the meeting-start alarm; the warning gets a calm track.
     music: pickTrack(mediaDir, urgent ? 'battle' : 'normal', rng),
     direction,

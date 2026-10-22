@@ -14,6 +14,7 @@ const { safeHttpsUrl } = require('./calendar/meeting-links');
  * @property {number} spriteScale  integer upscale factor
  * @property {{ walk: string, idle: string, walkLeft: string | null }} sprites  file:// URLs
  * @property {string | null} cry   file:// URL of the Pokémon's cry, or null
+ * @property {string} pokeball     file:// URL of the Poké Ball sheet, for the return animation on Dismiss / Join
  * @property {string | null} music file:// URL of the background track, or null (battle theme when urgent)
  * @property {'ltr' | 'rtl'} direction
  * @property {number} altitude     flyers: sprite centre as a fraction of the work-area height
@@ -41,7 +42,8 @@ const { safeHttpsUrl } = require('./calendar/meeting-links');
 const URGENT_PASSES = 1;
 const PASS_TIMEOUT_MS = 40_000;
 const MUSIC_START_TIMEOUT_MS = 2_000;
-const STOP_GRACE_MS = 1_000;
+// Long enough for the renderer's return-to-ball animation plus the stage fade.
+const STOP_GRACE_MS = 3_000;
 const NEVER = new Promise(() => {});
 const RENDERER_DIR = path.join(__dirname, '..', 'renderer');
 

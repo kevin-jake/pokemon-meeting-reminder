@@ -41,6 +41,19 @@ body {
   transform: rotate(var(--tilt, 0deg)) scaleX(-1);
 }
 
+/* Return animation on Dismiss / Join; sheet, size, position and frame are set from overlay.js. */
+#ball {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+#ball[hidden] {
+  display: none;
+}
+
 .banner {
   --pill: rgba(24, 24, 28, 0.9);
   box-sizing: border-box;

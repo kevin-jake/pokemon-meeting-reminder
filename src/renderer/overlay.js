@@ -11,6 +11,7 @@
  * A time-based rAF loop drives the motion (math in shared/scene-math.js); CSS
  * only handles the final opacity fade. The same window may be asked to play
  * several passes, so every play call resets the state.
+ * Dismiss / Join recalls the Pokémon into its Poké Ball before the fade.
  */
 
 /** @typedef {import('../main/overlay').PassPayload} PassPayload */
@@ -34,6 +35,18 @@ const CRY_VOLUME = 0.5;
 const MUSIC_VOLUME = 1;
 const MUSIC_DUCK_VOLUME = 0.2; // while the cry plays, so it stays audible
 const MUSIC_FADE_MS = 600;
+// media/pokeball_sprite_sheet.png: 6 stacked 64 px frames, closed ball (0) to open with the red beam (5).
+const BALL_FRAME_PX = 64;
+const BALL_FRAMES = 6;
+const BALL_SCALE = 3;
+const BALL_RADIUS_PX = 7 * BALL_SCALE; // the closed ball is 14 px across, centred in its frame
+const RETURN_BEAM_MS = 250;
+const RETURN_SHRINK_MS = 450;
+const RETURN_CLOSE_MS = 300;
+const RETURN_WOBBLE_MS = 450;
+// Same function list at both ends so the filter interpolates; the first one matches the CSS.
+const SPRITE_FILTER = 'brightness(1) sepia(0) saturate(1) hue-rotate(0deg) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.35))';
+const RECALL_FILTER = 'brightness(0.9) sepia(1) saturate(8) hue-rotate(-50deg) drop-shadow(0 0 8px rgba(255, 60, 60, 0.9))';
 
 const stage = /** @type {HTMLElement} */ (document.getElementById('stage'));
 const actor = /** @type {HTMLElement} */ (document.getElementById('actor'));
@@ -44,6 +57,7 @@ const bannerMeeting = /** @type {HTMLElement} */ (document.getElementById('banne
 const actions = /** @type {HTMLElement} */ (document.getElementById('banner-actions'));
 const joinBtn = /** @type {HTMLButtonElement} */ (document.getElementById('join'));
 const dismissBtn = /** @type {HTMLButtonElement} */ (document.getElementById('dismiss'));
+const ball = /** @type {HTMLElement} */ (document.getElementById('ball'));
 
 /**
  * @type {{
@@ -63,6 +77,17 @@ const api = /** @type {any} */ (window).overlayApi;
 
 let rafId = 0;
 let finishing = false;
+/** @type {PassPayload | null} */
+let current = null;
+/** Where the sprite was last placed; the Poké Ball appears there. */
+let actorBox = { x: 0, y: 0, size: 0 };
+/** @type {Promise<void> | null} set while the Pokémon is being recalled */
+let returning = null;
+
+const BALL_BOX_PX = BALL_FRAME_PX * BALL_SCALE;
+ball.style.width = `${BALL_BOX_PX}px`;
+ball.style.height = `${BALL_BOX_PX}px`;
+ball.style.backgroundSize = `${BALL_BOX_PX}px ${BALL_BOX_PX * BALL_FRAMES}px`;
 
 api.onScene((payload) => (payload.isFlyer ? playFlyer(payload) : playWalker(payload)));
 api.onStop(() => finish(true));
@@ -99,8 +124,78 @@ function updateClickable() {
   }
 }
 
-dismissBtn.addEventListener('click', () => api.dismiss());
-joinBtn.addEventListener('click', () => api.join());
+// Main is told right away (the link opens, the music fades); the scene:stop
+// that follows waits in finish() until the Pokémon is back in its ball.
+dismissBtn.addEventListener('click', () => {
+  recall();
+  api.dismiss();
+});
+joinBtn.addEventListener('click', () => {
+  recall();
+  api.join();
+});
+
+/** @param {number} frame */
+function ballFrame(frame) {
+  return `0 ${-frame * BALL_BOX_PX}px`;
+}
+
+/** Freezes the pass and starts the return-to-ball animation. */
+function recall() {
+  if (returning || finishing || !current) return;
+  cancelAnimationFrame(rafId);
+  banner.hidden = true;
+  updateClickable(); // the buttons are gone, so hand clicks back to the desktop
+  returning = playRecall(current).catch(() => {}); // cancelled by a new pass
+}
+
+/**
+ * Open ball with its beam at the Pokémon's feet (a flyer's centre), the
+ * Pokémon turns red and shrinks into it, the ball snaps shut and wobbles.
+ * @param {PassPayload} p
+ */
+async function playRecall(p) {
+  const { x, y, size } = actorBox;
+  const W = window.innerWidth;
+  // Keep the ball on screen even when the sprite is half off an edge.
+  const cx = Math.min(Math.max(x + size / 2, BALL_RADIUS_PX), W - BALL_RADIUS_PX);
+  const cy = p.isFlyer ? y + size / 2 : y + size - BALL_RADIUS_PX;
+  ball.style.backgroundImage = `url("${p.pokeball}")`;
+  ball.style.backgroundPosition = ballFrame(BALL_FRAMES - 1);
+  // left/top rather than a transform, so the pop and wobble below pivot on the ball itself.
+  ball.style.left = `${cx - BALL_BOX_PX / 2}px`;
+  ball.style.top = `${cy - BALL_BOX_PX / 2}px`;
+  ball.hidden = false;
+
+  ball.animate([{ scale: '0.3', opacity: 0 }, { scale: '1', opacity: 1 }], { duration: 150, easing: 'ease-out' });
+  await sprite.animate([{ filter: SPRITE_FILTER }, { filter: RECALL_FILTER }], {
+    duration: RETURN_BEAM_MS,
+    fill: 'forwards',
+  }).finished;
+
+  // `translate` and `scale` compose with the CSS tilt/flip transform, so the
+  // sprite shrinks about its centre while that centre slides into the ball.
+  const dx = cx - (x + size / 2);
+  const dy = cy - (y + size / 2);
+  await sprite.animate(
+    [
+      { translate: '0 0', scale: '1', opacity: 1 },
+      { translate: `${dx}px ${dy}px`, scale: '0', opacity: 0.4 },
+    ],
+    { duration: RETURN_SHRINK_MS, easing: 'ease-in', fill: 'forwards' },
+  ).finished;
+
+  await ball.animate([{ backgroundPosition: ballFrame(BALL_FRAMES - 1) }, { backgroundPosition: ballFrame(0) }], {
+    duration: RETURN_CLOSE_MS,
+    easing: `steps(${BALL_FRAMES - 1}, jump-start)`,
+    fill: 'forwards',
+  }).finished;
+
+  await ball.animate(
+    [{ rotate: '0deg' }, { rotate: '-20deg' }, { rotate: '15deg' }, { rotate: '-6deg' }, { rotate: '0deg' }],
+    { duration: RETURN_WOBBLE_MS, easing: 'ease-in-out' },
+  ).finished;
+}
 
 /** @param {string} title */
 function truncate(title) {
@@ -234,6 +329,10 @@ function stopMusic() {
 function startPass(p) {
   cancelAnimationFrame(rafId);
   finishing = false;
+  current = p;
+  returning = null;
+  for (const el of [sprite, ball]) for (const a of el.getAnimations()) a.cancel();
+  ball.hidden = true;
   stage.classList.remove('fade');
   const size = p.spriteSize * p.spriteScale;
   sprite.width = size;
@@ -287,6 +386,7 @@ function playWalker(p) {
   /** @param {number} x */
   function place(x) {
     actor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    actorBox = { x, y, size };
     const bw = banner.offsetWidth;
     const bh = banner.offsetHeight;
     // Keep the banner on screen even when the sprite is near the edges.
@@ -360,6 +460,7 @@ function playFlyer(p) {
   /** @param {number} x @param {number} y */
   function place(x, y) {
     actor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    actorBox = { x, y, size };
     sprite.style.setProperty('--tilt', `${tilt.toFixed(2)}deg`);
     const bh = banner.offsetHeight;
     // The banner trails behind, vertically centred on the sprite.
@@ -421,7 +522,12 @@ function finish(fade) {
     signalled = true;
     api.sceneDone();
   };
-  stage.addEventListener('transitionend', signal, { once: true });
-  setTimeout(signal, FADE_SAFETY_MS);
-  stage.classList.add('fade');
+  const fadeOut = () => {
+    stage.addEventListener('transitionend', signal, { once: true });
+    setTimeout(signal, FADE_SAFETY_MS);
+    stage.classList.add('fade');
+  };
+  // Let a recall finish before fading.
+  if (returning) void returning.then(fadeOut);
+  else fadeOut();
 }
