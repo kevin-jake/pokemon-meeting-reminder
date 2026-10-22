@@ -1,0 +1,159 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f4f4f6;
+  --card: #fff;
+  --text: #1c1c20;
+  --muted: #6b6b75;
+  --line: #e2e2e8;
+  --accent: #ffd84a;
+  --accent-text: #1c1c20;
+  --warn: #b42028;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1b1f;
+    --card: #26262c;
+    --text: #f2f2f4;
+    --muted: #a0a0aa;
+    --line: #3a3a42;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.4 'Segoe UI', system-ui, sans-serif;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+section {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+h2 {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+label.inline,
+span.inline {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+select,
+button {
+  font: inherit;
+  color: inherit;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+
+select {
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--muted);
+}
+
+button.primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.hint,
+.status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.status.warn,
+.state.warn {
+  color: var(--warn);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list:empty::before {
+  content: 'No calendars connected yet.';
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.account {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.account .who {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account .state {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.account .browser {
+  grid-column: 1 / -1;
+}
+
+.account .actions {
+  grid-column: 1 / -1;
+}

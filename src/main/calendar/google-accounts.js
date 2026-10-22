@@ -17,14 +17,26 @@ const PREFIX = 'google-';
  * @param {object} deps
  * @param {Parameters<typeof createGoogleSource>[0]['getConfig']} deps.getConfig
  * @param {Parameters<typeof createGoogleSource>[0]['store'] & { list(prefix: string): string[] }} deps.store
- * @param {(url: string) => Promise<void>} deps.openExternal
+ * @param {(url: string, sourceId: string) => Promise<void>} deps.openExternal  opens the sign-in page; the source id lets the caller pick a browser profile
  * @param {typeof fetch} [deps.fetchFn]
  * @param {() => string} [deps.newKey]
  */
 function createGoogleAccounts({ getConfig, store, openExternal, fetchFn, newKey = () => randomBytes(4).toString('hex') }) {
-  /** @param {string} key */
-  const make = (key) =>
-    createGoogleSource({ getConfig, store, openExternal, fetchFn, id: `google:${key}`, secretName: `${PREFIX}${key}` });
+  /**
+   * @param {string} key
+   * @param {(url: string) => Promise<void>} [openUrl]  overrides openExternal for this source
+   */
+  const make = (key, openUrl) => {
+    const id = `google:${key}`;
+    return createGoogleSource({
+      getConfig,
+      store,
+      openExternal: openUrl ?? ((url) => openExternal(url, id)),
+      fetchFn,
+      id,
+      secretName: `${PREFIX}${key}`,
+    });
+  };
   /** @param {CalendarSource} s */
   const secretOf = (s) => `${PREFIX}${s.id.slice('google:'.length)}`;
 
@@ -72,9 +84,10 @@ function createGoogleAccounts({ getConfig, store, openExternal, fetchFn, newKey 
      * Signs in a new account. Its row shows "waiting for browser sign-in…"
      * until it settles; a failed or cancelled sign-in leaves nothing behind.
      * @param {() => void} [onStarted]  called once the pending row exists
+     * @param {(url: string) => Promise<void>} [openUrl]  opens the sign-in page (e.g. in a chosen browser profile)
      */
-    async add(onStarted) {
-      const source = make(newKey());
+    async add(onStarted, openUrl) {
+      const source = make(newKey(), openUrl);
       list.push(source);
       const pending = source.connect();
       onStarted?.();

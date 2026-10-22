@@ -165,12 +165,22 @@ body {
   background: #ffe788;
 }
 
+/* Neutral on the dark pill; red text on the urgent (red) pill. */
 #dismiss {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+#dismiss:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.banner.urgent #dismiss {
   background: #fff;
   color: #8a1620;
 }
 
-#dismiss:hover {
+.banner.urgent #dismiss:hover {
   background: #ffe3e6;
 }
 

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'" />
+    <title>Settings · Pokémon Meeting Reminder</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <main>
+      <section>
+        <h2>Reminders</h2>
+        <label class="inline">
+          Alert
+          <select id="alertMinutes">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+          </select>
+          minutes before each meeting, and again when it starts
+        </label>
+        <label><input type="checkbox" id="nativeNotification" /> Also show a Windows notification</label>
+        <label><input type="checkbox" id="launchAtStartup" /> Launch at startup <span id="startupHint" class="hint"></span></label>
+        <div class="row">
+          <button type="button" data-action="testReminder" data-arg="5">Test: 5 min warning</button>
+          <button type="button" data-action="testReminder" data-arg="0">Test: meeting now</button>
+          <button type="button" data-action="dismiss">Dismiss reminder</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Pokémon</h2>
+        <label class="inline">Favorite <select id="favorite"></select></label>
+        <label><input type="checkbox" id="forceShiny" /> Always shiny</label>
+        <p class="hint">Random picks a different Pokémon every time (1 in 64 is shiny). Picking a favorite plays a preview.</p>
+      </section>
+
+      <section>
+        <h2>Calendars</h2>
+        <div id="accounts" class="list"></div>
+        <div class="row">
+          <button type="button" data-action="addGoogle" id="addGoogle">Add Google account…</button>
+          <span class="inline">sign in with <select id="addGoogleBrowser"></select></span>
+        </div>
+        <div class="row"><button type="button" data-action="addIcal">Add calendar link from clipboard…</button></div>
+        <p class="hint">
+          Each account chooses the browser profile its meeting links open in. Pick the profile that is signed in to that
+          account; "Default profile" uses the choice under Links.
+        </p>
+      </section>
+
+      <section>
+        <h2>Outlook / Teams (browser extension)</h2>
+        <p id="bridgeStatus" class="status"></p>
+        <label><input type="checkbox" id="bridgeEnabled" /> Capture meetings from Outlook on the web and Teams</label>
+        <label><input type="checkbox" id="toastReminders" /> Also play reminders for meeting toasts that match no captured meeting</label>
+        <label class="inline">Open links with <select id="bridgeBrowser"></select></label>
+        <div class="row">
+          <button type="button" data-action="copyPairingCode">Copy pairing code</button>
+          <button type="button" data-action="openExtensionFolder">Open extension folder</button>
+          <button type="button" data-action="forgetBrowserMeetings">Forget captured meetings</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Links</h2>
+        <label class="inline">Default profile <select id="defaultBrowser"></select></label>
+        <div class="row">
+          <button type="button" data-action="refreshBrowsers">Refresh profiles</button>
+          <button type="button" data-action="openSettingsFile">Open settings.json</button>
+        </div>
+        <p class="hint" id="profilesHint"></p>
+      </section>
+    </main>
+    <script src="settings.js"></script>
+  </body>
+</html>

@@ -212,12 +212,11 @@ function renderBanner(p) {
   // Flyers tow the banner behind them; its tail points forward at the sprite.
   banner.classList.toggle('trail-left', p.isFlyer && p.direction === 'ltr');
   banner.classList.toggle('trail-right', p.isFlyer && p.direction === 'rtl');
-  // "In N min" warnings get Dismiss; "starting now" alarms get Join, which also
-  // ends the alarm. An alarm with no link falls back to Dismiss so it can be closed.
-  joinBtn.hidden = !(p.urgent && p.meetingLink);
-  dismissBtn.hidden = !joinBtn.hidden;
+  // Every reminder can be dismissed; Join (which also ends it) needs a link.
+  joinBtn.hidden = !p.meetingLink;
+  dismissBtn.hidden = false;
   joinBtn.textContent = p.meetingLink?.kind === 'join' ? 'Join' : 'Open invite';
-  actions.hidden = dismissBtn.hidden && joinBtn.hidden;
+  actions.hidden = false;
   banner.hidden = false;
 }
 

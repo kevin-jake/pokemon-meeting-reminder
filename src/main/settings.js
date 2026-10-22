@@ -17,6 +17,8 @@ const { app } = require('electron');
  * @property {{ clientId: string, enabled: boolean }} microsoft
  * @property {{ enabled: boolean, refreshMinutes: number }} ical  calendars subscribed by private iCal link
  * @property {import('./calendar/browser-bridge').BridgeConfig} browserBridge  Outlook / Teams via the browser extension
+ * @property {string | null} defaultBrowser  browser profile id (see browsers.js) for links of unmapped accounts; null = system default browser
+ * @property {Record<string, string | null>} accountBrowsers  CalendarSource id → browser profile id
  */
 
 /** @type {Settings} */
@@ -32,6 +34,8 @@ const DEFAULTS = {
   microsoft: { clientId: '', enabled: true },
   ical: { enabled: true, refreshMinutes: 5 },
   browserBridge: { enabled: true, port: 47321, token: '', toastReminders: true },
+  defaultBrowser: null,
+  accountBrowsers: {},
 };
 
 /**

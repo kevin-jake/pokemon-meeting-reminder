@@ -1,8 +1,7 @@
 // @ts-check
 'use strict';
 const path = require('node:path');
-const { BrowserWindow, ipcMain, screen, shell } = require('electron');
-const { safeHttpsUrl } = require('./calendar/meeting-links');
+const { BrowserWindow, ipcMain, screen } = require('electron');
 
 /**
  * @typedef {object} ScenePayload
@@ -28,6 +27,7 @@ const { safeHttpsUrl } = require('./calendar/meeting-links');
  * @typedef {object} MeetingLink
  * @property {string} url          https only
  * @property {'join' | 'invite'} kind  join = video call, invite = the event in the calendar
+ * @property {string | null} source  CalendarSource id the meeting came from; picks the browser profile the link opens in
  */
 
 /**
@@ -219,9 +219,10 @@ async function playScene(payload, ctx) {
 /**
  * Serial queue so overlapping reminders never stack windows, plus the
  * dismiss signal shared by the tray menu and the on-screen button.
- * @param {{ openDevTools?: boolean }} [options]
+ * @param {{ openDevTools?: boolean, openLink: (link: MeetingLink) => void }} options
+ *   openLink opens the Join / Open invite target (main picks the browser profile)
  */
-function createOverlayQueue(options = {}) {
+function createOverlayQueue(options) {
   /** @type {ScenePayload[]} */
   const pending = [];
   let running = false;
@@ -240,8 +241,8 @@ function createOverlayQueue(options = {}) {
   // The Join / Open invite button. The renderer never sends a URL: main opens
   // the link of the scene it is playing, then ends the reminder.
   ipcMain.on('scene:join', () => {
-    const url = safeHttpsUrl(current?.payload.meetingLink?.url);
-    if (url) void shell.openExternal(url);
+    const link = current?.payload.meetingLink;
+    if (link) options.openLink(link);
     dismiss();
   });
   // The renderer toggles click-through while the cursor is over the Dismiss button.
