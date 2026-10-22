@@ -26,20 +26,30 @@
    */
 
   /**
+   * Where a parked sprite comes to rest: flush with the edge it is heading for.
+   * @param {{ W: number, spriteW: number, direction: Direction }} o
+   */
+  function parkX({ W, spriteW, direction }) {
+    return direction === 'ltr' ? W - spriteW : 0;
+  }
+
+  /**
    * A walker enters off-screen, optionally pauses with its centre at
    * `stopFraction` of the width, and leaves off-screen on the other side.
+   * With `park` it instead stops at the far edge and stays there for good
+   * (pauseMs and totalMs are Infinity).
    * @param {{ W: number, spriteW: number, pxPerSec: number, pauseMs: number, direction: Direction,
-   *   pause?: boolean, stopFraction?: number }} o
+   *   pause?: boolean, stopFraction?: number, park?: boolean }} o
    * @returns {WalkPlan}
    */
-  function walkPlan({ W, spriteW, pxPerSec, pauseMs, direction, pause = true, stopFraction = 0.5 }) {
+  function walkPlan({ W, spriteW, pxPerSec, pauseMs, direction, pause = true, stopFraction = 0.5, park = false }) {
     const ltr = direction === 'ltr';
     const startX = ltr ? -spriteW : W;
     const endX = ltr ? W : -spriteW;
-    const stopX = pause ? W * stopFraction - spriteW / 2 : endX;
+    const stopX = park ? parkX({ W, spriteW, direction }) : pause ? W * stopFraction - spriteW / 2 : endX;
     const walkInMs = (Math.abs(stopX - startX) / pxPerSec) * 1000;
-    const walkOutMs = (Math.abs(endX - stopX) / pxPerSec) * 1000;
-    const holdMs = pause ? pauseMs : 0;
+    const walkOutMs = park ? 0 : (Math.abs(endX - stopX) / pxPerSec) * 1000;
+    const holdMs = park ? Infinity : pause ? pauseMs : 0;
     return { startX, stopX, endX, walkInMs, pauseMs: holdMs, walkOutMs, totalMs: walkInMs + holdMs + walkOutMs };
   }
 
@@ -101,18 +111,19 @@
 
   /**
    * Timing for one flyer pass at constant ground speed, optionally hovering
-   * with its centre at `stopFraction` of the width.
+   * with its centre at `stopFraction` of the width. With `park` it hovers at
+   * the far edge for good instead (pauseMs and totalMs are Infinity).
    * @param {{ W: number, spriteW: number, bannerW: number, bannerGap?: number, direction: Direction,
-   *   pxPerSec: number, pauseMs: number, pause?: boolean, stopFraction?: number }} o
+   *   pxPerSec: number, pauseMs: number, pause?: boolean, stopFraction?: number, park?: boolean }} o
    * @returns {FlightPlan}
    */
   function flightPlan(o) {
-    const { W, spriteW, pxPerSec, pauseMs, pause = true, stopFraction = 0.5 } = o;
+    const { W, spriteW, pxPerSec, pauseMs, pause = true, stopFraction = 0.5, park = false } = o;
     const { startX, endX } = flightSpan(o);
     const travelMs = (Math.abs(endX - startX) / pxPerSec) * 1000;
-    const stopX = W * stopFraction - spriteW / 2;
-    const pauseAtU = pause ? clamp((stopX - startX) / (endX - startX), 0, 1) : 1;
-    const holdMs = pause ? pauseMs : 0;
+    const stopX = park ? parkX(o) : W * stopFraction - spriteW / 2;
+    const pauseAtU = park || pause ? clamp((stopX - startX) / (endX - startX), 0, 1) : 1;
+    const holdMs = park ? Infinity : pause ? pauseMs : 0;
     return { travelMs, pauseAtU, pauseMs: holdMs, totalMs: travelMs + holdMs };
   }
 
@@ -141,5 +152,5 @@
     return Math.min(hi, Math.max(lo, v));
   }
 
-  return { walkPlan, walkPosition, flightSpan, flightPose, flightPlan, flightProgress };
+  return { parkX, walkPlan, walkPosition, flightSpan, flightPose, flightPlan, flightProgress };
 });

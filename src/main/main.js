@@ -35,7 +35,7 @@ if (!app.requestSingleInstanceLock()) {
 
     /**
      * Test scenes stand in for real meetings until the calendar sources land (M3/M4).
-     * @param {number} minutesUntil  0 = the meeting is starting now (urgent, loops until dismissed)
+     * @param {number} minutesUntil  0 = the meeting is starting now (urgent: three passes, then parks until dismissed)
      */
     function playTest(minutesUntil) {
       const prefs = settings.get();

@@ -2,7 +2,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { walkPlan, walkPosition, flightPose, flightPlan, flightProgress } = require('../src/shared/scene-math');
+const { parkX, walkPlan, walkPosition, flightPose, flightPlan, flightProgress } = require('../src/shared/scene-math');
 
 const W = 1920;
 const spriteW = 128;
@@ -83,3 +83,25 @@ test('flightPlan without a pause never hovers', () => {
   assert.equal(plan.totalMs, plan.travelMs);
   for (let t = 0; t < plan.totalMs; t += 100) assert.notEqual(flightProgress(plan, t).phase, 'pause');
 });
+
+for (const direction of /** @type {const} */ (['ltr', 'rtl'])) {
+  test(`walkPlan with park (${direction}) stops flush with the far edge and stays there`, () => {
+    const plan = walkPlan({ W, spriteW, pxPerSec: 200, pauseMs: 2500, direction, park: true });
+    assert.equal(plan.stopX, direction === 'ltr' ? W - spriteW : 0);
+    assert.equal(plan.walkInMs, (W / 200) * 1000);
+    assert.equal(plan.totalMs, Infinity);
+    for (const t of [plan.walkInMs + 1, 60_000, 3_600_000]) {
+      assert.deepEqual(walkPosition(plan, t), { x: plan.stopX, phase: 'pause' });
+    }
+  });
+
+  test(`flightPlan with park (${direction}) hovers at the far edge for good`, () => {
+    const o = { W, spriteW, bannerW, bannerGap, direction, baseY: 300 };
+    const plan = flightPlan({ ...o, pxPerSec: 280, pauseMs: 2500, pause: false, park: true });
+    assert.equal(plan.totalMs, Infinity);
+    assert.ok(Math.abs(flightPose(plan.pauseAtU, o).x - parkX({ W, spriteW, direction })) < 1e-9);
+    const later = flightProgress(plan, 3_600_000);
+    assert.equal(later.phase, 'pause');
+    assert.equal(later.u, plan.pauseAtU);
+  });
+}

@@ -20,6 +20,9 @@ contextBridge.exposeInMainWorld('overlayApi', {
   onMusicStop(cb) {
     ipcRenderer.on('music:stop', () => cb());
   },
+  musicStarted() {
+    ipcRenderer.send('music:started');
+  },
   musicDone() {
     ipcRenderer.send('music:done');
   },

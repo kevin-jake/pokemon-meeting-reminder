@@ -30,7 +30,7 @@ const BANNER_GAP_PX = 10;
 const TITLE_MAX = 40;
 const FADE_SAFETY_MS = 1500;
 const CRY_VOLUME = 0.5;
-const MUSIC_VOLUME = 0.6;
+const MUSIC_VOLUME = 1;
 const MUSIC_DUCK_VOLUME = 0.2; // while the cry plays, so it stays audible
 const MUSIC_FADE_MS = 600;
 
@@ -47,6 +47,7 @@ const dismissBtn = /** @type {HTMLButtonElement} */ (document.getElementById('di
  *   onStop(cb: () => void): void,
  *   onMusic(cb: (m: { url: string, loop: boolean }) => void): void,
  *   onMusicStop(cb: () => void): void,
+ *   musicStarted(): void,
  *   musicDone(): void,
  *   sceneDone(): void,
  *   dismiss(): void,
@@ -154,17 +155,33 @@ function fadeMusic(target, ms, done) {
 }
 
 /**
+ * Tells main once the track is audible (or has failed), so the sprite can
+ * enter in sync with it.
  * @param {string} url
  * @param {boolean} loop  battle theme for the meeting-start alarm loops until dismissed
  */
 function startMusic(url, loop) {
   music?.pause();
   musicStopping = false;
-  music = new Audio(url);
-  music.loop = loop;
-  music.volume = 0;
-  music.play().catch((err) => console.warn('music failed', err));
-  fadeMusic(MUSIC_VOLUME, MUSIC_FADE_MS);
+  const audio = new Audio(url);
+  music = audio;
+  audio.loop = loop;
+  let signalled = false;
+  const started = () => {
+    if (signalled) return;
+    signalled = true;
+    api.musicStarted();
+  };
+  audio.addEventListener('playing', started, { once: true });
+  audio.addEventListener('error', started, { once: true });
+  // The battle theme hits at full volume the moment the sprite enters; the
+  // calmer "in N min" tracks fade in.
+  audio.volume = loop ? MUSIC_VOLUME : 0;
+  audio.play().catch((err) => {
+    console.warn('music failed', err);
+    started();
+  });
+  if (!loop) fadeMusic(MUSIC_VOLUME, MUSIC_FADE_MS);
 }
 
 function stopMusic() {
@@ -227,6 +244,7 @@ function playWalker(p) {
     pauseMs: PAUSE_MS,
     direction: p.direction,
     pause: p.pause,
+    park: p.park,
     stopFraction: randomStopFraction(),
   });
   const y = H - size;
@@ -234,7 +252,7 @@ function playWalker(p) {
   /** @type {string} */
   let phase = 'walkIn';
   const t0 = performance.now();
-  if (p.playCry && !p.pause) playCry(p.cry);
+  if (p.playCry && !p.pause && !p.park) playCry(p.cry);
 
   /** @param {number} x */
   function place(x) {
@@ -287,13 +305,17 @@ function playFlyer(p) {
     cycles: FLY_CYCLES,
     amplitude: FLY_AMPLITUDE_PX,
     // altitude is the sprite centre as a fraction of the height; keep the whole curve on screen.
-    baseY: Math.min(Math.max(p.altitude * H - size / 2, FLY_AMPLITUDE_PX), H - size - FLY_AMPLITUDE_PX),
+    // A parking flyer skims the bottom so it hovers in the lower corner (bob included).
+    baseY: p.park
+      ? H - size - FLY_AMPLITUDE_PX - HOVER_AMPLITUDE_PX
+      : Math.min(Math.max(p.altitude * H - size / 2, FLY_AMPLITUDE_PX), H - size - FLY_AMPLITUDE_PX),
   };
   const plan = sceneMath.flightPlan({
     ...geometry,
     pxPerSec: FLY_PX_PER_SEC,
     pauseMs: PAUSE_MS,
     pause: p.pause,
+    park: p.park,
     stopFraction: randomStopFraction(),
   });
   const ltr = p.direction === 'ltr';
@@ -302,7 +324,7 @@ function playFlyer(p) {
   let phase = 'flyIn';
   let tilt = 0;
   const t0 = performance.now();
-  if (p.playCry && !p.pause) playCry(p.cry);
+  if (p.playCry && !p.pause && !p.park) playCry(p.cry);
 
   /** @param {number} x @param {number} y */
   function place(x, y) {
