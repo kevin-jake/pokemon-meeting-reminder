@@ -90,3 +90,13 @@ test('poller fires due reminders, reports status and keeps cached events when ev
   assert.match(/** @type {string} */ (statuses.at(-1)), /google unavailable/);
   poller.stop();
 });
+
+test('dedupe keeps the first copy but borrows a join link from the duplicate it drops', () => {
+  const g = { ...ev('g1', NOW + 10 * MIN, 'google:a', 'Standup'), link: 'https://calendar.google.com/e/g1' };
+  const m = { ...ev('m1', NOW + 10 * MIN, 'microsoft:b', 'STANDUP'), joinUrl: 'https://teams.microsoft.com/l/meetup-join/x', link: 'https://outlook.office.com/m1' };
+  const [kept, ...rest] = dedupeEvents([g, m]);
+  assert.equal(rest.length, 0);
+  assert.equal(kept.id, 'g1');
+  assert.equal(kept.joinUrl, m.joinUrl);
+  assert.equal(kept.link, g.link);
+});

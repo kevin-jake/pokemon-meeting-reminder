@@ -5,13 +5,14 @@ const path = require('node:path');
 
 /**
  * Built-in OAuth clients, so people the app is shared with can "Connect
- * Google…" without registering their own. The values live in the git-ignored
- * oauth-clients.local.json next to this file (see oauth-clients.example.json)
- * and are bundled into the packaged app. For a Google "Desktop app" client
- * the secret is not confidential (PKCE protects the sign-in), but keeping it
- * out of the public repo avoids leaked-credential scanners revoking it.
+ * Google…" / "Connect Microsoft 365…" without registering their own. The
+ * values live in the git-ignored oauth-clients.local.json next to this file
+ * (see oauth-clients.example.json) and are bundled into the packaged app. For
+ * a Google "Desktop app" client the secret is not confidential (PKCE protects
+ * the sign-in), but keeping it out of the public repo avoids leaked-credential
+ * scanners revoking it. An Azure public client has no secret at all.
  *
- * @typedef {{ google: { clientId: string, clientSecret: string } }} BuiltInClients
+ * @typedef {{ google: { clientId: string, clientSecret: string }, microsoft: { clientId: string } }} BuiltInClients
  */
 
 const LOCAL_FILE = path.join(__dirname, 'oauth-clients.local.json');
@@ -28,10 +29,13 @@ function loadBuiltInClients(file = LOCAL_FILE) {
   // Also accept the client_secret_….json that Google Cloud Console downloads as-is.
   const g = raw.google ?? { clientId: raw.installed?.client_id, clientSecret: raw.installed?.client_secret };
   const google = { clientId: String(g.clientId ?? ''), clientSecret: String(g.clientSecret ?? '') };
-  if (!google.clientId && Object.keys(raw).length) {
-    console.warn('oauth-clients.local.json has no Google client id: expected {"google":{"clientId",…}} or Google\'s {"installed":{…}} download.');
+  const microsoft = { clientId: String(raw.microsoft?.clientId ?? '') };
+  if (!google.clientId && !microsoft.clientId && Object.keys(raw).length) {
+    console.warn(
+      'oauth-clients.local.json has no client id: expected {"google":{"clientId",…},"microsoft":{"clientId"}} or Google\'s {"installed":{…}} download.',
+    );
   }
-  return { google };
+  return { google, microsoft };
 }
 
 /**
@@ -48,4 +52,15 @@ function resolveGoogleClient(fromSettings, env, builtIn) {
   return { ...builtIn.google };
 }
 
-module.exports = { loadBuiltInClients, resolveGoogleClient };
+/**
+ * Effective Microsoft (Azure app registration) client id: environment, then
+ * settings.json, then the built-in client.
+ * @param {{ clientId: string }} fromSettings
+ * @param {NodeJS.ProcessEnv} env
+ * @param {BuiltInClients} builtIn
+ */
+function resolveMicrosoftClient(fromSettings, env, builtIn) {
+  return env.PMR_MS_CLIENT_ID || fromSettings.clientId || builtIn.microsoft.clientId;
+}
+
+module.exports = { loadBuiltInClients, resolveGoogleClient, resolveMicrosoftClient };
