@@ -30,8 +30,8 @@ const BANNER_GAP_PX = 10;
 const TITLE_MAX = 40;
 const FADE_SAFETY_MS = 1500;
 const CRY_VOLUME = 0.5;
-const MUSIC_VOLUME = 0.3;
-const MUSIC_DUCK_VOLUME = 0.1; // while the cry plays, so it stays audible
+const MUSIC_VOLUME = 0.6;
+const MUSIC_DUCK_VOLUME = 0.2; // while the cry plays, so it stays audible
 const MUSIC_FADE_MS = 600;
 
 const stage = /** @type {HTMLElement} */ (document.getElementById('stage'));
