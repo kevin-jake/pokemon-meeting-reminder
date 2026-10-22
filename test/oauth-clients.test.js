@@ -27,6 +27,14 @@ test('built-in clients load from the local file, or are empty without it', () =>
   assert.deepEqual(loadBuiltInClients(file), { google: empty });
   fs.writeFileSync(file, JSON.stringify(builtIn));
   assert.deepEqual(loadBuiltInClients(file), builtIn);
+  // The JSON Google Cloud Console downloads works unchanged.
+  fs.writeFileSync(
+    file,
+    JSON.stringify({
+      installed: { client_id: 'dl-id', project_id: 'p', auth_uri: 'https://accounts.google.com/o/oauth2/auth', client_secret: 'dl-secret', redirect_uris: ['http://localhost'] },
+    }),
+  );
+  assert.deepEqual(loadBuiltInClients(file), { google: { clientId: 'dl-id', clientSecret: 'dl-secret' } });
   fs.rmSync(dir, { recursive: true, force: true });
 });
 

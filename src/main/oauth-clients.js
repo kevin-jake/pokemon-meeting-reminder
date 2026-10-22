@@ -25,9 +25,13 @@ function loadBuiltInClients(file = LOCAL_FILE) {
   } catch (err) {
     if (/** @type {NodeJS.ErrnoException} */ (err).code !== 'ENOENT') console.warn('oauth-clients.local.json unreadable:', err);
   }
-  return {
-    google: { clientId: String(raw.google?.clientId ?? ''), clientSecret: String(raw.google?.clientSecret ?? '') },
-  };
+  // Also accept the client_secret_….json that Google Cloud Console downloads as-is.
+  const g = raw.google ?? { clientId: raw.installed?.client_id, clientSecret: raw.installed?.client_secret };
+  const google = { clientId: String(g.clientId ?? ''), clientSecret: String(g.clientSecret ?? '') };
+  if (!google.clientId && Object.keys(raw).length) {
+    console.warn('oauth-clients.local.json has no Google client id: expected {"google":{"clientId",…}} or Google\'s {"installed":{…}} download.');
+  }
+  return { google };
 }
 
 /**
