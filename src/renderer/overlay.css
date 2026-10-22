@@ -41,7 +41,10 @@ body {
 
 .banner {
   box-sizing: border-box;
-  max-width: 520px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 600px;
   padding: 10px 18px;
   border-radius: 999px;
   background: rgba(24, 24, 28, 0.9);
@@ -49,6 +52,11 @@ body {
   font: 600 16px/1.2 'Segoe UI', system-ui, sans-serif;
   white-space: nowrap;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* display:flex above would otherwise beat the hidden attribute. */
+.banner[hidden] {
+  display: none;
 }
 
 /* Small tail pointing down at the Pokémon's head. */
@@ -67,8 +75,33 @@ body {
   color: #ffd84a;
 }
 
+.banner.urgent {
+  background: rgba(180, 32, 40, 0.94);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.banner.urgent::after {
+  border-top-color: rgba(180, 32, 40, 0.94);
+}
+
 .banner.pop {
   animation: pop 0.35s ease-out;
+}
+
+/* The only element that receives clicks; main toggles click-through when the cursor is over it. */
+#dismiss {
+  pointer-events: auto;
+  cursor: pointer;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #8a1620;
+  font: 700 14px/1 'Segoe UI', system-ui, sans-serif;
+}
+
+#dismiss:hover {
+  background: #ffe3e6;
 }
 
 @keyframes pop {
@@ -80,5 +113,15 @@ body {
   }
   100% {
     scale: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+  50% {
+    box-shadow: 0 6px 28px rgba(255, 70, 80, 0.75);
   }
 }

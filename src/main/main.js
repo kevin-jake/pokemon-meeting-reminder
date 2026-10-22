@@ -29,23 +29,28 @@ if (!app.requestSingleInstanceLock()) {
   app.whenReady().then(() => {
     const overlays = createOverlayQueue({ openDevTools });
     tray = createTray({
-      onTestReminder: () => overlays.enqueue(buildTestScene()),
+      onTestReminder: () => overlays.enqueue(buildTestScene(5)),
+      onTestMeetingNow: () => overlays.enqueue(buildTestScene(0)),
+      onDismiss: () => overlays.dismiss(),
       onQuit: () => app.quit(),
     });
     tray.setStatus('Next: calendar not connected yet');
-    // `npm start -- --test` plays a reminder right away (handy while iterating on scenes).
-    if (process.argv.includes('--test')) overlays.enqueue(buildTestScene());
+    // `npm start -- --test` / `--test-now` play a reminder right away (handy while iterating on scenes).
+    if (process.argv.includes('--test')) overlays.enqueue(buildTestScene(5));
+    if (process.argv.includes('--test-now')) overlays.enqueue(buildTestScene(0));
   });
 }
 
 /**
  * M1: hardcoded Pikachu scene. M2 replaces this with species.pickSpecies().
+ * @param {number} minutesUntil  0 = the meeting is starting now (urgent, loops until dismissed)
  * @returns {import('./overlay').ScenePayload}
  */
-function buildTestScene() {
+function buildTestScene(minutesUntil) {
   const shiny = Math.random() < 1 / 64;
   const variant = shiny ? 'shiny' : 'default';
-  const spriteDir = path.join(app.getAppPath(), 'media', 'gen1', 'pikachu');
+  const mediaDir = path.join(app.getAppPath(), 'media');
+  const spriteDir = path.join(mediaDir, 'gen1', 'pikachu');
   /** @param {string} state */
   const url = (state) => pathToFileURL(path.join(spriteDir, `${variant}_${state}_8fps.gif`)).href;
   return {
@@ -56,8 +61,11 @@ function buildTestScene() {
     spriteSize: 32,
     spriteScale: 4,
     sprites: { walk: url('walk'), idle: url('idle'), walkLeft: null },
+    // PokeAPI/cries files are keyed by National Dex number; Pikachu is 25.
+    cry: pathToFileURL(path.join(mediaDir, 'cries', '25.ogg')).href,
     direction: Math.random() < 0.5 ? 'ltr' : 'rtl',
     meetingTitle: 'Test meeting',
-    minutesUntil: 5,
+    minutesUntil,
+    urgent: minutesUntil <= 0,
   };
 }

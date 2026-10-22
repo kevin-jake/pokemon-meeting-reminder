@@ -8,7 +8,18 @@ contextBridge.exposeInMainWorld('overlayApi', {
   onScene(cb) {
     ipcRenderer.on('scene:play', (_event, payload) => cb(payload));
   },
+  /** @param {() => void} cb */
+  onStop(cb) {
+    ipcRenderer.on('scene:stop', () => cb());
+  },
   sceneDone() {
     ipcRenderer.send('scene:done');
+  },
+  dismiss() {
+    ipcRenderer.send('scene:dismiss');
+  },
+  /** @param {boolean} clickable */
+  setClickable(clickable) {
+    ipcRenderer.send('overlay:clickable', clickable);
   },
 });

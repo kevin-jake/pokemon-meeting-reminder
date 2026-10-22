@@ -12,12 +12,24 @@ const { BrowserWindow, ipcMain, screen } = require('electron');
  * @property {number} spriteSize   native sprite size in px (32 or 64)
  * @property {number} spriteScale  integer upscale factor
  * @property {{ walk: string, idle: string, walkLeft: string | null }} sprites  file:// URLs
+ * @property {string | null} cry   file:// URL of the Pokémon's cry, or null
  * @property {'ltr' | 'rtl'} direction
  * @property {string} meetingTitle
- * @property {number} minutesUntil
+ * @property {number} minutesUntil  0 = meeting starts now
+ * @property {boolean} urgent       loop across the monitors until dismissed
  */
 
-const SCENE_TIMEOUT_MS = 40_000;
+/**
+ * What one overlay window is told to play for one pass over its monitor.
+ * @typedef {ScenePayload & {
+ *   pause: boolean,    stop mid-screen, show idle sprite and pop the banner
+ *   playCry: boolean,  play the cry on this window during this pass
+ *   fadeOut: boolean,  fade the stage once the sprite leaves this monitor
+ * }} PassPayload
+ */
+
+const PASS_TIMEOUT_MS = 40_000;
+const STOP_GRACE_MS = 1_000;
 const RENDERER_DIR = path.join(__dirname, '..', 'renderer');
 
 /**
@@ -25,10 +37,11 @@ const RENDERER_DIR = path.join(__dirname, '..', 'renderer');
  *  - never call maximize() on a transparent window; pass final bounds in the constructor instead
  *  - never call app.disableHardwareAcceleration(); transparency breaks without the GPU path
  *  - frame:false + thickFrame:false, and html/body must have background: transparent
+ * @param {Electron.Display} display
  * @param {boolean} openDevTools
  */
-function createOverlayWindow(openDevTools) {
-  const { x, y, width, height } = screen.getPrimaryDisplay().workArea; // DIP, excludes the taskbar
+function createOverlayWindow(display, openDevTools) {
+  const { x, y, width, height } = display.workArea; // DIP, excludes that monitor's taskbar
   const win = new BrowserWindow({
     x,
     y,
@@ -56,7 +69,9 @@ function createOverlayWindow(openDevTools) {
       backgroundThrottling: false,
     },
   });
-  win.setIgnoreMouseEvents(true); // click-through
+  // Click-through, but keep forwarding mouse moves so the renderer can ask to
+  // become clickable while the cursor is over the Dismiss button.
+  win.setIgnoreMouseEvents(true, { forward: true });
   win.setAlwaysOnTop(true, 'screen-saver');
   win.setMenuBarVisibility(false);
   if (openDevTools) win.webContents.openDevTools({ mode: 'detach' });
@@ -64,62 +79,151 @@ function createOverlayWindow(openDevTools) {
   return win;
 }
 
-/**
- * Plays one scene: create, ready-to-show, showInactive, scene:play,
- * wait for scene:done (or the hard timeout), destroy.
- * @param {ScenePayload} payload
- * @param {boolean} openDevTools
- * @returns {Promise<void>}
- */
-function playScene(payload, openDevTools) {
+/** @param {BrowserWindow} win */
+function whenReadyToShow(win) {
   return new Promise((resolve) => {
-    const win = createOverlayWindow(openDevTools);
-    const contents = win.webContents;
-    let finished = false;
-
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      clearTimeout(timer);
-      ipcMain.removeListener('scene:done', onDone);
-      if (!win.isDestroyed()) win.destroy();
-      resolve();
-    };
-    /** @param {Electron.IpcMainEvent} event */
-    const onDone = (event) => {
-      if (event.sender === contents) finish();
-    };
-    const timer = setTimeout(finish, SCENE_TIMEOUT_MS);
-
-    ipcMain.on('scene:done', onDone);
-    win.once('closed', finish);
-    win.once('ready-to-show', () => {
-      win.setAlwaysOnTop(true, 'screen-saver'); // re-assert on show; Windows can drop it
-      win.showInactive(); // never steal focus from the user's current window
-      contents.send('scene:play', payload);
-    });
+    win.once('ready-to-show', resolve);
+    win.once('closed', resolve);
   });
 }
 
 /**
- * Serial queue so overlapping reminders never stack windows.
+ * Resolves when `channel` arrives from `win`, when the abort promise settles,
+ * when the window closes, or after `timeoutMs`.
+ * @param {BrowserWindow} win
+ * @param {string} channel
+ * @param {Promise<void>} abort
+ * @param {number} timeoutMs
+ */
+function waitFor(win, channel, abort, timeoutMs) {
+  return new Promise((resolve) => {
+    /** @param {Electron.IpcMainEvent} event */
+    const onMessage = (event) => {
+      if (!win.isDestroyed() && event.sender === win.webContents) finish();
+    };
+    const finish = () => {
+      clearTimeout(timer);
+      ipcMain.removeListener(channel, onMessage);
+      win.removeListener('closed', finish);
+      resolve(undefined);
+    };
+    const timer = setTimeout(finish, timeoutMs);
+    ipcMain.on(channel, onMessage);
+    win.once('closed', finish);
+    abort.then(finish);
+  });
+}
+
+/**
+ * Plays one reminder across every monitor. One transparent window per
+ * display is created up front and shown; the sprite is then sent through the
+ * windows one after another in x order, so it appears to walk from monitor
+ * to monitor. It pauses (idle sprite, banner pop, cry) only on the monitor
+ * under the mouse cursor. Urgent scenes repeat, reversing direction each
+ * pass, until the user dismisses them.
+ * @param {ScenePayload} payload
+ * @param {{ openDevTools: boolean, dismissed: Promise<void>, isDismissed: () => boolean }} ctx
+ */
+async function playScene(payload, ctx) {
+  const activeDisplay = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+  const windows = screen.getAllDisplays().map((display) => ({
+    display,
+    win: createOverlayWindow(display, ctx.openDevTools),
+  }));
+
+  try {
+    await Promise.all(windows.map((w) => whenReadyToShow(w.win)));
+    for (const { win } of windows) {
+      if (win.isDestroyed()) continue;
+      win.setAlwaysOnTop(true, 'screen-saver'); // re-assert on show; Windows can drop it
+      win.showInactive(); // never steal focus from the user's current window
+    }
+
+    let direction = payload.direction;
+    let pass = 0;
+    do {
+      const order = [...windows].sort((a, b) =>
+        direction === 'ltr' ? a.display.bounds.x - b.display.bounds.x : b.display.bounds.x - a.display.bounds.x,
+      );
+      for (const [i, { display, win }] of order.entries()) {
+        if (ctx.isDismissed() || win.isDestroyed()) break;
+        const isActive = display.id === activeDisplay.id;
+        /** @type {PassPayload} */
+        const pass_ = {
+          ...payload,
+          direction,
+          // Urgent scenes keep moving after the first pass so they read as an alarm.
+          pause: isActive && (!payload.urgent || pass === 0),
+          playCry: isActive,
+          fadeOut: !payload.urgent && i === order.length - 1,
+        };
+        win.webContents.send('scene:play', pass_);
+        await waitFor(win, 'scene:done', ctx.dismissed, PASS_TIMEOUT_MS);
+      }
+      direction = direction === 'ltr' ? 'rtl' : 'ltr';
+      pass += 1;
+    } while (payload.urgent && !ctx.isDismissed());
+
+    if (payload.urgent) {
+      // Dismissed mid-pass: let every window fade before tearing down.
+      const live = windows.filter((w) => !w.win.isDestroyed());
+      for (const { win } of live) win.webContents.send('scene:stop');
+      await Promise.all(live.map((w) => waitFor(w.win, 'scene:done', new Promise(() => {}), STOP_GRACE_MS)));
+    }
+  } finally {
+    for (const { win } of windows) if (!win.isDestroyed()) win.destroy();
+  }
+}
+
+/**
+ * Serial queue so overlapping reminders never stack windows, plus the
+ * dismiss signal shared by the tray menu and the on-screen button.
  * @param {{ openDevTools?: boolean }} [options]
  */
 function createOverlayQueue(options = {}) {
   /** @type {ScenePayload[]} */
   const pending = [];
   let running = false;
+  /** @type {{ promise: Promise<void>, resolve: () => void, done: boolean } | null} */
+  let current = null;
+
+  function dismiss() {
+    if (current && !current.done) {
+      current.done = true;
+      current.resolve();
+    }
+  }
+
+  // The Dismiss button in any overlay window.
+  ipcMain.on('scene:dismiss', dismiss);
+  // The renderer toggles click-through while the cursor is over the Dismiss button.
+  ipcMain.on('overlay:clickable', (event, /** @type {boolean} */ clickable) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (win && !win.isDestroyed()) win.setIgnoreMouseEvents(!clickable, { forward: true });
+  });
 
   async function drain() {
     if (running) return;
     running = true;
     while (pending.length) {
       const next = /** @type {ScenePayload} */ (pending.shift());
+      /** @type {() => void} */
+      let resolve = () => {};
+      const promise = new Promise((r) => {
+        resolve = () => r(undefined);
+      });
+      current = { promise, resolve, done: false };
+      const ctx = {
+        openDevTools: Boolean(options.openDevTools),
+        dismissed: promise,
+        isDismissed: () => Boolean(current?.done),
+      };
       try {
-        await playScene(next, Boolean(options.openDevTools));
+        await playScene(next, ctx);
       } catch (err) {
         console.error('Overlay scene failed:', err);
       }
+      current = null;
     }
     running = false;
   }
@@ -130,6 +234,9 @@ function createOverlayQueue(options = {}) {
       pending.push(payload);
       void drain();
     },
+    /** Stops the scene that is playing now (urgent loops end here). */
+    dismiss,
+    isPlaying: () => current !== null,
   };
 }
 

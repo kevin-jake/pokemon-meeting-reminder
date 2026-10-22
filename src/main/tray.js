@@ -5,7 +5,9 @@ const { app, Tray, Menu, nativeImage } = require('electron');
 
 /**
  * @typedef {object} TrayHandlers
- * @property {() => void} onTestReminder
+ * @property {() => void} onTestReminder      5-minute warning scene
+ * @property {() => void} onTestMeetingNow    meeting-start scene (loops until dismissed)
+ * @property {() => void} onDismiss
  * @property {() => void} onQuit
  */
 
@@ -32,7 +34,10 @@ function createTray(handlers) {
       Menu.buildFromTemplate([
         { label: status, enabled: false },
         { type: 'separator' },
-        { label: 'Test reminder', click: handlers.onTestReminder },
+        { label: 'Dismiss reminder', click: handlers.onDismiss },
+        { type: 'separator' },
+        { label: 'Test reminder (5 min warning)', click: handlers.onTestReminder },
+        { label: 'Test reminder (meeting now)', click: handlers.onTestMeetingNow },
         { type: 'separator' },
         { label: 'Quit', click: handlers.onQuit },
       ]),
