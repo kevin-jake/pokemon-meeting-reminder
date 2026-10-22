@@ -84,10 +84,10 @@ function createSettingsWindow({ getState, update, action, openDevTools = false }
       return;
     }
     win = new BrowserWindow({
-      width: 600,
-      height: 760,
+      width: 880,
+      height: 700,
       minWidth: 480,
-      minHeight: 400,
+      minHeight: 420,
       title: 'Settings · Pokémon Meeting Reminder',
       autoHideMenuBar: true,
       show: false,

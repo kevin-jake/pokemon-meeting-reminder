@@ -7,78 +7,354 @@
     <link rel="stylesheet" href="settings.css" />
   </head>
   <body>
-    <main>
-      <section>
-        <h2>Reminders</h2>
-        <label class="inline">
-          Alert
-          <select id="alertMinutes">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-          </select>
-          minutes before each meeting, and again when it starts
-        </label>
-        <label><input type="checkbox" id="nativeNotification" /> Also show a Windows notification</label>
-        <label><input type="checkbox" id="launchAtStartup" /> Launch at startup <span id="startupHint" class="hint"></span></label>
-        <label class="stacked" for="ignoredTitles">No reminder for meetings titled (one per line)</label>
-        <textarea id="ignoredTitles" rows="4" spellcheck="false" placeholder="Focus time (company-wide)"></textarea>
-        <p class="hint">Case doesn't matter. Use * as a wildcard, e.g. "Lunch*" skips every title starting with Lunch.</p>
-        <div class="row">
-          <button type="button" data-action="testReminder" data-arg="5">Test: 5 min warning</button>
-          <button type="button" data-action="testReminder" data-arg="0">Test: meeting now</button>
-          <button type="button" data-action="dismiss">Dismiss reminder</button>
+    <div class="layout">
+      <nav class="sidebar" aria-label="Settings sections">
+        <div class="brand">
+          <svg class="icon brand-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h6M15 12h6" /><circle cx="12" cy="12" r="3" /></svg>
+          <span class="brand-text">Settings</span>
         </div>
-      </section>
+        <button type="button" class="nav-item" data-section="general" title="General">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4" /></svg>
+          <span class="nav-label">General</span>
+        </button>
+        <button type="button" class="nav-item" data-section="reminders" title="Reminders">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>
+          <span class="nav-label">Reminders</span>
+        </button>
+        <button type="button" class="nav-item" data-section="pokemon" title="Pokémon">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" /></svg>
+          <span class="nav-label">Pokémon</span>
+        </button>
+        <button type="button" class="nav-item" data-section="calendars" title="Calendars">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+          <span class="nav-label">Calendars</span>
+          <span class="badge" id="badge-calendars" hidden></span>
+        </button>
+        <button type="button" class="nav-item" data-section="outlook" title="Outlook &amp; Teams">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-5M9 8V2M15 8V2M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z" /></svg>
+          <span class="nav-label">Outlook &amp; Teams</span>
+          <span class="badge" id="badge-outlook" hidden></span>
+        </button>
+        <button type="button" class="nav-item" data-section="links" title="Browser &amp; links">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20" /></svg>
+          <span class="nav-label">Browser &amp; links</span>
+        </button>
+      </nav>
 
-      <section>
-        <h2>Pokémon</h2>
-        <label class="inline">Favorite <select id="favorite"></select></label>
-        <label><input type="checkbox" id="forceShiny" /> Always shiny</label>
-        <p class="hint">Random picks a different Pokémon every time (1 in 64 is shiny). Picking a favorite plays a preview.</p>
-      </section>
+      <main>
+        <!-- General -->
+        <section class="pane" data-pane="general">
+          <header class="pane-head">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4" /></svg>
+            <div>
+              <h1>General</h1>
+              <p>How the app starts and where your settings are kept.</p>
+            </div>
+          </header>
 
-      <section>
-        <h2>Calendars</h2>
-        <div id="accounts" class="list"></div>
-        <div class="row">
-          <button type="button" data-action="addGoogle" id="addGoogle">Add Google account…</button>
-          <span class="inline">sign in with <select id="addGoogleBrowser"></select></span>
-        </div>
-        <div class="row"><button type="button" data-action="addIcal">Add calendar link from clipboard…</button></div>
-        <p class="hint">
-          Each account chooses the browser profile its meeting links open in. Pick the profile that is signed in to that
-          account; "Default profile" uses the choice under Links.
-        </p>
-      </section>
+          <div class="group">
+            <h2>Startup</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="launchAtStartup">Launch at startup</label>
+                <p class="setting-desc">Start the app quietly in the tray when you sign in to Windows, so you never miss a reminder because you forgot to open it.</p>
+                <p class="setting-desc note" id="startupHint"></p>
+              </div>
+              <input type="checkbox" class="switch" id="launchAtStartup" />
+            </div>
+          </div>
 
-      <section>
-        <h2>Outlook / Teams (browser extension)</h2>
-        <p id="bridgeStatus" class="status"></p>
-        <label><input type="checkbox" id="bridgeEnabled" /> Capture meetings from Outlook on the web and Teams</label>
-        <label><input type="checkbox" id="toastReminders" /> Also play reminders for meeting toasts that match no captured meeting</label>
-        <label class="inline">Open links with <select id="bridgeBrowser"></select></label>
-        <div class="row">
-          <button type="button" data-action="copyPairingCode">Copy pairing code</button>
-          <button type="button" data-action="openExtensionFolder">Open extension folder</button>
-          <button type="button" data-action="forgetBrowserMeetings">Forget captured meetings</button>
-        </div>
-      </section>
+          <div class="group">
+            <h2>Advanced</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <span class="setting-title">Settings file</span>
+                <p class="setting-desc">Everything on this page is saved in settings.json. Open it to back up your settings or change options this page doesn't show.</p>
+              </div>
+              <button type="button" data-action="openSettingsFile">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M10 13l-2 2 2 2M14 17l2-2-2-2" /></svg>
+                Open settings.json
+              </button>
+            </div>
+          </div>
+        </section>
 
-      <section>
-        <h2>Links</h2>
-        <label class="inline">Default profile <select id="defaultBrowser"></select></label>
-        <div class="row">
-          <button type="button" data-action="refreshBrowsers">Refresh profiles</button>
-          <button type="button" data-action="openSettingsFile">Open settings.json</button>
-        </div>
-        <p class="hint" id="profilesHint"></p>
-      </section>
-    </main>
+        <!-- Reminders -->
+        <section class="pane" data-pane="reminders" hidden>
+          <header class="pane-head">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>
+            <div>
+              <h1>Reminders</h1>
+              <p>Choose when a Pokémon runs across your screen to warn you about a meeting.</p>
+            </div>
+          </header>
+
+          <div class="group">
+            <h2>Timing</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="alertMinutes">Early warning</label>
+                <p class="setting-desc">How long before a meeting you get the first heads-up. You always get a second reminder when the meeting starts.</p>
+              </div>
+              <select id="alertMinutes">
+                <option value="1">1 minute before</option>
+                <option value="2">2 minutes before</option>
+                <option value="3">3 minutes before</option>
+                <option value="5">5 minutes before</option>
+                <option value="10">10 minutes before</option>
+                <option value="15">15 minutes before</option>
+                <option value="30">30 minutes before</option>
+              </select>
+            </div>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="nativeNotification">Windows notification</label>
+                <p class="setting-desc">Also show a regular Windows notification with the meeting title, alongside the Pokémon.</p>
+              </div>
+              <input type="checkbox" class="switch" id="nativeNotification" />
+            </div>
+          </div>
+
+          <div class="group">
+            <h2>Skipped meetings</h2>
+            <div class="setting stacked">
+              <div class="setting-text">
+                <label class="setting-title" for="ignoredTitles">Don't remind me about</label>
+                <p class="setting-desc">
+                  Meetings with these titles never trigger a reminder. Put one title on each line. Upper or lower case doesn't matter. Use * as a wildcard: <code>Lunch*</code> skips every meeting whose title starts with "Lunch".
+                </p>
+              </div>
+              <textarea id="ignoredTitles" rows="4" spellcheck="false" placeholder="Focus time&#10;Lunch*"></textarea>
+            </div>
+          </div>
+
+          <div class="group">
+            <h2>Try it out</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <span class="setting-title">Preview a reminder</span>
+                <p class="setting-desc">Play a sample reminder now to see and hear it, without waiting for a real meeting.</p>
+              </div>
+              <div class="row">
+                <button type="button" data-action="testReminder" data-arg="5">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l12 8-12 8z" /></svg>
+                  5 min warning
+                </button>
+                <button type="button" data-action="testReminder" data-arg="0">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l12 8-12 8z" /></svg>
+                  Meeting starting
+                </button>
+              </div>
+            </div>
+            <div class="setting">
+              <div class="setting-text">
+                <span class="setting-title">Dismiss reminder</span>
+                <p class="setting-desc">Remove the Pokémon from your screen and stop the music right away.</p>
+              </div>
+              <button type="button" data-action="dismiss">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pokémon -->
+        <section class="pane" data-pane="pokemon" hidden>
+          <header class="pane-head">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" /></svg>
+            <div>
+              <h1>Pokémon</h1>
+              <p>Choose which Pokémon shows up to remind you.</p>
+            </div>
+          </header>
+
+          <div class="group">
+            <h2>Appearance</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="favorite">Favorite Pokémon</label>
+                <p class="setting-desc">"Random" sends a different Pokémon each time. Pick a favorite to always see that one. A short preview plays when you choose it.</p>
+              </div>
+              <select id="favorite"></select>
+            </div>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="forceShiny">Always shiny</label>
+                <p class="setting-desc">Always use the rare shiny colors. When this is off, 1 in 64 reminders is shiny.</p>
+              </div>
+              <input type="checkbox" class="switch" id="forceShiny" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Calendars -->
+        <section class="pane" data-pane="calendars" hidden>
+          <header class="pane-head">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+            <div>
+              <h1>Calendars</h1>
+              <p>Connect the calendars that hold your meetings. The app checks them in the background and reminds you before each meeting.</p>
+            </div>
+          </header>
+
+          <div class="group">
+            <h2>Connected calendars</h2>
+            <p class="group-desc">
+              For each calendar, choose the browser profile that opens its meeting links. Pick the profile that's signed in to that account. "Default profile" uses your choice under Browser &amp; links.
+            </p>
+            <div id="accounts" class="list"></div>
+          </div>
+
+          <div class="group">
+            <h2>Add a calendar</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <span class="setting-title">Google Calendar</span>
+                <p class="setting-desc">Sign in with Google to give the app read-only access to your events. Choose the browser to sign in with.</p>
+                <label class="inline-control">Sign in with <select id="addGoogleBrowser"></select></label>
+              </div>
+              <button type="button" class="primary" data-action="addGoogle" id="addGoogle">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+                Add Google account…
+              </button>
+            </div>
+            <div class="setting">
+              <div class="setting-text">
+                <span class="setting-title">Calendar link (iCal)</span>
+                <p class="setting-desc">Works with Outlook, Google, iCloud and others. Copy your calendar's secret iCal (.ics) address, then click Add. The app reads the link from your clipboard.</p>
+              </div>
+              <button type="button" data-action="addIcal">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" /></svg>
+                Add from clipboard…
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Outlook / Teams -->
+        <section class="pane" data-pane="outlook" hidden>
+          <header class="pane-head">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-5M9 8V2M15 8V2M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z" /></svg>
+            <div>
+              <h1>Outlook &amp; Teams</h1>
+              <p>Get reminders for work meetings without connecting your account. A browser extension reads them from Outlook on the web and Teams. Nothing leaves this PC.</p>
+            </div>
+          </header>
+
+          <div class="status-card">
+            <span class="status-dot" id="bridgeDot"></span>
+            <div>
+              <span class="setting-title">Status</span>
+              <p id="bridgeStatus" class="status"></p>
+            </div>
+          </div>
+
+          <div class="group">
+            <h2>Capture</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="bridgeEnabled">Capture meetings from the browser</label>
+                <p class="setting-desc">Get reminders for meetings you open in Outlook on the web or Teams in Edge or Chrome.</p>
+              </div>
+              <input type="checkbox" class="switch" id="bridgeEnabled" />
+            </div>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="toastReminders">Remind on unknown meeting alerts</label>
+                <p class="setting-desc">Outlook or Teams sometimes shows an alert for a meeting the extension hasn't captured. Turn this on to play a Pokémon reminder for those alerts too.</p>
+              </div>
+              <input type="checkbox" class="switch" id="toastReminders" />
+            </div>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="bridgeBrowser">Open meeting links with</label>
+                <p class="setting-desc">The browser profile used to join these meetings. This is usually the profile where you use Outlook and Teams.</p>
+              </div>
+              <select id="bridgeBrowser" data-source="browser"></select>
+            </div>
+          </div>
+
+          <div class="group">
+            <h2>Set up the extension</h2>
+            <ol class="steps">
+              <li>
+                <div class="step-text">
+                  <span class="setting-title">Install the extension</span>
+                  <p class="setting-desc">Go to <code>edge://extensions</code> or <code>chrome://extensions</code> and turn on Developer mode. Click <em>Load unpacked</em>, then pick the folder opened by this button.</p>
+                </div>
+                <button type="button" data-action="openExtensionFolder">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z" /></svg>
+                  Open folder
+                </button>
+              </li>
+              <li>
+                <div class="step-text">
+                  <span class="setting-title">Pair it with this app</span>
+                  <p class="setting-desc">Copy the pairing code, paste it on the extension's options page, and click <em>Save and test</em>.</p>
+                </div>
+                <button type="button" data-action="copyPairingCode">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="14" height="14" rx="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+                  Copy pairing code
+                </button>
+              </li>
+              <li>
+                <div class="step-text">
+                  <span class="setting-title">Open your calendar</span>
+                  <p class="setting-desc">Reload any open Outlook or Teams tabs, then open the Outlook calendar once. The status above shows how many meetings were captured.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <div class="group">
+            <h2>Troubleshooting</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <span class="setting-title">Forget captured meetings</span>
+                <p class="setting-desc">Clear every meeting the extension has sent. Use this if you get reminders for meetings that were cancelled or deleted. They come back the next time you open your calendar.</p>
+              </div>
+              <button type="button" class="danger" data-action="forgetBrowserMeetings">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                Forget
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Browser & links -->
+        <section class="pane" data-pane="links" hidden>
+          <header class="pane-head">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20" /></svg>
+            <div>
+              <h1>Browser &amp; links</h1>
+              <p>Choose where the Join button on a reminder opens the meeting link.</p>
+            </div>
+          </header>
+
+          <div class="group">
+            <h2>Meeting links</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="defaultBrowser">Default profile</label>
+                <p class="setting-desc">Meeting links open here unless a calendar has its own profile. Picking the profile that's signed in to your work account means you join meetings already signed in.</p>
+              </div>
+              <select id="defaultBrowser"></select>
+            </div>
+            <div class="setting">
+              <div class="setting-text">
+                <span class="setting-title">Browser profiles</span>
+                <p class="setting-desc" id="profilesHint"></p>
+              </div>
+              <button type="button" data-action="refreshBrowsers">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15-6.7L3 8M3 3v5h5M3 12a9 9 0 0 0 15 6.7l3-2.7M21 21v-5h-5" /></svg>
+                Refresh
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
     <script src="settings.js"></script>
   </body>
 </html>
