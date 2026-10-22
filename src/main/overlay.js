@@ -16,6 +16,7 @@ const { BrowserWindow, ipcMain, screen } = require('electron');
  * @property {{ url: string, column: number, columns: number }} pokeball  file:// URL of the ball atlas and which
  *   column (ball type) to use, for the return animation on Dismiss / Join
  * @property {string | null} music file:// URL of the background track, or null (battle theme when urgent)
+ * @property {{ cry: number, music: number }} volume  0–1, from the cryVolume / musicVolume settings
  * @property {'ltr' | 'rtl'} direction
  * @property {number} altitude     flyers: sprite centre as a fraction of the work-area height
  * @property {string} meetingTitle
@@ -173,7 +174,7 @@ async function playScene(payload, ctx) {
     }
     const musicWin = windows.find((w) => w.display.id === activeDisplay.id)?.win;
     if (payload.music && musicWin && !musicWin.isDestroyed()) {
-      musicWin.webContents.send('music:play', { url: payload.music, loop: payload.urgent });
+      musicWin.webContents.send('music:play', { url: payload.music, loop: payload.urgent, volume: payload.volume.music });
       // Hold the sprite back until the track is audible so they start together.
       await waitFor(musicWin, 'music:started', ctx.dismissed, MUSIC_START_TIMEOUT_MS);
     }

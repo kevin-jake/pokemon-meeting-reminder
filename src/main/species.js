@@ -77,10 +77,11 @@ function spriteUrl(entry, mediaDir) {
 /**
  * Turns a pick into the payload the overlay plays.
  * @param {ReturnType<typeof pickSpecies>} pick
- * @param {{ meetingTitle: string, minutesUntil: number, mediaDir: string, meetingLink?: import('./overlay').MeetingLink | null, rng?: () => number }} opts
+ * @param {{ meetingTitle: string, minutesUntil: number, mediaDir: string, meetingLink?: import('./overlay').MeetingLink | null, cryVolume?: number, musicVolume?: number, rng?: () => number }} opts
+ *   cryVolume / musicVolume: 0–1, 0 leaves that sound out
  * @returns {import('./overlay').ScenePayload}
  */
-function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, mediaDir, meetingLink = null, rng = Math.random }) {
+function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, mediaDir, meetingLink = null, cryVolume = 0.5, musicVolume = 1, rng = Math.random }) {
   const urgent = minutesUntil <= 0;
   const variant = shiny ? 'shiny' : 'default';
   const spriteDir = path.join(mediaDir, `gen${entry.gen}`, entry.key);
@@ -97,7 +98,7 @@ function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, m
     // Everything renders at 128 px: 32 px sprites x4, the 64 px giants x2.
     spriteScale: entry.spriteSize === 64 ? 2 : 4,
     sprites: { walk: sprite('walk'), idle: sprite('idle'), walkLeft: entry.hasLeftFacing ? sprite('walk_left') : null },
-    cry: fs.existsSync(cryFile) ? pathToFileURL(cryFile).href : null,
+    cry: cryVolume > 0 && fs.existsSync(cryFile) ? pathToFileURL(cryFile).href : null,
     // A ball type by rarity each time, for the return animation.
     pokeball: {
       url: pathToFileURL(path.join(mediaDir, 'all_balls_atlas.png')).href,
@@ -105,7 +106,9 @@ function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, m
       columns: BALL_ATLAS_COLUMNS,
     },
     // Battle theme only for the meeting-start alarm; the warning gets a calm track.
-    music: pickTrack(mediaDir, urgent ? 'battle' : 'normal', rng),
+    // With music off there is no track, so the sprite doesn't wait for one to start.
+    music: musicVolume > 0 ? pickTrack(mediaDir, urgent ? 'battle' : 'normal', rng) : null,
+    volume: { cry: cryVolume, music: musicVolume },
     direction,
     // Flyers cruise at the same relative height on every monitor (15-45 % from the top).
     altitude: 0.15 + rng() * 0.3,

@@ -34,9 +34,7 @@ const BANNER_GAP_PX = 10;
 const POINTER_FRESH_MS = 1000;
 const TITLE_MAX = 40;
 const FADE_SAFETY_MS = 1500;
-const CRY_VOLUME = 0.5;
-const MUSIC_VOLUME = 1;
-const MUSIC_DUCK_VOLUME = 0.2; // while the cry plays, so it stays audible
+const MUSIC_DUCK = 0.2; // music volume factor while the cry plays, so it stays audible
 const MUSIC_FADE_MS = 600;
 // media/all_balls_atlas.png: one column per ball type, each 6 stacked 64 px frames,
 // closed ball (0) to open with the red beam (5). Main picks the column per pass.
@@ -67,7 +65,7 @@ const ball = /** @type {HTMLElement} */ (document.getElementById('ball'));
  * @type {{
  *   onScene(cb: (p: PassPayload) => void): void,
  *   onStop(cb: () => void): void,
- *   onMusic(cb: (m: { url: string, loop: boolean }) => void): void,
+ *   onMusic(cb: (m: { url: string, loop: boolean, volume: number }) => void): void,
  *   onMusicStop(cb: () => void): void,
  *   musicStarted(): void,
  *   musicDone(): void,
@@ -99,7 +97,7 @@ ball.style.height = `${BALL_BOX_PX}px`;
 
 api.onScene((payload) => (payload.isFlyer ? playFlyer(payload) : playWalker(payload)));
 api.onStop(() => finish(true));
-api.onMusic(({ url, loop }) => startMusic(url, loop));
+api.onMusic(({ url, loop, volume }) => startMusic(url, loop, volume));
 api.onMusicStop(() => stopMusic());
 
 // The window is click-through. Main forwards mouse moves anyway, so we ask to
@@ -283,13 +281,16 @@ function setSprite(p, state) {
   sprite.classList.toggle('flip', state === 'walk' && headingLeft && !useLeftGif);
 }
 
-/** @param {string | null} url */
-function playCry(url) {
+/**
+ * @param {string | null} url
+ * @param {number} volume  0–1
+ */
+function playCry(url, volume) {
   if (!url) return;
   const audio = new Audio(url);
-  audio.volume = CRY_VOLUME;
-  audio.addEventListener('playing', () => fadeMusic(MUSIC_DUCK_VOLUME, 150));
-  const unduck = () => fadeMusic(MUSIC_VOLUME, 400);
+  audio.volume = volume;
+  audio.addEventListener('playing', () => fadeMusic(musicVolume * MUSIC_DUCK, 150));
+  const unduck = () => fadeMusic(musicVolume, 400);
   audio.addEventListener('ended', unduck);
   audio.addEventListener('error', unduck);
   audio.play().catch((err) => console.warn('cry failed', err));
@@ -301,6 +302,7 @@ function playCry(url) {
  * @type {HTMLAudioElement | null}
  */
 let music = null;
+let musicVolume = 1;
 let musicStopping = false;
 let musicFadeId = 0;
 
@@ -332,9 +334,11 @@ function fadeMusic(target, ms, done) {
  * enter in sync with it.
  * @param {string} url
  * @param {boolean} loop  battle theme for the meeting-start alarm loops until dismissed
+ * @param {number} volume  0–1
  */
-function startMusic(url, loop) {
+function startMusic(url, loop, volume) {
   music?.pause();
+  musicVolume = volume;
   musicStopping = false;
   const audio = new Audio(url);
   music = audio;
@@ -349,12 +353,12 @@ function startMusic(url, loop) {
   audio.addEventListener('error', started, { once: true });
   // The battle theme hits at full volume the moment the sprite enters; the
   // calmer "in N min" tracks fade in.
-  audio.volume = loop ? MUSIC_VOLUME : 0;
+  audio.volume = loop ? musicVolume : 0;
   audio.play().catch((err) => {
     console.warn('music failed', err);
     started();
   });
-  if (!loop) fadeMusic(MUSIC_VOLUME, MUSIC_FADE_MS);
+  if (!loop) fadeMusic(musicVolume, MUSIC_FADE_MS);
 }
 
 function stopMusic() {
@@ -400,7 +404,7 @@ function beginPause(p) {
   banner.classList.remove('pop');
   void banner.offsetWidth; // restart the animation
   banner.classList.add('pop');
-  if (p.playCry) playCry(p.cry);
+  if (p.playCry) playCry(p.cry, p.volume.cry);
 }
 
 /** Pauses mid-screen somewhere in the middle 30 % so repeat reminders don't look identical. */
@@ -430,7 +434,7 @@ function playWalker(p) {
   let phase = 'walkIn';
   let elapsed = 0; // scene time; stands still while the pass is held
   let last = performance.now();
-  if (p.playCry && !p.pause && !p.park) playCry(p.cry);
+  if (p.playCry && !p.pause && !p.park) playCry(p.cry, p.volume.cry);
 
   /** @param {number} x */
   function place(x) {
@@ -510,7 +514,7 @@ function playFlyer(p) {
   let tilt = 0;
   let elapsed = 0; // scene time; stands still while the pass is held
   let last = performance.now();
-  if (p.playCry && !p.pause && !p.park) playCry(p.cry);
+  if (p.playCry && !p.pause && !p.park) playCry(p.cry, p.volume.cry);
 
   /** @param {number} x @param {number} y */
   function place(x, y) {

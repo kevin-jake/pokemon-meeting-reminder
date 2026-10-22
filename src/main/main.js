@@ -70,6 +70,11 @@ const ICAL_SETUP = [
 /** @param {string} id */
 const isIcalId = (id) => id.startsWith('ical:');
 
+// Electron names userData after productName ("Pokémon Meeting Reminder"); pin it to
+// the folder npm start has always used, so dev, installed and portable builds share
+// settings and sign-ins. Must happen before the single-instance lock, which lives there.
+app.setPath('userData', path.join(app.getPath('appData'), 'pokemon-meeting-reminder'));
+
 // One tray icon only: a second launch pings the first instance and exits.
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -149,7 +154,9 @@ if (!app.requestSingleInstanceLock()) {
     function playReminder(meetingTitle, minutesUntil, { species = null, meetingLink = null } = {}) {
       const prefs = settings.get();
       const pick = pickSpecies(species ? { pokemonMode: 'favorites', favoriteSpecies: [species] } : prefs);
-      overlays.enqueue(buildScene(pick, { meetingTitle, minutesUntil, mediaDir: mediaDir(), meetingLink }));
+      overlays.enqueue(
+        buildScene(pick, { meetingTitle, minutesUntil, mediaDir: mediaDir(), meetingLink, cryVolume: prefs.cryVolume, musicVolume: prefs.musicVolume }),
+      );
     }
 
     /**
@@ -369,9 +376,14 @@ if (!app.requestSingleInstanceLock()) {
         }),
     };
 
-    /** Applies "Launch at startup" to the Windows Run key (installed builds only). */
+    /**
+     * Applies "Launch at startup" to the Windows Run key (packaged builds only).
+     * The portable exe unpacks itself to a temp folder and runs from there, so
+     * register the portable file itself, not process.execPath.
+     */
     function syncLoginItem() {
-      if (app.isPackaged) app.setLoginItemSettings({ openAtLogin: settings.get().launchAtStartup });
+      if (!app.isPackaged) return;
+      app.setLoginItemSettings({ openAtLogin: settings.get().launchAtStartup, path: process.env.PORTABLE_EXECUTABLE_FILE || process.execPath });
     }
 
     settingsWindow = createSettingsWindow({

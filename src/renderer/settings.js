@@ -339,6 +339,11 @@ function render(state) {
     select('alertMinutes').value = String(s.alertMinutesBefore);
   }
   checkbox('nativeNotification').checked = s.nativeNotification;
+  for (const id of /** @type {const} */ (['cryVolume', 'musicVolume'])) {
+    // Don't yank the slider out from under a drag when a poll re-renders.
+    if (document.activeElement !== checkbox(id)) checkbox(id).value = String(Math.round(s[id] * 100));
+    showVolume(id);
+  }
   checkbox('launchAtStartup').checked = s.launchAtStartup;
   checkbox('launchAtStartup').disabled = !state.isPackaged;
   $('startupHint').textContent = state.isPackaged ? '' : 'Only available in the installed app, not when running with npm start.';
@@ -368,6 +373,18 @@ function render(state) {
     : 'No Chrome, Edge or Brave profiles were found, so links open in the system default browser. Click Refresh after adding one.';
 }
 
+/** @param {'cryVolume' | 'musicVolume'} id */
+function showVolume(id) {
+  const v = Number(checkbox(id).value);
+  $(`${id}Value`).textContent = v === 0 ? 'Off' : `${v}%`;
+}
+
+/** Live label while a volume slider is dragged; the setting saves on release (change). */
+document.addEventListener('input', (e) => {
+  const t = e.target;
+  if (t instanceof HTMLInputElement && (t.id === 'cryVolume' || t.id === 'musicVolume')) showVolume(t.id);
+});
+
 async function refresh() {
   const state = await api.getState();
   if (state) render(state);
@@ -396,6 +413,10 @@ document.addEventListener('change', (e) => {
       case 'nativeNotification':
       case 'launchAtStartup':
         patch = { [t.id]: t.checked };
+        break;
+      case 'cryVolume':
+      case 'musicVolume':
+        patch = { [t.id]: Number(t.value) / 100 };
         break;
       case 'bridgeEnabled':
         patch = { browserBridge: { enabled: t.checked } };

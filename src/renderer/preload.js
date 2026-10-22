@@ -12,7 +12,7 @@ contextBridge.exposeInMainWorld('overlayApi', {
   onStop(cb) {
     ipcRenderer.on('scene:stop', () => cb());
   },
-  /** @param {(m: { url: string, loop: boolean }) => void} cb */
+  /** @param {(m: { url: string, loop: boolean, volume: number }) => void} cb */
   onMusic(cb) {
     ipcRenderer.on('music:play', (_event, m) => cb(m));
   },

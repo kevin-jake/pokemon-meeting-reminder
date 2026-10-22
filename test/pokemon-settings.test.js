@@ -29,3 +29,13 @@ test('sanitizePatch checks the Pokémon settings', () => {
   assert.deepEqual(sanitizePatch({ generations: [2, 2] }), {});
   assert.deepEqual(sanitizePatch({ forceShiny: true }), {});
 });
+
+test('sanitizePatch accepts volumes from 0 to 1 only', () => {
+  assert.deepEqual(sanitizePatch({ cryVolume: 0, musicVolume: 0.35 }), { cryVolume: 0, musicVolume: 0.35 });
+  assert.deepEqual(sanitizePatch({ cryVolume: 1 }), { cryVolume: 1 });
+  assert.deepEqual(sanitizePatch({ cryVolume: 1.5 }), {});
+  assert.deepEqual(sanitizePatch({ musicVolume: -0.1 }), {});
+  assert.deepEqual(sanitizePatch({ musicVolume: '0.5' }), {});
+  assert.deepEqual(sanitizePatch({ musicVolume: Number.NaN }), {});
+  assert.equal(deepMerge(DEFAULTS, {}).cryVolume, 0.5);
+});

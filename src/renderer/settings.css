@@ -293,6 +293,26 @@ h2 {
   width: 220px;
 }
 
+.volume {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 220px;
+}
+
+.volume input[type='range'] {
+  flex: 1;
+  accent-color: var(--accent-strong);
+}
+
+.volume output {
+  width: 4ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
 code {
   font: 12px Consolas, 'Cascadia Mono', monospace;
   background: var(--hover);

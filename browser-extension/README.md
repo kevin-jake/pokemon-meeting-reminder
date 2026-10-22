@@ -4,9 +4,9 @@ For accounts where you can't (or don't want to) create an Azure app registration
 
 ## Setup (once)
 
-1. Start the tray app. In the tray menu, open **Outlook / Teams (browser) ▸ Open extension folder (Load unpacked)** to see this folder.
+1. Start the tray app. In the tray menu, open **Settings… ▸ Outlook & Teams** and click **Open folder** to see this folder.
 2. Open `edge://extensions` (or `chrome://extensions`), turn on **Developer mode**, click **Load unpacked** and pick this folder.
-3. The options page opens. In the tray menu choose **Outlook / Teams (browser) ▸ Copy pairing code**, paste it there, and click **Save and test**.
+3. The options page opens. On the same Settings page click **Copy pairing code**, paste it there, and click **Save and test**.
 4. Reload any open Outlook / Teams tabs or PWA windows so the extension can hook into them.
 5. Open the Outlook calendar once. The options page lists the meetings it captured, and the tray row shows "N meetings captured".
 

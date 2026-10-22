@@ -126,3 +126,14 @@ test('buildScene recalls into a ball from the atlas', () => {
   assert.deepEqual(ball.column, 0);
   assert.equal(ball.columns, BALL_ATLAS_COLUMNS);
 });
+
+test('buildScene carries the volumes and leaves out muted sounds', () => {
+  const pick = { entry: manifest[0], shiny: false, direction: /** @type {const} */ ('ltr') };
+  const loud = buildScene(pick, { meetingTitle: 'Standup', minutesUntil: 5, mediaDir, cryVolume: 0.8, musicVolume: 0.3 });
+  assert.deepEqual(loud.volume, { cry: 0.8, music: 0.3 });
+  assert.ok(loud.cry);
+
+  const muted = buildScene(pick, { meetingTitle: 'Standup', minutesUntil: 0, mediaDir, cryVolume: 0, musicVolume: 0 });
+  assert.equal(muted.cry, null);
+  assert.equal(muted.music, null);
+});

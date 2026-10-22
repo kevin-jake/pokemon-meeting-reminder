@@ -20,11 +20,18 @@ const RENDERER_DIR = path.join(__dirname, '..', 'renderer');
  * @property {boolean} googleConfigured
  */
 
+/** @param {unknown} v */
+function isVolume(v) {
+  return typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 1;
+}
+
 /** Settings keys the page may change, and how each value is checked. */
 const EDITABLE = {
   alertMinutesBefore: (/** @type {unknown} */ v) => typeof v === 'number' && Number.isInteger(v) && v >= 1 && v <= 60,
   nativeNotification: (/** @type {unknown} */ v) => typeof v === 'boolean',
   launchAtStartup: (/** @type {unknown} */ v) => typeof v === 'boolean',
+  cryVolume: isVolume,
+  musicVolume: isVolume,
   pokemonMode: (/** @type {unknown} */ v) => v === 'random' || v === 'favorites',
   favoriteSpecies: (/** @type {unknown} */ v) =>
     Array.isArray(v) &&

@@ -116,6 +116,30 @@
           </div>
 
           <div class="group">
+            <h2>Sound</h2>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="cryVolume">Pokémon cry</label>
+                <p class="setting-desc">The Pokémon calls out when it stops on your screen. Slide all the way left to mute it.</p>
+              </div>
+              <div class="volume">
+                <input type="range" id="cryVolume" min="0" max="100" step="5" />
+                <output for="cryVolume" id="cryVolumeValue"></output>
+              </div>
+            </div>
+            <div class="setting">
+              <div class="setting-text">
+                <label class="setting-title" for="musicVolume">Background music</label>
+                <p class="setting-desc">Tracks you put in the mediagm folder play during reminders: a calm one for the early warning, a battle theme when the meeting starts. Slide all the way left to turn music off.</p>
+              </div>
+              <div class="volume">
+                <input type="range" id="musicVolume" min="0" max="100" step="5" />
+                <output for="musicVolume" id="musicVolumeValue"></output>
+              </div>
+            </div>
+          </div>
+
+          <div class="group">
             <h2>Skipped meetings</h2>
             <div class="setting stacked">
               <div class="setting-text">

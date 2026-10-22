@@ -12,6 +12,8 @@ const { app } = require('electron');
  * @property {number[]} generations  generations random mode picks from
  * @property {boolean} launchAtStartup
  * @property {boolean} nativeNotification
+ * @property {number} cryVolume  0–1, 0 = mute the Pokémon's cry
+ * @property {number} musicVolume  0–1, 0 = no background music
  * @property {number} pollIntervalSec
  * @property {number} lookaheadMinutes
  * @property {string[]} ignoredTitles  meetings with these titles get no reminder (see shared/ignored-meetings.js)
@@ -31,6 +33,8 @@ const DEFAULTS = {
   generations: [1, 2, 3, 4, 5],
   launchAtStartup: false,
   nativeNotification: false,
+  cryVolume: 0.5,
+  musicVolume: 1,
   pollIntervalSec: 60,
   lookaheadMinutes: 60,
   ignoredTitles: ['Focus time (company-wide)'],
