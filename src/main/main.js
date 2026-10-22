@@ -165,7 +165,10 @@ if (!app.requestSingleInstanceLock()) {
         .filter((s) => s.isEnabled() && s !== bridge.source)
         .map((s) => ({ id: s.id, provider: isIcalId(s.id) ? 'ical' : 'google', name: s.name, state: s.state(), label: s.accountLabel() }));
     }
-    const syncAccounts = () => settingsWindow?.notify();
+    const syncAccounts = () => {
+      tray?.setAccounts(accounts());
+      settingsWindow?.notify();
+    };
 
     let lastStatus = '';
     const poller = createPoller({
@@ -398,13 +401,20 @@ if (!app.requestSingleInstanceLock()) {
       action: (name, arg) => actions[name]?.(arg),
     });
 
-    tray = createTray({
-      onTestReminder: () => playTest(5),
-      onTestMeetingNow: () => playTest(0),
-      onDismiss: () => overlays.dismiss(),
-      onOpenSettings: () => settingsWindow?.open(),
-      onQuit: () => app.quit(),
-    });
+    tray = createTray(
+      {
+        onTestReminder: () => playTest(5),
+        onTestMeetingNow: () => playTest(0),
+        onDismiss: () => overlays.dismiss(),
+        onOpenSettings: () => settingsWindow?.open(),
+        onReconnect: actions.reconnect,
+        onDisconnect: actions.disconnect,
+        onCancelConnect: actions.cancelConnect,
+        onCopySignInLink: actions.copySignInLink,
+        onQuit: () => app.quit(),
+      },
+      { accounts: accounts() },
+    );
 
     syncLoginItem();
     void bridge.start().then(() => settingsWindow?.notify());
