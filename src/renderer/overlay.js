@@ -17,6 +17,9 @@ const BANNER_GAP_PX = 10;
 const TITLE_MAX = 40;
 const FADE_SAFETY_MS = 1500;
 const CRY_VOLUME = 0.5;
+const MUSIC_VOLUME = 0.3;
+const MUSIC_DUCK_VOLUME = 0.1; // while the cry plays, so it stays audible
+const MUSIC_FADE_MS = 600;
 
 const stage = /** @type {HTMLElement} */ (document.getElementById('stage'));
 const actor = /** @type {HTMLElement} */ (document.getElementById('actor'));
@@ -29,6 +32,9 @@ const dismissBtn = /** @type {HTMLButtonElement} */ (document.getElementById('di
  * @type {{
  *   onScene(cb: (p: PassPayload) => void): void,
  *   onStop(cb: () => void): void,
+ *   onMusic(cb: (m: { url: string, loop: boolean }) => void): void,
+ *   onMusicStop(cb: () => void): void,
+ *   musicDone(): void,
  *   sceneDone(): void,
  *   dismiss(): void,
  *   setClickable(clickable: boolean): void,
@@ -41,6 +47,8 @@ let finishing = false;
 
 api.onScene((payload) => playWalker(payload));
 api.onStop(() => finish(true));
+api.onMusic(({ url, loop }) => startMusic(url, loop));
+api.onMusicStop(() => stopMusic());
 
 // The window is click-through. Main forwards mouse moves anyway, so we ask to
 // become clickable only while the cursor is over the Dismiss button.
@@ -92,7 +100,68 @@ function playCry(url) {
   if (!url) return;
   const audio = new Audio(url);
   audio.volume = CRY_VOLUME;
+  audio.addEventListener('playing', () => fadeMusic(MUSIC_DUCK_VOLUME, 150));
+  const unduck = () => fadeMusic(MUSIC_VOLUME, 400);
+  audio.addEventListener('ended', unduck);
+  audio.addEventListener('error', unduck);
   audio.play().catch((err) => console.warn('cry failed', err));
+}
+
+/**
+ * Background music lives in this window for the whole scene (main only sends
+ * it to the monitor under the cursor), independent of the per-pass state.
+ * @type {HTMLAudioElement | null}
+ */
+let music = null;
+let musicStopping = false;
+let musicFadeId = 0;
+
+/**
+ * @param {number} target
+ * @param {number} ms
+ * @param {() => void} [done]
+ */
+function fadeMusic(target, ms, done) {
+  const audio = music;
+  if (!audio || (musicStopping && !done)) return;
+  cancelAnimationFrame(musicFadeId);
+  const from = audio.volume;
+  const t0 = performance.now();
+  /** @param {number} now */
+  const step = (now) => {
+    const k = Math.min(1, (now - t0) / ms);
+    audio.volume = from + (target - from) * k;
+    if (k < 1) musicFadeId = requestAnimationFrame(step);
+    else done?.();
+  };
+  musicFadeId = requestAnimationFrame(step);
+}
+
+/**
+ * @param {string} url
+ * @param {boolean} loop  battle theme for the meeting-start alarm loops until dismissed
+ */
+function startMusic(url, loop) {
+  music?.pause();
+  musicStopping = false;
+  music = new Audio(url);
+  music.loop = loop;
+  music.volume = 0;
+  music.play().catch((err) => console.warn('music failed', err));
+  fadeMusic(MUSIC_VOLUME, MUSIC_FADE_MS);
+}
+
+function stopMusic() {
+  if (!music) {
+    api.musicDone();
+    return;
+  }
+  musicStopping = true;
+  fadeMusic(0, MUSIC_FADE_MS, () => {
+    music?.pause();
+    music = null;
+    api.musicDone();
+  });
 }
 
 /** @param {PassPayload} p */

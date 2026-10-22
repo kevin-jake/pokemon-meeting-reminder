@@ -5,6 +5,7 @@ const { pathToFileURL } = require('node:url');
 const { app } = require('electron');
 const { createTray } = require('./tray');
 const { createOverlayQueue } = require('./overlay');
+const { pickTrack } = require('./music');
 
 const APP_ID = 'com.kevinc.pokemon-meeting-reminder';
 const openDevTools = process.argv.includes('--devtools');
@@ -47,6 +48,7 @@ if (!app.requestSingleInstanceLock()) {
  * @returns {import('./overlay').ScenePayload}
  */
 function buildTestScene(minutesUntil) {
+  const urgent = minutesUntil <= 0;
   const shiny = Math.random() < 1 / 64;
   const variant = shiny ? 'shiny' : 'default';
   const mediaDir = path.join(app.getAppPath(), 'media');
@@ -63,9 +65,11 @@ function buildTestScene(minutesUntil) {
     sprites: { walk: url('walk'), idle: url('idle'), walkLeft: null },
     // PokeAPI/cries files are keyed by National Dex number; Pikachu is 25.
     cry: pathToFileURL(path.join(mediaDir, 'cries', '25.ogg')).href,
+    // Battle theme only for the meeting-start alarm; the warning gets a calm track.
+    music: pickTrack(mediaDir, urgent ? 'battle' : 'normal'),
     direction: Math.random() < 0.5 ? 'ltr' : 'rtl',
     meetingTitle: 'Test meeting',
     minutesUntil,
-    urgent: minutesUntil <= 0,
+    urgent,
   };
 }

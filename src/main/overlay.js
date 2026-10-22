@@ -13,6 +13,7 @@ const { BrowserWindow, ipcMain, screen } = require('electron');
  * @property {number} spriteScale  integer upscale factor
  * @property {{ walk: string, idle: string, walkLeft: string | null }} sprites  file:// URLs
  * @property {string | null} cry   file:// URL of the Pokémon's cry, or null
+ * @property {string | null} music file:// URL of the background track, or null (battle theme when urgent)
  * @property {'ltr' | 'rtl'} direction
  * @property {string} meetingTitle
  * @property {number} minutesUntil  0 = meeting starts now
@@ -30,6 +31,7 @@ const { BrowserWindow, ipcMain, screen } = require('electron');
 
 const PASS_TIMEOUT_MS = 40_000;
 const STOP_GRACE_MS = 1_000;
+const NEVER = new Promise(() => {});
 const RENDERER_DIR = path.join(__dirname, '..', 'renderer');
 
 /**
@@ -119,8 +121,10 @@ function waitFor(win, channel, abort, timeoutMs) {
  * display is created up front and shown; the sprite is then sent through the
  * windows one after another in x order, so it appears to walk from monitor
  * to monitor. It pauses (idle sprite, banner pop, cry) only on the monitor
- * under the mouse cursor. Urgent scenes repeat, reversing direction each
- * pass, until the user dismisses them.
+ * under the mouse cursor. Background music plays once for the whole scene on
+ * that same monitor, so it carries on while the sprite crosses the others.
+ * Urgent scenes repeat, reversing direction each pass, until the user
+ * dismisses them.
  * @param {ScenePayload} payload
  * @param {{ openDevTools: boolean, dismissed: Promise<void>, isDismissed: () => boolean }} ctx
  */
@@ -137,6 +141,10 @@ async function playScene(payload, ctx) {
       if (win.isDestroyed()) continue;
       win.setAlwaysOnTop(true, 'screen-saver'); // re-assert on show; Windows can drop it
       win.showInactive(); // never steal focus from the user's current window
+    }
+    const musicWin = windows.find((w) => w.display.id === activeDisplay.id)?.win;
+    if (payload.music && musicWin && !musicWin.isDestroyed()) {
+      musicWin.webContents.send('music:play', { url: payload.music, loop: payload.urgent });
     }
 
     let direction = payload.direction;
@@ -164,12 +172,19 @@ async function playScene(payload, ctx) {
       pass += 1;
     } while (payload.urgent && !ctx.isDismissed());
 
+    /** @type {Promise<unknown>[]} */
+    const fades = [];
     if (payload.urgent) {
       // Dismissed mid-pass: let every window fade before tearing down.
       const live = windows.filter((w) => !w.win.isDestroyed());
       for (const { win } of live) win.webContents.send('scene:stop');
-      await Promise.all(live.map((w) => waitFor(w.win, 'scene:done', new Promise(() => {}), STOP_GRACE_MS)));
+      fades.push(...live.map((w) => waitFor(w.win, 'scene:done', NEVER, STOP_GRACE_MS)));
     }
+    if (payload.music && musicWin && !musicWin.isDestroyed()) {
+      musicWin.webContents.send('music:stop');
+      fades.push(waitFor(musicWin, 'music:done', NEVER, STOP_GRACE_MS));
+    }
+    await Promise.all(fades);
   } finally {
     for (const { win } of windows) if (!win.isDestroyed()) win.destroy();
   }
