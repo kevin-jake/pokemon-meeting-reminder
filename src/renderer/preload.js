@@ -40,4 +40,11 @@ contextBridge.exposeInMainWorld('overlayApi', {
   setClickable(clickable) {
     ipcRenderer.send('overlay:clickable', clickable);
   },
+  /**
+   * The cursor is resting on the Pokémon or its banner, so the pass is held in place.
+   * @param {boolean} held
+   */
+  setHeld(held) {
+    ipcRenderer.send('overlay:held', held);
+  },
 });

@@ -11,6 +11,9 @@
  * A time-based rAF loop drives the motion (math in shared/scene-math.js); CSS
  * only handles the final opacity fade. The same window may be asked to play
  * several passes, so every play call resets the state.
+ * While the cursor rests on the Pokémon or its banner the pass is held: the
+ * scene clock stops, the sprite stands still facing front, and main is told so
+ * its pass timeout waits too. Moving the cursor away resumes the pass.
  * Dismiss / Join recalls the Pokémon into its Poké Ball before the fade.
  */
 
@@ -71,6 +74,7 @@ const ball = /** @type {HTMLElement} */ (document.getElementById('ball'));
  *   dismiss(): void,
  *   join(): void,
  *   setClickable(clickable: boolean): void,
+ *   setHeld(held: boolean): void,
  * }}
  */
 const api = /** @type {any} */ (window).overlayApi;
@@ -81,6 +85,10 @@ let finishing = false;
 let current = null;
 /** Where the sprite was last placed; the Poké Ball appears there. */
 let actorBox = { x: 0, y: 0, size: 0 };
+/** Where the banner was last placed, for the hover test. */
+let bannerBox = { x: 0, y: 0, w: 0, h: 0 };
+/** The cursor is on the Pokémon or its banner, so the pass clock is stopped. */
+let held = false;
 /** @type {Promise<void> | null} set while the Pokémon is being recalled */
 let returning = null;
 
@@ -124,6 +132,40 @@ function updateClickable() {
   }
 }
 
+/**
+ * Whether the cursor rests on the sprite box or the (visible) banner. The
+ * window is click-through, so this is a plain box test on where the frame
+ * loop last placed them rather than a DOM hit test.
+ */
+function isHovered() {
+  if (!pointer) return false;
+  const { x, y } = pointer;
+  const a = actorBox;
+  const b = bannerBox;
+  if (x >= a.x && x < a.x + a.size && y >= a.y && y < a.y + a.size) return true;
+  return !banner.hidden && x >= b.x && x < b.x + b.w && y >= b.y && y < b.y + b.h;
+}
+
+/**
+ * Called every frame: tracks the hover and tells main when it changes, so the
+ * pass timeout there pauses with the scene clock. Returns the new state.
+ */
+function syncHeld() {
+  const next = isHovered();
+  if (next !== held) {
+    held = next;
+    api.setHeld(next);
+  }
+  return held;
+}
+
+/** Ends a hold when the pass stops on its own (recall, stop) rather than by the cursor leaving. */
+function releaseHold() {
+  if (!held) return;
+  held = false;
+  api.setHeld(false);
+}
+
 // Main is told right away (the link opens, the music fades); the scene:stop
 // that follows waits in finish() until the Pokémon is back in its ball.
 dismissBtn.addEventListener('click', () => {
@@ -144,6 +186,7 @@ function ballFrame(frame) {
 function recall() {
   if (returning || finishing || !current) return;
   cancelAnimationFrame(rafId);
+  releaseHold();
   banner.hidden = true;
   updateClickable(); // the buttons are gone, so hand clicks back to the desktop
   returning = playRecall(current).catch(() => {}); // cancelled by a new pass
@@ -221,8 +264,9 @@ function renderBanner(p) {
 }
 
 /**
- * Sets the walk or idle GIF with the right facing. Sprites face right; heading
- * left uses the species' left-facing walk GIF when it has one, else a CSS flip.
+ * Sets the walk or idle GIF with the right facing. Walk sprites face right;
+ * heading left uses the species' left-facing walk GIF when it has one, else a
+ * CSS flip. Idle sprites face the viewer, so they are never flipped.
  * @param {PassPayload} p
  * @param {'walk' | 'idle'} state
  */
@@ -231,7 +275,7 @@ function setSprite(p, state) {
   const useLeftGif = state === 'walk' && headingLeft && Boolean(p.sprites.walkLeft);
   const src = useLeftGif ? /** @type {string} */ (p.sprites.walkLeft) : p.sprites[state];
   if (sprite.src !== src) sprite.src = src;
-  sprite.classList.toggle('flip', headingLeft && !useLeftGif);
+  sprite.classList.toggle('flip', state === 'walk' && headingLeft && !useLeftGif);
 }
 
 /** @param {string | null} url */
@@ -343,11 +387,11 @@ function startPass(p) {
 }
 
 /**
- * The pause beat shared by both scenes: idle GIF, banner pop, cry.
+ * The pause beat shared by both scenes: banner pop and cry (the frame loop
+ * switches the sprite to idle).
  * @param {PassPayload} p
  */
 function beginPause(p) {
-  setSprite(p, 'idle');
   banner.classList.remove('pop');
   void banner.offsetWidth; // restart the animation
   banner.classList.add('pop');
@@ -379,7 +423,8 @@ function playWalker(p) {
 
   /** @type {string} */
   let phase = 'walkIn';
-  const t0 = performance.now();
+  let elapsed = 0; // scene time; stands still while the pass is held
+  let last = performance.now();
   if (p.playCry && !p.pause && !p.park) playCry(p.cry);
 
   /** @param {number} x */
@@ -392,17 +437,22 @@ function playWalker(p) {
     const bx = Math.min(Math.max(x + size / 2 - bw / 2, 8), W - bw - 8);
     const by = y - bh - BANNER_GAP_PX;
     banner.style.transform = `translate3d(${bx}px, ${by}px, 0)`;
+    bannerBox = { x: bx, y: by, w: bw, h: bh };
     updateClickable();
   }
 
   /** @param {number} now */
   function frame(now) {
-    const pos = sceneMath.walkPosition(plan, now - t0);
+    const holding = syncHeld();
+    if (!holding) elapsed += now - last;
+    last = now;
+    const pos = sceneMath.walkPosition(plan, elapsed);
     if (pos.phase !== phase) {
       phase = pos.phase;
       if (phase === 'pause') beginPause(p);
-      else if (phase === 'walkOut') setSprite(p, 'walk');
     }
+    // Held or pausing, the Pokémon stands and looks at the viewer.
+    setSprite(p, holding || phase === 'pause' ? 'idle' : 'walk');
     place(pos.x);
     if (phase === 'done') {
       finish(p.fadeOut);
@@ -453,7 +503,8 @@ function playFlyer(p) {
   /** @type {string} */
   let phase = 'flyIn';
   let tilt = 0;
-  const t0 = performance.now();
+  let elapsed = 0; // scene time; stands still while the pass is held
+  let last = performance.now();
   if (p.playCry && !p.pause && !p.park) playCry(p.cry);
 
   /** @param {number} x @param {number} y */
@@ -466,21 +517,26 @@ function playFlyer(p) {
     const bx = ltr ? x - BANNER_GAP_PX - bannerW : x + size + BANNER_GAP_PX;
     const by = y + size / 2 - bh / 2;
     banner.style.transform = `translate3d(${bx}px, ${by}px, 0)`;
+    bannerBox = { x: bx, y: by, w: bannerW, h: bh };
     updateClickable();
   }
 
   /** @param {number} now */
   function frame(now) {
-    const prog = sceneMath.flightProgress(plan, now - t0);
+    const holding = syncHeld();
+    if (!holding) elapsed += now - last;
+    last = now;
+    const prog = sceneMath.flightProgress(plan, elapsed);
     if (prog.phase !== phase) {
       phase = prog.phase;
       if (phase === 'pause') beginPause(p);
-      else if (phase === 'flyOut') setSprite(p, 'walk');
     }
     const pose = sceneMath.flightPose(prog.u, geometry);
     const hovering = phase === 'pause';
+    // Held or pausing, the flyer levels out and looks at the viewer; the bob freezes with the clock.
+    setSprite(p, holding || hovering ? 'idle' : 'walk');
     const bob = hovering ? HOVER_AMPLITUDE_PX * Math.sin((2 * Math.PI * prog.pauseT) / HOVER_PERIOD_MS) : 0;
-    tilt += ((hovering ? 0 : pose.tilt) - tilt) * TILT_SMOOTHING;
+    tilt += ((holding || hovering ? 0 : pose.tilt) - tilt) * TILT_SMOOTHING;
     place(pose.x, pose.y + bob);
     if (phase === 'done') {
       finish(p.fadeOut);
@@ -504,6 +560,7 @@ function finish(fade) {
   if (finishing) return;
   finishing = true;
   cancelAnimationFrame(rafId);
+  releaseHold();
   if (clickable) {
     clickable = false;
     api.setClickable(false);

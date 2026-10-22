@@ -104,7 +104,9 @@ function whenReadyToShow(win) {
 
 /**
  * Resolves when `channel` arrives from `win`, when the abort promise settles,
- * when the window closes, or after `timeoutMs`.
+ * when the window closes, or after `timeoutMs`. The timeout is a safety net
+ * for a stuck renderer, so it stops counting while the renderer reports the
+ * pass is held (the cursor resting on the Pokémon) and restarts on release.
  * @param {BrowserWindow} win
  * @param {string} channel
  * @param {Promise<void>} abort
@@ -113,17 +115,27 @@ function whenReadyToShow(win) {
 function waitFor(win, channel, abort, timeoutMs) {
   return new Promise((resolve) => {
     /** @param {Electron.IpcMainEvent} event */
+    const fromWin = (event) => !win.isDestroyed() && event.sender === win.webContents;
+    /** @param {Electron.IpcMainEvent} event */
     const onMessage = (event) => {
-      if (!win.isDestroyed() && event.sender === win.webContents) finish();
+      if (fromWin(event)) finish();
+    };
+    /** @param {Electron.IpcMainEvent} event @param {boolean} held */
+    const onHeld = (event, held) => {
+      if (!fromWin(event)) return;
+      clearTimeout(timer);
+      if (!held) timer = setTimeout(finish, timeoutMs);
     };
     const finish = () => {
       clearTimeout(timer);
       ipcMain.removeListener(channel, onMessage);
+      ipcMain.removeListener('overlay:held', onHeld);
       win.removeListener('closed', finish);
       resolve(undefined);
     };
-    const timer = setTimeout(finish, timeoutMs);
+    let timer = setTimeout(finish, timeoutMs);
     ipcMain.on(channel, onMessage);
+    ipcMain.on('overlay:held', onHeld);
     win.once('closed', finish);
     abort.then(finish);
   });
