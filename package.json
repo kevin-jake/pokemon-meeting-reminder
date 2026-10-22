@@ -1,0 +1,21 @@
+{
+  "name": "pokemon-meeting-reminder",
+  "version": "0.1.0",
+  "description": "Windows tray app that sends a Pokémon across your desktop before meetings.",
+  "main": "src/main/main.js",
+  "private": true,
+  "license": "UNLICENSED",
+  "author": "kevinc",
+  "scripts": {
+    "postinstall": "node node_modules/electron/install.js",
+    "start": "electron .",
+    "dev": "electron . --devtools",
+    "test-scene": "electron . --test",
+    "build-icons": "node scripts/build-icons.js",
+    "test": "node --test test/"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "sharp": "^0.35.5"
+  }
+}
