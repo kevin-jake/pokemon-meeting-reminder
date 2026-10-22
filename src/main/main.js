@@ -9,6 +9,8 @@ const { mediaDir } = require('./media');
 const { pickSpecies, buildScene, speciesByGen } = require('./species');
 const { createSecureStore } = require('./secure-store');
 const { createGoogleAccounts } = require('./calendar/google-accounts');
+const { createIcalAccounts } = require('./calendar/ical-accounts');
+const { normalizeFeedUrl, maskFeedUrl } = require('./calendar/ical');
 const { createRegistry } = require('./calendar/registry');
 const { createBrowserBridge, toastReminder, newPairingToken, pairingCode } = require('./calendar/browser-bridge');
 const { createReminderScheduler } = require('../shared/reminder-scheduler');
@@ -50,6 +52,19 @@ const GOOGLE_SETUP = [
   'Or set PMR_GOOGLE_CLIENT_ID / PMR_GOOGLE_CLIENT_SECRET in the environment.',
   'To build it into the app for everyone you share it with, put them in src/main/oauth-clients.local.json instead (format documented in oauth-clients.js).',
 ].join('\n');
+
+const ICAL_SETUP = [
+  'Copy your calendar\'s private iCal link, then choose "Add calendar link from clipboard…" again.',
+  '',
+  'Google Calendar: Settings → Settings for my calendars → (your calendar) → Integrate calendar → "Secret address in iCal format" → copy.',
+  'Outlook on the web: Settings → Calendar → Shared calendars → Publish a calendar → "Can view all details" → Publish → copy the ICS link.',
+  '',
+  'No sign-in is needed. The link is stored encrypted on this PC and checked every few minutes.',
+  'Anyone who has the link can read that calendar: if it leaks, reset it in Google / Outlook and add the new one.',
+].join('\n');
+
+/** @param {string} id */
+const isIcalId = (id) => id.startsWith('ical:');
 
 // One tray icon only: a second launch pings the first instance and exits.
 if (!app.requestSingleInstanceLock()) {
@@ -93,7 +108,8 @@ if (!app.requestSingleInstanceLock()) {
       },
       onPortChanged: (port) => settings.update({ browserBridge: { ...settings.get().browserBridge, port } }),
     });
-    const registry = createRegistry(() => [...google.sources(), bridge.source]);
+    const icals = createIcalAccounts({ getConfig: () => settings.get().ical, store });
+    const registry = createRegistry(() => [...google.sources(), ...icals.sources(), bridge.source]);
     const scheduler = createReminderScheduler({ alertMinutes: settings.get().alertMinutesBefore });
 
     /**
@@ -125,7 +141,7 @@ if (!app.requestSingleInstanceLock()) {
       return registry
         .sources()
         .filter((s) => s.isEnabled() && s !== bridge.source)
-        .map((s) => ({ id: s.id, provider: 'google', name: s.name, state: s.state(), label: s.accountLabel() }));
+        .map((s) => ({ id: s.id, provider: isIcalId(s.id) ? 'ical' : 'google', name: s.name, state: s.state(), label: s.accountLabel() }));
     }
     const syncAccounts = () => tray?.setAccounts(accounts());
 
@@ -141,7 +157,11 @@ if (!app.requestSingleInstanceLock()) {
         syncAccounts();
         for (const s of registry.sources()) {
           if (s.state() === 'reconnect') {
-            tray?.notify(`${s.name} sign-in expired for ${s.accountLabel() ?? 'an account'}. Reconnect it from the tray menu.`);
+            tray?.notify(
+              isIcalId(s.id)
+                ? `The calendar link for ${s.accountLabel() ?? 'a calendar'} stopped working. Copy the new link and replace it from the tray menu.`
+                : `${s.name} sign-in expired for ${s.accountLabel() ?? 'an account'}. Reconnect it from the tray menu.`,
+            );
           }
         }
       },
@@ -197,9 +217,46 @@ if (!app.requestSingleInstanceLock()) {
       void poller.pollNow();
     }
 
+    /**
+     * Adds the calendar link on the clipboard, or swaps it in for `replaceId`
+     * (a link that stopped working). Asks first, showing the link with its
+     * secret part masked, and clears the clipboard afterwards so the link is
+     * not pasted somewhere by accident.
+     * (Electron 45's clipboard is async, modelled on navigator.clipboard.)
+     * @param {string} [replaceId]
+     */
+    async function addCalendarLink(replaceId) {
+      try {
+        const copied = (await clipboard.readText()).trim();
+        const url = normalizeFeedUrl(copied);
+        if (!url) {
+          await dialog.showMessageBox({ type: 'info', title: 'Add calendar link', message: 'Copy the calendar link first', detail: ICAL_SETUP });
+          return;
+        }
+        const { response } = await dialog.showMessageBox({
+          type: 'question',
+          title: 'Add calendar link',
+          message: replaceId ? 'Replace the calendar link with the one on the clipboard?' : 'Add the calendar link on the clipboard?',
+          detail: `${maskFeedUrl(url)}\n\nIt is stored encrypted on this PC. Anyone who has this link can read the calendar, so don't share it.`,
+          buttons: [replaceId ? 'Replace' : 'Add', 'Cancel'],
+          defaultId: 0,
+          cancelId: 1,
+        });
+        if (response !== 0) return;
+        const source = replaceId ? await icals.replace(replaceId, url) : await icals.add(url);
+        if ((await clipboard.readText()).trim() === copied) clipboard.clear();
+        tray?.notify(`Calendar link ${replaceId ? 'replaced' : 'added'}: ${source.accountLabel() ?? 'calendar'}.`);
+      } catch (err) {
+        console.warn('Calendar link failed:', err);
+        dialog.showErrorBox('Could not add the calendar link', err instanceof Error ? err.message : String(err));
+      }
+      syncAccounts();
+      void poller.pollNow();
+    }
+
     /** @param {string} id */
     async function disconnect(id) {
-      await google.remove(id);
+      await (isIcalId(id) ? icals.remove(id) : google.remove(id));
       syncAccounts();
       void poller.pollNow();
     }
@@ -219,17 +276,22 @@ if (!app.requestSingleInstanceLock()) {
           settings.update({ forceShiny: on });
           syncPrefs();
         },
-        onAddAccount: () => void runSignIn((onStarted) => google.add(onStarted)),
+        onAddAccount: (provider) =>
+          void (provider === 'ical' ? addCalendarLink() : runSignIn((onStarted) => google.add(onStarted))),
         onReconnect: (id) =>
-          void runSignIn(async (onStarted) => {
-            await google.reconnect(id, onStarted);
-            return google.find(id);
-          }),
+          void (isIcalId(id)
+            ? addCalendarLink(id)
+            : runSignIn(async (onStarted) => {
+                await google.reconnect(id, onStarted);
+                return google.find(id);
+              })),
         onDisconnect: (id) => void disconnect(id),
         onCancelConnect: (id) => google.find(id)?.cancelConnect(),
         onCopyPairingCode: () => {
-          clipboard.writeText(pairingCode(bridge.port(), settings.get().browserBridge.token));
-          tray?.notify('Pairing code copied. Paste it into the extension options page in Edge / Chrome.');
+          clipboard
+            .writeText(pairingCode(bridge.port(), settings.get().browserBridge.token))
+            .then(() => tray?.notify('Pairing code copied. Paste it into the extension options page in Edge / Chrome.'))
+            .catch((err) => dialog.showErrorBox('Could not copy the pairing code', err instanceof Error ? err.message : String(err)));
         },
         onOpenExtensionFolder: () => void shell.openPath(extensionDir()),
         onClearBrowserMeetings: () => {

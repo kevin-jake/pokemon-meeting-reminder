@@ -12,7 +12,7 @@ const { app, Tray, Menu, nativeImage } = require('electron');
  * @property {() => void} onDismiss
  * @property {(key: string | null) => void} onPickFavorite  null = random Pokémon
  * @property {(on: boolean) => void} onToggleShiny
- * @property {(providerId: string) => void} onAddAccount  e.g. 'google'
+ * @property {(providerId: string) => void} onAddAccount  'google' | 'ical'
  * @property {(sourceId: string) => void} onReconnect
  * @property {(sourceId: string) => void} onDisconnect
  * @property {(sourceId: string) => void} onCancelConnect
@@ -26,7 +26,7 @@ const { app, Tray, Menu, nativeImage } = require('electron');
  * One calendar account row in the menu.
  * @typedef {object} TrayAccount
  * @property {string} id
- * @property {string} provider  e.g. 'google'
+ * @property {string} provider  'google' | 'ical'
  * @property {string} name      provider display name
  * @property {import('./calendar/types').SourceState} state
  * @property {string | null} label  signed-in account, e.g. an email address
@@ -52,8 +52,11 @@ function speciesLabel(e) {
   return `#${String(e.dex).padStart(3, '0')} ${e.name}`;
 }
 
-/** Calendar providers that get an "Add … account" item. */
-const PROVIDERS = [{ id: 'google', name: 'Google' }];
+/** Calendar providers that get an "Add …" item. */
+const PROVIDERS = [
+  { id: 'google', connectLabel: 'Connect Google…', addLabel: 'Add another Google account…' },
+  { id: 'ical', connectLabel: 'Add calendar link from clipboard…', addLabel: 'Add another calendar link from clipboard…' },
+];
 
 /**
  * One submenu per connected account.
@@ -70,19 +73,23 @@ function accountItem(a, handlers) {
         label: `${a.name}: waiting for browser sign-in…`,
         submenu: [{ label: 'Cancel sign-in', click: () => handlers.onCancelConnect(a.id) }],
       };
-    case 'reconnect':
+    case 'reconnect': {
+      const isLink = a.provider === 'ical';
       return {
-        label: `${a.name}: ${who} ⚠ sign-in expired`,
-        submenu: [{ label: 'Reconnect…', click: () => handlers.onReconnect(a.id) }, disconnect],
+        label: `${a.name}: ${who} ⚠ ${isLink ? 'link stopped working' : 'sign-in expired'}`,
+        submenu: [
+          { label: isLink ? 'Replace with link from clipboard…' : 'Reconnect…', click: () => handlers.onReconnect(a.id) },
+          disconnect,
+        ],
       };
+    }
     default:
       return { label: `${a.name}: ${who}`, submenu: [disconnect] };
   }
 }
 
 /**
- * Account rows followed by "Connect Google…" (no account yet) or
- * "Add another Google account…".
+ * Account rows, then each provider's "Connect…" (none yet) or "Add another…" item.
  * @param {TrayAccount[]} accounts
  * @param {TrayHandlers} handlers
  * @returns {Electron.MenuItemConstructorOptions[]}
@@ -93,7 +100,7 @@ function accountItems(accounts, handlers) {
     return [
       ...mine.map((a) => accountItem(a, handlers)),
       {
-        label: mine.length ? `Add another ${p.name} account…` : `Connect ${p.name}…`,
+        label: mine.length ? p.addLabel : p.connectLabel,
         click: () => handlers.onAddAccount(p.id),
       },
     ];
