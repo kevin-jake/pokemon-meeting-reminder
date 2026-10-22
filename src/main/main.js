@@ -8,7 +8,7 @@ const { createSettings } = require('./settings');
 const { createSettingsWindow } = require('./settings-window');
 const { discoverBrowsers, resolveProfile, openUrl } = require('./browsers');
 const { mediaDir } = require('./media');
-const { pickSpecies, buildScene, speciesByGen } = require('./species');
+const { pickSpecies, spriteUrl, buildScene, speciesByGen } = require('./species');
 const { openSecureStore } = require('./secure-store');
 const { createGoogleAccounts } = require('./calendar/google-accounts');
 const { createIcalAccounts } = require('./calendar/ical-accounts');
@@ -144,18 +144,22 @@ if (!app.requestSingleInstanceLock()) {
      * @param {string} meetingTitle
      * @param {number} minutesUntil  0 = the meeting is starting now (urgent: parks until dismissed)
      * @param {{ species?: string | null, meetingLink?: import('./overlay').MeetingLink | null }} [opts]
-     *   species overrides the favorite; meetingLink adds the Join / Open invite button
+     *   species overrides the favorites and generations; meetingLink adds the Join / Open invite button
      */
     function playReminder(meetingTitle, minutesUntil, { species = null, meetingLink = null } = {}) {
       const prefs = settings.get();
-      const pick = pickSpecies({ ...prefs, favoriteSpecies: species ?? prefs.favoriteSpecies });
+      const pick = pickSpecies(species ? { pokemonMode: 'favorites', favoriteSpecies: [species] } : prefs);
       overlays.enqueue(buildScene(pick, { meetingTitle, minutesUntil, mediaDir: mediaDir(), meetingLink }));
     }
 
-    /** Test scenes get an "Open invite" button that opens Google Calendar. @param {number} minutesUntil */
-    const playTest = (minutesUntil) =>
+    /**
+     * Test scenes get an "Open invite" button that opens Google Calendar.
+     * @param {number} minutesUntil
+     * @param {string | null} [species]  defaults to --species=, else the usual pick
+     */
+    const playTest = (minutesUntil, species = forcedSpecies) =>
       playReminder('Test meeting', minutesUntil, {
-        species: forcedSpecies,
+        species,
         meetingLink: { url: 'https://calendar.google.com/', kind: 'invite', source: null },
       });
 
@@ -377,7 +381,7 @@ if (!app.requestSingleInstanceLock()) {
         accounts: accounts(),
         browserBridge: bridge.statusLabel(),
         profiles,
-        speciesByGen: speciesByGen().map(([gen, list]) => [gen, list.map(({ key, name, dex }) => ({ key, name, dex }))]),
+        speciesByGen: speciesByGen().map(([gen, list]) => [gen, list.map((e) => ({ key: e.key, name: e.name, sprite: spriteUrl(e, mediaDir()) }))]),
         isPackaged: app.isPackaged,
         googleConfigured: google.isConfigured(),
       }),
@@ -385,8 +389,10 @@ if (!app.requestSingleInstanceLock()) {
         const before = settings.get();
         const after = settings.update(patch);
         if ('launchAtStartup' in patch) syncLoginItem();
-        // Preview the new pick right away (Random previews a random one).
-        if ('favoriteSpecies' in patch) playTest(5);
+        // Preview right away: a newly added favorite, else a pick from the new pool.
+        const added = after.favoriteSpecies.find((k) => !before.favoriteSpecies.includes(k));
+        if (added) playTest(5, added);
+        else if ('pokemonMode' in patch) playTest(5);
         if (after.alertMinutesBefore !== before.alertMinutesBefore) void poller.pollNow();
         if ('ignoredTitles' in patch) poller.recheck();
         if (after.browserBridge.enabled !== before.browserBridge.enabled) {

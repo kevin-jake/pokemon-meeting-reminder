@@ -21,17 +21,30 @@ const seq = (values) => {
   return () => values[i++ % values.length];
 };
 
-test('pickSpecies uses the favorite when it is in the manifest, else a random one', () => {
-  assert.equal(pickSpecies({ favoriteSpecies: 'lugia' }, seq([0.9]), manifest).entry.key, 'lugia');
-  assert.equal(pickSpecies({ favoriteSpecies: 'gone' }, seq([0.5, 0.9]), manifest).entry.key, 'lugia');
-  assert.equal(pickSpecies({ favoriteSpecies: null }, seq([0, 0.9]), manifest).entry.key, 'pikachu');
+test('pickSpecies picks among the favorites that are still in the manifest', () => {
+  const prefs = { pokemonMode: /** @type {const} */ ('favorites'), favoriteSpecies: ['togekiss', 'gone', 'pikachu'] };
+  // Pool is in manifest order: [pikachu, togekiss].
+  assert.equal(pickSpecies(prefs, seq([0, 0.9]), manifest).entry.key, 'pikachu');
+  assert.equal(pickSpecies(prefs, seq([0.6, 0.9]), manifest).entry.key, 'togekiss');
+  // Favorites are ignored in random mode, and an empty or stale list falls back to random.
+  assert.equal(pickSpecies({ ...prefs, pokemonMode: 'random' }, seq([0.5, 0.9]), manifest).entry.key, 'lugia');
+  assert.equal(pickSpecies({ pokemonMode: 'favorites', favoriteSpecies: ['gone'] }, seq([0.5, 0.9]), manifest).entry.key, 'lugia');
 });
 
-test('pickSpecies: shiny at 1/64, always with forceShiny, never without shiny GIFs', () => {
-  assert.equal(pickSpecies({ favoriteSpecies: 'pikachu' }, seq([0.01, 0]), manifest).shiny, true);
-  assert.equal(pickSpecies({ favoriteSpecies: 'pikachu' }, seq([0.02, 0]), manifest).shiny, false);
-  assert.equal(pickSpecies({ favoriteSpecies: 'pikachu', forceShiny: true }, seq([0.9]), manifest).shiny, true);
-  assert.equal(pickSpecies({ favoriteSpecies: 'togekiss', forceShiny: true }, seq([0]), manifest).shiny, false);
+test('pickSpecies: random mode only picks from the enabled generations', () => {
+  assert.equal(pickSpecies({ pokemonMode: 'random', generations: [4] }, seq([0, 0.9]), manifest).entry.key, 'togekiss');
+  assert.equal(pickSpecies({ pokemonMode: 'random', generations: [1, 2] }, seq([0.99, 0.9]), manifest).entry.key, 'lugia');
+  // No enabled generation in the manifest: anyone.
+  assert.equal(pickSpecies({ pokemonMode: 'random', generations: [9] }, seq([0.99, 0.9]), manifest).entry.key, 'togekiss');
+  // Favorites win over the generation filter.
+  assert.equal(pickSpecies({ pokemonMode: 'favorites', favoriteSpecies: ['lugia'], generations: [1] }, seq([0, 0.9]), manifest).entry.key, 'lugia');
+});
+
+test('pickSpecies: shiny 1 in 10, never without shiny GIFs', () => {
+  const only = (/** @type {string} */ key) => ({ pokemonMode: /** @type {const} */ ('favorites'), favoriteSpecies: [key] });
+  assert.equal(pickSpecies(only('pikachu'), seq([0, 0.09, 0]), manifest).shiny, true);
+  assert.equal(pickSpecies(only('pikachu'), seq([0, 0.1, 0]), manifest).shiny, false);
+  assert.equal(pickSpecies(only('togekiss'), seq([0]), manifest).shiny, false);
 });
 
 test('buildScene scales giants x2 and others x4, and wires left-facing GIFs and cries', () => {

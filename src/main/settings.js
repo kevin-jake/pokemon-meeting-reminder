@@ -7,8 +7,9 @@ const { app } = require('electron');
 /**
  * @typedef {object} Settings
  * @property {number} alertMinutesBefore
- * @property {string | null} favoriteSpecies  manifest key, or null for a random Pokémon
- * @property {boolean} forceShiny
+ * @property {'random' | 'favorites'} pokemonMode  a random Pokémon each time, or one of the favorites
+ * @property {string[]} favoriteSpecies  up to 6 manifest keys, used in "favorites" mode
+ * @property {number[]} generations  generations random mode picks from
  * @property {boolean} launchAtStartup
  * @property {boolean} nativeNotification
  * @property {number} pollIntervalSec
@@ -25,8 +26,9 @@ const { app } = require('electron');
 /** @type {Settings} */
 const DEFAULTS = {
   alertMinutesBefore: 5,
-  favoriteSpecies: null,
-  forceShiny: false,
+  pokemonMode: 'random',
+  favoriteSpecies: [],
+  generations: [1, 2, 3, 4, 5],
   launchAtStartup: false,
   nativeNotification: false,
   pollIntervalSec: 60,
@@ -54,6 +56,24 @@ function deepMerge(defaults, value) {
   return out;
 }
 
+/**
+ * Upgrades a settings.json from before multiple favorites: the single
+ * favoriteSpecies (string, or null for random) becomes a one-entry list, and
+ * the removed "Always shiny" switch is dropped.
+ * @param {any} raw
+ * @returns {any}
+ */
+function migrate(raw) {
+  if (!isPlainObject(raw)) return raw;
+  const out = { ...raw };
+  if (typeof out.favoriteSpecies === 'string' || out.favoriteSpecies === null) {
+    if (!('pokemonMode' in out)) out.pokemonMode = out.favoriteSpecies ? 'favorites' : 'random';
+    out.favoriteSpecies = out.favoriteSpecies ? [out.favoriteSpecies] : [];
+  }
+  delete out.forceShiny;
+  return out;
+}
+
 /** @param {unknown} v */
 function isPlainObject(v) {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -67,7 +87,7 @@ function createSettings(file = path.join(app.getPath('userData'), 'settings.json
   /** @type {Settings} */
   let current;
   try {
-    current = deepMerge(DEFAULTS, JSON.parse(fs.readFileSync(file, 'utf8')));
+    current = deepMerge(DEFAULTS, migrate(JSON.parse(fs.readFileSync(file, 'utf8'))));
   } catch (err) {
     if (/** @type {NodeJS.ErrnoException} */ (err).code !== 'ENOENT') console.warn('settings.json unreadable, using defaults:', err);
     current = structuredClone(DEFAULTS);
@@ -95,4 +115,4 @@ function createSettings(file = path.join(app.getPath('userData'), 'settings.json
   };
 }
 
-module.exports = { createSettings, deepMerge, DEFAULTS };
+module.exports = { createSettings, deepMerge, migrate, DEFAULTS };

@@ -150,6 +150,184 @@ function showSection(section) {
   }
 }
 
+/* ---------- Pokémon ---------- */
+
+/** Most favorites; main enforces the same cap (MAX_FAVORITES in species.js). */
+const MAX_FAVORITES = 6;
+
+/** Region names for the generation switches and picker headings. */
+const REGIONS = /** @type {Record<number, string>} */ ({ 1: 'Kanto', 2: 'Johto', 3: 'Hoenn', 4: 'Sinnoh', 5: 'Unova', 6: 'Kalos', 7: 'Alola', 8: 'Galar', 9: 'Paldea' });
+
+/** @param {number} gen */
+const genLabel = (gen) => `Gen ${gen}${REGIONS[gen] ? ` · ${REGIONS[gen]}` : ''}`;
+
+/** The favorites as last rendered; picker clicks edit a copy of this. */
+let favorites = /** @type {string[]} */ ([]);
+/** Every species by key, for the favorite slots. */
+const speciesInfo = /** @type {Map<string, { name: string, sprite: string }>} */ (new Map());
+
+/** @param {string} src @param {string} [cls] */
+const sprite = (src, cls = 'sprite') => el('img', { src, alt: '', class: cls, loading: 'lazy', decoding: 'async', draggable: 'false' });
+
+/**
+ * Builds the picker's option list once: 600+ animated rows are too many to
+ * rebuild on every refresh, and rebuilding would reset the scroll position.
+ * @param {SettingsState['speciesByGen']} byGen
+ */
+function buildPicker(byGen) {
+  if (speciesInfo.size) return;
+  const list = $('pickerList');
+  for (const [gen, entries] of byGen) {
+    const group = el('div', { class: 'picker-group', role: 'group', 'aria-label': genLabel(gen) }, [el('div', { class: 'picker-gen', text: genLabel(gen) })]);
+    for (const e of entries) {
+      speciesInfo.set(e.key, e);
+      group.append(
+        el('button', { type: 'button', class: 'picker-option', role: 'option', 'data-pick': e.key, 'data-name': e.name.toLowerCase(), tabindex: '-1' }, [
+          sprite(e.sprite),
+          el('span', { class: 'picker-name', text: e.name }),
+          icon('M5 12l5 5L20 7', 'icon check'),
+        ]),
+      );
+    }
+    list.append(group);
+  }
+}
+
+/** @param {SettingsState} state */
+function renderPokemon(state) {
+  const s = state.settings;
+  buildPicker(state.speciesByGen);
+  favorites = s.favoriteSpecies.filter((k) => speciesInfo.has(k));
+  const favoritesMode = s.pokemonMode === 'favorites';
+  select('pokemonMode').value = s.pokemonMode;
+  $('favoritesSetting').hidden = !favoritesMode;
+  if (!favoritesMode) closePicker();
+
+  // Six slots: the chosen ones, then empty ones that open the picker.
+  const slots = favorites.map((key) => {
+    const info = /** @type {{ name: string, sprite: string }} */ (speciesInfo.get(key));
+    return el('li', { class: 'slot filled' }, [
+      sprite(info.sprite, 'sprite big'),
+      el('span', { class: 'slot-name', text: info.name }),
+      el('button', { type: 'button', class: 'slot-remove', 'data-unpick': key, title: `Remove ${info.name}`, 'aria-label': `Remove ${info.name}` }, [
+        icon('M6 6l12 12M18 6L6 18', 'icon'),
+      ]),
+    ]);
+  });
+  for (let i = favorites.length; i < MAX_FAVORITES; i++) {
+    slots.push(el('li', { class: 'slot' }, [el('button', { type: 'button', class: 'slot-add', 'data-open-picker': '', title: 'Add a favorite', 'aria-label': 'Add a favorite' }, [icon('M12 5v14M5 12h14', 'icon')])]));
+  }
+  $('favorites').replaceChildren(...slots);
+
+  const full = favorites.length >= MAX_FAVORITES;
+  const left = MAX_FAVORITES - favorites.length;
+  $('favoritesHint').textContent = !favorites.length
+    ? `Pick up to ${MAX_FAVORITES}. Until you do, reminders send a random Pokémon. A short preview plays for each one you add.`
+    : full
+      ? 'Each reminder sends one of these. Remove one to pick another.'
+      : `Each reminder sends one of these. You can add ${left} more.`;
+  $('pickerLabel').textContent = full ? `All ${MAX_FAVORITES} chosen` : 'Add a favorite';
+  /** @type {HTMLButtonElement} */ ($('pickerToggle')).disabled = full;
+  if (full) closePicker();
+
+  for (const opt of /** @type {NodeListOf<HTMLButtonElement>} */ ($('pickerList').querySelectorAll('.picker-option'))) {
+    const chosen = favorites.includes(/** @type {string} */ (opt.dataset.pick));
+    opt.setAttribute('aria-selected', String(chosen));
+    opt.disabled = full && !chosen;
+  }
+
+  $('generations').replaceChildren(
+    ...state.speciesByGen.map(([gen, entries]) => {
+      const on = s.generations.includes(gen);
+      const box = /** @type {HTMLInputElement} */ (el('input', { type: 'checkbox', class: 'switch', 'data-gen': String(gen), 'aria-label': genLabel(gen) }));
+      box.checked = on;
+      // At least one generation stays on, or random mode would have no one to send.
+      box.disabled = on && s.generations.length === 1;
+      return el('label', { class: 'gen' }, [
+        el('span', { class: 'gen-text' }, [el('span', { class: 'gen-title', text: genLabel(gen) }), el('span', { class: 'gen-count', text: `${entries.length} Pokémon` })]),
+        box,
+      ]);
+    }),
+  );
+}
+
+/** @param {string[]} next */
+function saveFavorites(next) {
+  favorites = next;
+  void api.update({ favoriteSpecies: next }).then(refresh);
+}
+
+function openPicker() {
+  const pop = $('pickerPop');
+  if (!pop.hidden || favorites.length >= MAX_FAVORITES) return;
+  pop.hidden = false;
+  $('pickerToggle').setAttribute('aria-expanded', 'true');
+  const search = /** @type {HTMLInputElement} */ ($('pickerSearch'));
+  search.value = '';
+  filterPicker('');
+  $('pickerList').scrollTop = 0;
+  search.focus();
+}
+
+function closePicker() {
+  $('pickerPop').hidden = true;
+  $('pickerToggle').setAttribute('aria-expanded', 'false');
+}
+
+/** Shows only names containing `query`, and hides generations left empty. @param {string} query */
+function filterPicker(query) {
+  const q = query.trim().toLowerCase();
+  let any = false;
+  for (const group of /** @type {NodeListOf<HTMLElement>} */ ($('pickerList').querySelectorAll('.picker-group'))) {
+    let shown = 0;
+    for (const opt of /** @type {NodeListOf<HTMLElement>} */ (group.querySelectorAll('.picker-option'))) {
+      opt.hidden = Boolean(q) && !opt.dataset.name?.includes(q);
+      if (!opt.hidden) shown++;
+    }
+    group.hidden = shown === 0;
+    any ||= shown > 0;
+  }
+  $('pickerEmpty').hidden = any;
+}
+
+/** Visible, enabled options in list order, for arrow-key moves. */
+function pickerOptions() {
+  return [.../** @type {NodeListOf<HTMLButtonElement>} */ ($('pickerList').querySelectorAll('.picker-option'))].filter(
+    (o) => !o.hidden && !o.disabled && !(/** @type {HTMLElement} */ (o.parentElement).hidden),
+  );
+}
+
+$('pickerSearch').addEventListener('input', (e) => filterPicker(/** @type {HTMLInputElement} */ (e.target).value));
+
+/** Keyboard: arrows move through the list, Enter in the search box picks the first match, Escape closes. */
+$('picker').addEventListener('keydown', (e) => {
+  if ($('pickerPop').hidden) return;
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    closePicker();
+    $('pickerToggle').focus();
+    return;
+  }
+  const options = pickerOptions();
+  const at = options.indexOf(/** @type {HTMLButtonElement} */ (document.activeElement));
+  if (e.key === 'Enter' && document.activeElement === $('pickerSearch') && options[0]) {
+    e.preventDefault();
+    options[0].click();
+  } else if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    options[Math.min(at + 1, options.length - 1)]?.focus();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (at <= 0) $('pickerSearch').focus();
+    else options[at - 1].focus();
+  }
+});
+
+/** Clicks outside the open picker close it. */
+document.addEventListener('pointerdown', (e) => {
+  if (!$('pickerPop').hidden && e.target instanceof Node && !$('picker').contains(e.target)) closePicker();
+});
+
 /** @param {SettingsState} state */
 function render(state) {
   const s = state.settings;
@@ -168,15 +346,7 @@ function render(state) {
   const ignored = /** @type {HTMLTextAreaElement} */ ($('ignoredTitles'));
   if (document.activeElement !== ignored) ignored.value = s.ignoredTitles.join('\n');
 
-  const favorite = select('favorite');
-  favorite.replaceChildren(el('option', { value: NONE, text: 'Random' }));
-  for (const [gen, list] of state.speciesByGen) {
-    const group = el('optgroup', { label: `Gen ${gen}` });
-    for (const e of list) group.append(el('option', { value: e.key, text: `#${String(e.dex).padStart(3, '0')} ${e.name}` }));
-    favorite.append(group);
-  }
-  favorite.value = s.favoriteSpecies ?? NONE;
-  checkbox('forceShiny').checked = s.forceShiny;
+  renderPokemon(state);
 
   $('accounts').replaceChildren(...state.accounts.map((a) => accountRow(a, state)));
   setBadge('calendars', state.accounts.some((a) => a.state === 'reconnect'));
@@ -217,11 +387,14 @@ document.addEventListener('change', (e) => {
   /** @type {object | null} */
   let patch = null;
   if (sourceId) patch = { accountBrowsers: { [sourceId]: t.value || null } };
-  else if (t instanceof HTMLInputElement) {
+  else if (t.dataset.gen) {
+    const boxes = /** @type {NodeListOf<HTMLInputElement>} */ (document.querySelectorAll('input[data-gen]'));
+    const generations = [...boxes].filter((b) => b.checked).map((b) => Number(b.dataset.gen));
+    if (generations.length) patch = { generations };
+  } else if (t instanceof HTMLInputElement) {
     switch (t.id) {
       case 'nativeNotification':
       case 'launchAtStartup':
-      case 'forceShiny':
         patch = { [t.id]: t.checked };
         break;
       case 'bridgeEnabled':
@@ -236,8 +409,8 @@ document.addEventListener('change', (e) => {
       case 'alertMinutes':
         patch = { alertMinutesBefore: Number(t.value) };
         break;
-      case 'favorite':
-        patch = { favoriteSpecies: t.value || null };
+      case 'pokemonMode':
+        patch = { pokemonMode: t.value };
         break;
       case 'defaultBrowser':
         patch = { defaultBrowser: t.value || null };
@@ -252,6 +425,23 @@ document.addEventListener('click', (e) => {
   // Buttons hold icons, so the click may land on the svg inside.
   const t = e.target instanceof Element ? e.target.closest('button') : null;
   if (!t) return;
+  if (t.id === 'pickerToggle' || t.dataset.openPicker !== undefined) {
+    if (t.id === 'pickerToggle' && !$('pickerPop').hidden) closePicker();
+    else openPicker();
+    return;
+  }
+  if (t.dataset.pick) {
+    const key = t.dataset.pick;
+    if (favorites.includes(key)) saveFavorites(favorites.filter((k) => k !== key));
+    else if (favorites.length < MAX_FAVORITES) saveFavorites([...favorites, key]);
+    // The list stays open for more picks until all six are chosen.
+    if (favorites.length >= MAX_FAVORITES) closePicker();
+    return;
+  }
+  if (t.dataset.unpick) {
+    saveFavorites(favorites.filter((k) => k !== t.dataset.unpick));
+    return;
+  }
   if (t.dataset.section) {
     showSection(t.dataset.section);
     return;

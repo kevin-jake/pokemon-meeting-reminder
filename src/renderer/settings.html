@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src file:" />
     <title>Settings · Pokémon Meeting Reminder</title>
     <link rel="stylesheet" href="settings.css" />
   </head>
@@ -173,17 +173,40 @@
             <h2>Appearance</h2>
             <div class="setting">
               <div class="setting-text">
-                <label class="setting-title" for="favorite">Favorite Pokémon</label>
-                <p class="setting-desc">"Random" sends a different Pokémon each time. Pick a favorite to always see that one. A short preview plays when you choose it.</p>
+                <label class="setting-title" for="pokemonMode">Who shows up</label>
+                <p class="setting-desc">"Random" sends a different Pokémon each time. "Favorites" sends one of the Pokémon you pick below. 1 in 10 appearances is shiny.</p>
               </div>
-              <select id="favorite"></select>
+              <select id="pokemonMode">
+                <option value="random">Random</option>
+                <option value="favorites">Favorites</option>
+              </select>
             </div>
-            <div class="setting">
+            <div class="setting stacked" id="favoritesSetting">
               <div class="setting-text">
-                <label class="setting-title" for="forceShiny">Always shiny</label>
-                <p class="setting-desc">Always use the rare shiny colors. When this is off, 1 in 64 reminders is shiny.</p>
+                <span class="setting-title">Favorite Pokémon</span>
+                <p class="setting-desc" id="favoritesHint"></p>
               </div>
-              <input type="checkbox" class="switch" id="forceShiny" />
+              <ul class="favorites" id="favorites" aria-label="Favorite Pokémon"></ul>
+              <div class="picker" id="picker">
+                <button type="button" class="picker-toggle" id="pickerToggle" aria-haspopup="listbox" aria-expanded="false" aria-controls="pickerPop">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+                  <span id="pickerLabel">Add a favorite</span>
+                  <svg class="icon chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                </button>
+                <div class="picker-pop" id="pickerPop" hidden>
+                  <input type="search" id="pickerSearch" placeholder="Search Pokémon" autocomplete="off" spellcheck="false" aria-label="Search Pokémon" />
+                  <div class="picker-list" id="pickerList" role="listbox" aria-label="Pokémon" aria-multiselectable="true"></div>
+                  <p class="picker-empty" id="pickerEmpty" hidden>No Pokémon match that name.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="group">
+            <h2>Generations</h2>
+            <p class="group-desc">Random reminders only send Pokémon from the generations switched on here.</p>
+            <div class="setting stacked">
+              <div class="gens" id="generations"></div>
             </div>
           </div>
         </section>

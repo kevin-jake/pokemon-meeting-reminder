@@ -3,6 +3,7 @@
 const path = require('node:path');
 const { BrowserWindow, ipcMain } = require('electron');
 const { isValidIgnoredTitles } = require('../shared/ignored-meetings');
+const { MAX_FAVORITES } = require('./species');
 
 const RENDERER_DIR = path.join(__dirname, '..', 'renderer');
 
@@ -14,7 +15,7 @@ const RENDERER_DIR = path.join(__dirname, '..', 'renderer');
  * @property {Array<{ id: string, provider: string, name: string, state: import('./calendar/types').SourceState, label: string | null }>} accounts
  * @property {string | null} browserBridge  status row text, null when switched off
  * @property {import('./browsers').BrowserProfile[]} profiles
- * @property {Array<[number, Array<{ key: string, name: string, dex: number }>]>} speciesByGen
+ * @property {Array<[number, Array<{ key: string, name: string, sprite: string }>]>} speciesByGen  sprite is a file:// URL
  * @property {boolean} isPackaged  "Launch at startup" only works for an installed build
  * @property {boolean} googleConfigured
  */
@@ -24,8 +25,14 @@ const EDITABLE = {
   alertMinutesBefore: (/** @type {unknown} */ v) => typeof v === 'number' && Number.isInteger(v) && v >= 1 && v <= 60,
   nativeNotification: (/** @type {unknown} */ v) => typeof v === 'boolean',
   launchAtStartup: (/** @type {unknown} */ v) => typeof v === 'boolean',
-  favoriteSpecies: (/** @type {unknown} */ v) => v === null || (typeof v === 'string' && /^[a-z0-9_-]+$/.test(v)),
-  forceShiny: (/** @type {unknown} */ v) => typeof v === 'boolean',
+  pokemonMode: (/** @type {unknown} */ v) => v === 'random' || v === 'favorites',
+  favoriteSpecies: (/** @type {unknown} */ v) =>
+    Array.isArray(v) &&
+    v.length <= MAX_FAVORITES &&
+    new Set(v).size === v.length &&
+    v.every((k) => typeof k === 'string' && /^[a-z0-9_-]+$/.test(k)),
+  generations: (/** @type {unknown} */ v) =>
+    Array.isArray(v) && v.length > 0 && new Set(v).size === v.length && v.every((g) => Number.isInteger(g) && g >= 1 && g <= 9),
   ignoredTitles: isValidIgnoredTitles,
   defaultBrowser: (/** @type {unknown} */ v) => v === null || typeof v === 'string',
   accountBrowsers: (/** @type {unknown} */ v) =>
