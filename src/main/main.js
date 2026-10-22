@@ -16,6 +16,7 @@ const { normalizeFeedUrl, maskFeedUrl } = require('./calendar/ical');
 const { createRegistry } = require('./calendar/registry');
 const { createBrowserBridge, toastReminder, newPairingToken, pairingCode } = require('./calendar/browser-bridge');
 const { createReminderScheduler } = require('../shared/reminder-scheduler');
+const { createTitleFilter } = require('../shared/ignored-meetings');
 const { createPoller, mergeTitles } = require('./poller');
 const { loadBuiltInClients, resolveGoogleClient } = require('./oauth-clients');
 
@@ -130,7 +131,7 @@ if (!app.requestSingleInstanceLock()) {
       onToast: (toast) => {
         if (!settings.get().browserBridge.toastReminders) return;
         const reminder = toastReminder(toast, poller.events(), Date.now());
-        if (reminder) playReminder(reminder.title, reminder.minutesUntil);
+        if (reminder && !createTitleFilter(settings.get().ignoredTitles)(reminder.title)) playReminder(reminder.title, reminder.minutesUntil);
       },
       onPortChanged: (port) => settings.update({ browserBridge: { ...settings.get().browserBridge, port } }),
     });
@@ -384,6 +385,7 @@ if (!app.requestSingleInstanceLock()) {
         // Preview the new pick right away (Random previews a random one).
         if ('favoriteSpecies' in patch) playTest(5);
         if (after.alertMinutesBefore !== before.alertMinutesBefore) void poller.pollNow();
+        if ('ignoredTitles' in patch) poller.recheck();
         if (after.browserBridge.enabled !== before.browserBridge.enabled) {
           if (after.browserBridge.enabled) void bridge.start().then(() => poller.pollNow());
           else {

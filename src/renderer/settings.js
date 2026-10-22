@@ -115,6 +115,9 @@ function render(state) {
   checkbox('launchAtStartup').checked = s.launchAtStartup;
   checkbox('launchAtStartup').disabled = !state.isPackaged;
   $('startupHint').textContent = state.isPackaged ? '' : '(only for the installed app, not npm start)';
+  // Re-renders come with every poll: don't clobber a list that is being typed.
+  const ignored = /** @type {HTMLTextAreaElement} */ ($('ignoredTitles'));
+  if (document.activeElement !== ignored) ignored.value = s.ignoredTitles.join('\n');
 
   const favorite = select('favorite');
   favorite.replaceChildren(el('option', { value: NONE, text: 'Random' }));
@@ -150,6 +153,12 @@ async function refresh() {
 /** Checkbox / select → settings patch. */
 document.addEventListener('change', (e) => {
   const t = e.target;
+  if (t instanceof HTMLTextAreaElement && t.id === 'ignoredTitles') {
+    // One title per line; main checks the list's shape and caps.
+    const titles = [...new Set(t.value.split(/\r?\n/).map((l) => l.trim()).filter(Boolean))];
+    void api.update({ ignoredTitles: titles.slice(0, 200).map((l) => l.slice(0, 200)) }).then(refresh);
+    return;
+  }
   if (!(t instanceof HTMLInputElement || t instanceof HTMLSelectElement)) return;
   const sourceId = t.getAttribute('data-source');
   /** @type {object | null} */

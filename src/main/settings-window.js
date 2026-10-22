@@ -2,6 +2,7 @@
 'use strict';
 const path = require('node:path');
 const { BrowserWindow, ipcMain } = require('electron');
+const { isValidIgnoredTitles } = require('../shared/ignored-meetings');
 
 const RENDERER_DIR = path.join(__dirname, '..', 'renderer');
 
@@ -25,6 +26,7 @@ const EDITABLE = {
   launchAtStartup: (/** @type {unknown} */ v) => typeof v === 'boolean',
   favoriteSpecies: (/** @type {unknown} */ v) => v === null || (typeof v === 'string' && /^[a-z0-9_-]+$/.test(v)),
   forceShiny: (/** @type {unknown} */ v) => typeof v === 'boolean',
+  ignoredTitles: isValidIgnoredTitles,
   defaultBrowser: (/** @type {unknown} */ v) => v === null || typeof v === 'string',
   accountBrowsers: (/** @type {unknown} */ v) =>
     typeof v === 'object' && v !== null && Object.values(v).every((p) => p === null || typeof p === 'string'),

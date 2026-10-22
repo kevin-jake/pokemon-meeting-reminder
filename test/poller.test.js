@@ -75,7 +75,7 @@ test('poller fires due reminders, reports status and keeps cached events when ev
   const poller = createPoller({
     registry: reg,
     scheduler: createReminderScheduler(),
-    getSettings: () => ({ pollIntervalSec: 60, lookaheadMinutes: 60, alertMinutesBefore: 5 }),
+    getSettings: () => ({ pollIntervalSec: 60, lookaheadMinutes: 60, alertMinutesBefore: 5, ignoredTitles: [] }),
     onReminders: (due) => fired.push(...due.map((d) => `${d.event.id}:${d.kind}`)),
     onStatus: (s) => statuses.push(s),
     now: () => now,
@@ -88,5 +88,34 @@ test('poller fires due reminders, reports status and keeps cached events when ev
   await poller.pollNow();
   assert.deepEqual(fired, ['a:warn', 'a:start']);
   assert.match(/** @type {string} */ (statuses.at(-1)), /google unavailable/);
+  poller.stop();
+});
+
+test('poller: meetings on the ignore list get no reminder and are skipped in the status line', async () => {
+  const reg = createRegistry([
+    source('google', async () => [ev('focus', NOW + 2 * MIN, 'google', 'Focus time (company-wide)'), ev('sync', NOW + 20 * MIN, 'google', 'Sync')]),
+  ]);
+  /** @type {string[]} */
+  const fired = [];
+  /** @type {string[]} */
+  const statuses = [];
+  let ignoredTitles = [' focus TIME (company-wide) '];
+  const poller = createPoller({
+    registry: reg,
+    scheduler: createReminderScheduler(),
+    getSettings: () => ({ pollIntervalSec: 60, lookaheadMinutes: 60, alertMinutesBefore: 5, ignoredTitles }),
+    onReminders: (due) => fired.push(...due.map((d) => `${d.event.id}:${d.kind}`)),
+    onStatus: (s) => statuses.push(s),
+    now: () => NOW,
+  });
+  await poller.pollNow();
+  assert.deepEqual(fired, []);
+  assert.equal(statuses.at(-1), 'Next: Sync at 09:20 (in 20 min)');
+  // Toast matching still sees the ignored meeting.
+  assert.deepEqual(poller.events().map((e) => e.id), ['focus', 'sync']);
+  // Taking it off the list brings the reminder back without a fetch.
+  ignoredTitles = [];
+  poller.recheck();
+  assert.deepEqual(fired, ['focus:warn']);
   poller.stop();
 });

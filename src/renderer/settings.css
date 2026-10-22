@@ -81,6 +81,20 @@ select {
   max-width: 100%;
 }
 
+label.stacked {
+  margin-top: 4px;
+}
+
+textarea {
+  font: inherit;
+  color: inherit;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 10px;
+  resize: vertical;
+}
+
 button {
   cursor: pointer;
 }

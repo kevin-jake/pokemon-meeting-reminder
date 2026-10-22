@@ -1,6 +1,7 @@
 // @ts-check
 'use strict';
 const { ReconnectNeededError } = require('./calendar/types');
+const { createTitleFilter } = require('../shared/ignored-meetings');
 
 /** @typedef {import('./calendar/types').CalendarEvent} CalendarEvent */
 /** @typedef {import('../shared/reminder-scheduler').DueReminder} DueReminder */
@@ -45,10 +46,12 @@ function mergeTitles(titles, max = 40) {
  * Polls the calendars every `pollIntervalSec` and feeds the scheduler. Between
  * polls a timer is armed for the next reminder moment, so reminders fire on
  * time (from the cached events) instead of up to a poll interval late.
+ * Meetings on the `ignoredTitles` list never reach the scheduler or the
+ * status line.
  * @param {object} deps
  * @param {ReturnType<typeof import('./calendar/registry').createRegistry>} deps.registry
  * @param {ReturnType<typeof import('../shared/reminder-scheduler').createReminderScheduler>} deps.scheduler
- * @param {() => { pollIntervalSec: number, lookaheadMinutes: number, alertMinutesBefore: number }} deps.getSettings
+ * @param {() => { pollIntervalSec: number, lookaheadMinutes: number, alertMinutesBefore: number, ignoredTitles: string[] }} deps.getSettings
  * @param {(due: DueReminder[], now: number) => void} deps.onReminders
  * @param {(status: string) => void} deps.onStatus
  * @param {() => void} [deps.onSourcesChanged]  a source changed state during a poll (e.g. needs reconnect)
@@ -69,9 +72,12 @@ function createPoller({ registry, scheduler, getSettings, onReminders, onStatus,
   /** Runs the scheduler over the cached events, reports, and re-arms the precise timer. */
   function check() {
     const t = now();
-    const { due, next } = scheduler.ingest(events, t);
+    const settings = getSettings();
+    const ignored = createTitleFilter(settings.ignoredTitles);
+    const wanted = events.filter((e) => !ignored(e.title));
+    const { due, next } = scheduler.ingest(wanted, t);
     if (due.length) onReminders(due, t);
-    onStatus(statusText({ events, now: t, connected: registry.connected().length, failed, lookaheadMinutes: getSettings().lookaheadMinutes }));
+    onStatus(statusText({ events: wanted, now: t, connected: registry.connected().length, failed, lookaheadMinutes: settings.lookaheadMinutes }));
     if (timer) clearTimeout(timer);
     timer = null;
     if (next !== null) timer = setTimeout(check, Math.min(Math.max(next - t, 0) + 50, MAX_TIMER_MS));
@@ -126,7 +132,9 @@ function createPoller({ registry, scheduler, getSettings, onReminders, onStatus,
       interval = timer = null;
     },
     pollNow,
-    /** Events from the last successful poll. */
+    /** Re-applies settings that need no fetch (e.g. the ignore list). */
+    recheck: check,
+    /** Events from the last successful poll, ignored ones included (toasts are matched against them). */
     events: () => [...events],
   };
 }

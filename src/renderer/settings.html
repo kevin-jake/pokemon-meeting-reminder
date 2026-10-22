@@ -25,6 +25,9 @@
         </label>
         <label><input type="checkbox" id="nativeNotification" /> Also show a Windows notification</label>
         <label><input type="checkbox" id="launchAtStartup" /> Launch at startup <span id="startupHint" class="hint"></span></label>
+        <label class="stacked" for="ignoredTitles">No reminder for meetings titled (one per line)</label>
+        <textarea id="ignoredTitles" rows="4" spellcheck="false" placeholder="Focus time (company-wide)"></textarea>
+        <p class="hint">Case doesn't matter. Use * as a wildcard, e.g. "Lunch*" skips every title starting with Lunch.</p>
         <div class="row">
           <button type="button" data-action="testReminder" data-arg="5">Test: 5 min warning</button>
           <button type="button" data-action="testReminder" data-arg="0">Test: meeting now</button>

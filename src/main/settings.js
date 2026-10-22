@@ -13,6 +13,7 @@ const { app } = require('electron');
  * @property {boolean} nativeNotification
  * @property {number} pollIntervalSec
  * @property {number} lookaheadMinutes
+ * @property {string[]} ignoredTitles  meetings with these titles get no reminder (see shared/ignored-meetings.js)
  * @property {{ clientId: string, clientSecret: string, enabled: boolean, allCalendars: boolean }} google
  * @property {{ clientId: string, enabled: boolean }} microsoft
  * @property {{ enabled: boolean, refreshMinutes: number }} ical  calendars subscribed by private iCal link
@@ -30,6 +31,7 @@ const DEFAULTS = {
   nativeNotification: false,
   pollIntervalSec: 60,
   lookaheadMinutes: 60,
+  ignoredTitles: ['Focus time (company-wide)'],
   google: { clientId: '', clientSecret: '', enabled: true, allCalendars: false },
   microsoft: { clientId: '', enabled: true },
   ical: { enabled: true, refreshMinutes: 5 },
