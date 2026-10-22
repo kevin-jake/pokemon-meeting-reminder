@@ -198,7 +198,7 @@ async function playScene(payload, ctx) {
 
     /** @type {Promise<unknown>[]} */
     const fades = [];
-    if (payload.urgent) {
+    if (payload.urgent || ctx.isDismissed()) {
       // Dismissed (mid-pass or while parked): let every window fade before tearing down.
       const live = windows.filter((w) => !w.win.isDestroyed());
       for (const { win } of live) win.webContents.send('scene:stop');
