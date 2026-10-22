@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Pokémon Meeting Reminder bridge</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font: 14px 'Segoe UI', system-ui, sans-serif; max-width: 760px; margin: 32px auto; padding: 0 16px; }
+    h1 { font-size: 20px; }
+    h2 { font-size: 16px; margin-top: 28px; }
+    input { width: 100%; box-sizing: border-box; padding: 6px 8px; font: 13px Consolas, monospace; }
+    button { margin: 8px 8px 0 0; padding: 6px 14px; }
+    .ok { color: #2e7d32; }
+    .bad { color: #c62828; }
+    .muted { opacity: 0.7; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { text-align: left; padding: 4px 8px 4px 0; vertical-align: top; }
+    code { font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h1>Pokémon Meeting Reminder bridge</h1>
+  <p class="muted">Passes the meetings that Outlook on the web and Teams load in this browser, and the meeting toasts they raise, to the tray app on this PC. Nothing leaves your computer.</p>
+
+  <h2>1. Pair with the app</h2>
+  <p>In the tray menu choose <b>Outlook / Teams (browser) ▸ Copy pairing code</b> and paste it here.</p>
+  <input id="code" placeholder="pmr:47321:…" autocomplete="off" spellcheck="false">
+  <button id="save">Save and test</button>
+  <span id="pairStatus"></span>
+
+  <h2>2. Keep Outlook open</h2>
+  <p>Keep an Outlook on the web tab (or the Outlook PWA) open, and open its calendar once so the week is loaded. Teams works the same way. Meetings are sent to the app every minute.</p>
+
+  <h2>Status</h2>
+  <p id="pushStatus" class="muted">No push yet.</p>
+  <button id="pushNow">Send now</button>
+  <button id="clear">Forget captured meetings</button>
+
+  <h2>Captured meetings</h2>
+  <table><thead><tr><th>Start</th><th>Title</th><th>Join link</th></tr></thead><tbody id="meetings"></tbody></table>
+
+  <h2>Capture log</h2>
+  <p class="muted">Responses in which meetings were found (most recent first).</p>
+  <table><tbody id="log"></tbody></table>
+
+  <script src="lib/meetings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

@@ -126,6 +126,8 @@ function createPoller({ registry, scheduler, getSettings, onReminders, onStatus,
       interval = timer = null;
     },
     pollNow,
+    /** Events from the last successful poll. */
+    events: () => [...events],
   };
 }
 

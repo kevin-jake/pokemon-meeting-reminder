@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
 const path = require('node:path');
-const { app, dialog, shell, safeStorage, powerMonitor, Notification } = require('electron');
+const { app, clipboard, dialog, shell, safeStorage, powerMonitor, Notification } = require('electron');
 const { createTray } = require('./tray');
 const { createOverlayQueue } = require('./overlay');
 const { createSettings } = require('./settings');
@@ -10,6 +10,7 @@ const { pickSpecies, buildScene, speciesByGen } = require('./species');
 const { createSecureStore } = require('./secure-store');
 const { createGoogleAccounts } = require('./calendar/google-accounts');
 const { createRegistry } = require('./calendar/registry');
+const { createBrowserBridge, toastReminder, newPairingToken, pairingCode } = require('./calendar/browser-bridge');
 const { createReminderScheduler } = require('../shared/reminder-scheduler');
 const { createPoller, mergeTitles } = require('./poller');
 const { loadBuiltInClients, resolveGoogleClient } = require('./oauth-clients');
@@ -29,6 +30,13 @@ function meetingLinkOf([first]) {
   if (first?.joinUrl) return { url: first.joinUrl, kind: 'join' };
   if (first?.link) return { url: first.link, kind: 'invite' };
   return null;
+}
+
+/** The unpacked browser extension, for Edge / Chrome "Load unpacked". */
+function extensionDir() {
+  return app.isPackaged
+    ? path.join(process.resourcesPath, 'browser-extension')
+    : path.join(app.getAppPath(), 'browser-extension');
 }
 
 const GOOGLE_SETUP = [
@@ -74,7 +82,18 @@ if (!app.requestSingleInstanceLock()) {
       store,
       openExternal: (url) => shell.openExternal(url),
     });
-    const registry = createRegistry(() => google.sources());
+    if (!settings.get().browserBridge.token) settings.update({ browserBridge: { ...settings.get().browserBridge, token: newPairingToken() } });
+    const bridge = createBrowserBridge({
+      getConfig: () => settings.get().browserBridge,
+      onMeetingsChanged: () => void poller.pollNow(),
+      onToast: (toast) => {
+        if (!settings.get().browserBridge.toastReminders) return;
+        const reminder = toastReminder(toast, poller.events(), Date.now());
+        if (reminder) playReminder(reminder.title, reminder.minutesUntil);
+      },
+      onPortChanged: (port) => settings.update({ browserBridge: { ...settings.get().browserBridge, port } }),
+    });
+    const registry = createRegistry(() => [...google.sources(), bridge.source]);
     const scheduler = createReminderScheduler({ alertMinutes: settings.get().alertMinutesBefore });
 
     /**
@@ -105,7 +124,7 @@ if (!app.requestSingleInstanceLock()) {
     function accounts() {
       return registry
         .sources()
-        .filter((s) => s.isEnabled())
+        .filter((s) => s.isEnabled() && s !== bridge.source)
         .map((s) => ({ id: s.id, provider: 'google', name: s.name, state: s.state(), label: s.accountLabel() }));
     }
     const syncAccounts = () => tray?.setAccounts(accounts());
@@ -114,7 +133,10 @@ if (!app.requestSingleInstanceLock()) {
       registry,
       scheduler,
       getSettings: () => settings.get(),
-      onStatus: (text) => tray?.setStatus(text),
+      onStatus: (text) => {
+        tray?.setBrowserBridge(bridge.statusLabel());
+        tray?.setStatus(text);
+      },
       onSourcesChanged: () => {
         syncAccounts();
         for (const s of registry.sources()) {
@@ -205,15 +227,26 @@ if (!app.requestSingleInstanceLock()) {
           }),
         onDisconnect: (id) => void disconnect(id),
         onCancelConnect: (id) => google.find(id)?.cancelConnect(),
+        onCopyPairingCode: () => {
+          clipboard.writeText(pairingCode(bridge.port(), settings.get().browserBridge.token));
+          tray?.notify('Pairing code copied. Paste it into the extension options page in Edge / Chrome.');
+        },
+        onOpenExtensionFolder: () => void shell.openPath(extensionDir()),
+        onClearBrowserMeetings: () => {
+          void bridge.source.disconnect().then(() => poller.pollNow());
+        },
         onQuit: () => app.quit(),
       },
       {
         speciesByGen: speciesByGen(),
         prefs: { favoriteSpecies: settings.get().favoriteSpecies, forceShiny: settings.get().forceShiny },
         accounts: accounts(),
+        browserBridge: bridge.statusLabel(),
       },
     );
 
+    void bridge.start().then(() => tray?.setBrowserBridge(bridge.statusLabel()));
+    app.on('before-quit', () => bridge.stop());
     poller.start();
     // Timers drift or stall across sleep; catch up on anything missed as soon as the user is back.
     powerMonitor.on('resume', () => void poller.pollNow());

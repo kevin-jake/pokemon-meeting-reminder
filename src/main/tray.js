@@ -16,6 +16,9 @@ const { app, Tray, Menu, nativeImage } = require('electron');
  * @property {(sourceId: string) => void} onReconnect
  * @property {(sourceId: string) => void} onDisconnect
  * @property {(sourceId: string) => void} onCancelConnect
+ * @property {() => void} onCopyPairingCode       browser extension pairing code → clipboard
+ * @property {() => void} onOpenExtensionFolder   for "Load unpacked" in Edge / Chrome
+ * @property {() => void} onClearBrowserMeetings
  * @property {() => void} onQuit
  */
 
@@ -98,6 +101,26 @@ function accountItems(accounts, handlers) {
 }
 
 /**
+ * Outlook / Teams (browser): N meetings captured ▸ pairing and setup helpers.
+ * @param {string | null} label  null when the bridge is switched off
+ * @param {TrayHandlers} handlers
+ * @returns {Electron.MenuItemConstructorOptions[]}
+ */
+function browserBridgeItems(label, handlers) {
+  if (!label) return [];
+  return [
+    {
+      label,
+      submenu: [
+        { label: 'Copy pairing code', click: handlers.onCopyPairingCode },
+        { label: 'Open extension folder (Load unpacked)', click: handlers.onOpenExtensionFolder },
+        { label: 'Forget captured meetings', click: handlers.onClearBrowserMeetings },
+      ],
+    },
+  ];
+}
+
+/**
  * Favorite Pokémon ▸ (•) Random | Always shiny | Gen 1 ▸ … Gen 5 ▸
  * Radio items in different submenus don't uncheck each other, but the whole
  * menu is rebuilt on every change, so `checked` is always computed fresh.
@@ -139,7 +162,7 @@ function favoriteSubmenu(speciesByGen, prefs, handlers) {
 /**
  * Creates the tray icon. The menu is rebuilt whenever state changes.
  * @param {TrayHandlers} handlers
- * @param {{ speciesByGen: Array<[number, ManifestEntry[]]>, prefs: TrayPrefs, accounts: TrayAccount[] }} init
+ * @param {{ speciesByGen: Array<[number, ManifestEntry[]]>, prefs: TrayPrefs, accounts: TrayAccount[], browserBridge: string | null }} init
  */
 function createTray(handlers, init) {
   const tray = new Tray(loadTrayIcon());
@@ -148,6 +171,7 @@ function createTray(handlers, init) {
   let prefs = init.prefs;
   /** @type {TrayAccount[]} */
   let accounts = init.accounts;
+  let browserBridge = init.browserBridge;
 
   function rebuild() {
     const favorite = init.speciesByGen.flatMap(([, list]) => list).find((e) => e.key === prefs.favoriteSpecies);
@@ -156,6 +180,7 @@ function createTray(handlers, init) {
         { label: status, enabled: false },
         { type: 'separator' },
         ...accountItems(accounts, handlers),
+        ...browserBridgeItems(browserBridge, handlers),
         { type: 'separator' },
         { label: 'Dismiss reminder', click: handlers.onDismiss },
         { type: 'separator' },
@@ -189,6 +214,12 @@ function createTray(handlers, init) {
     /** @param {TrayAccount[]} next */
     setAccounts(next) {
       accounts = next;
+      rebuild();
+    },
+    /** @param {string | null} label */
+    setBrowserBridge(label) {
+      if (label === browserBridge) return;
+      browserBridge = label;
       rebuild();
     },
     /** @param {string} content */

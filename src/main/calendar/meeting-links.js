@@ -10,6 +10,7 @@ const JOIN_URL_PATTERNS = [
   /https:\/\/meet\.google\.com\/[a-z0-9-]+/i,
   /https:\/\/(?:[a-z0-9-]+\.)*zoom\.us\/(?:j|my|w)\/[^\s"'<>]+/i,
   /https:\/\/teams\.microsoft\.com\/l\/meetup-join\/[^\s"'<>]+/i,
+  /https:\/\/teams\.microsoft\.com\/meet\/[^\s"'<>]+/i,
   /https:\/\/teams\.live\.com\/meet\/[^\s"'<>]+/i,
   /https:\/\/(?:[a-z0-9-]+\.)*webex\.com\/[^\s"'<>]+/i,
 ];

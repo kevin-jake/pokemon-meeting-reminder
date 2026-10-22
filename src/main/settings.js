@@ -15,6 +15,7 @@ const { app } = require('electron');
  * @property {number} lookaheadMinutes
  * @property {{ clientId: string, clientSecret: string, enabled: boolean, allCalendars: boolean }} google
  * @property {{ clientId: string, enabled: boolean }} microsoft
+ * @property {import('./calendar/browser-bridge').BridgeConfig} browserBridge  Outlook / Teams via the browser extension
  */
 
 /** @type {Settings} */
@@ -28,6 +29,7 @@ const DEFAULTS = {
   lookaheadMinutes: 60,
   google: { clientId: '', clientSecret: '', enabled: true, allCalendars: false },
   microsoft: { clientId: '', enabled: true },
+  browserBridge: { enabled: true, port: 47321, token: '', toastReminders: true },
 };
 
 /**
