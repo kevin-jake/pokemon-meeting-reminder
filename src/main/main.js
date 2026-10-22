@@ -12,6 +12,7 @@ const { createGoogleSource } = require('./calendar/google');
 const { createRegistry } = require('./calendar/registry');
 const { createReminderScheduler } = require('../shared/reminder-scheduler');
 const { createPoller, mergeTitles } = require('./poller');
+const { loadBuiltInClients, resolveGoogleClient } = require('./oauth-clients');
 
 const APP_ID = 'com.kevinc.pokemon-meeting-reminder';
 const openDevTools = process.argv.includes('--devtools');
@@ -27,6 +28,7 @@ const GOOGLE_SETUP = [
   '4. Paste its client ID and secret into settings.json under "google" (clientId, clientSecret), then Connect Google again.',
   '',
   'Or set PMR_GOOGLE_CLIENT_ID / PMR_GOOGLE_CLIENT_SECRET in the environment.',
+  'To build it into the app for everyone you share it with, put them in src/main/oauth-clients.local.json instead (see oauth-clients.example.json).',
 ].join('\n');
 
 // One tray icon only: a second launch pings the first instance and exits.
@@ -49,16 +51,13 @@ if (!app.requestSingleInstanceLock()) {
   app.whenReady().then(() => {
     const settings = createSettings();
     const overlays = createOverlayQueue({ openDevTools });
+    const builtInClients = loadBuiltInClients();
     const store = createSecureStore({ dir: path.join(app.getPath('userData'), 'secrets'), safeStorage });
 
     const google = createGoogleSource({
       getConfig: () => {
         const g = settings.get().google;
-        return {
-          ...g,
-          clientId: process.env.PMR_GOOGLE_CLIENT_ID || g.clientId,
-          clientSecret: process.env.PMR_GOOGLE_CLIENT_SECRET || g.clientSecret,
-        };
+        return { ...g, ...resolveGoogleClient(g, process.env, builtInClients) };
       },
       store,
       openExternal: (url) => shell.openExternal(url),

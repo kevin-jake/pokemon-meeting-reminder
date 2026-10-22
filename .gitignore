@@ -3,3 +3,4 @@ dist/
 *.tmp
 .tmp/
 CLAUDE.local.md
+src/main/oauth-clients.local.json
