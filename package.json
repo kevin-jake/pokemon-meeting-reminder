@@ -23,5 +23,32 @@
   },
   "dependencies": {
     "ical.js": "2.2.1"
+  },
+  "build": {
+    "appId": "com.kevinc.pokemon-meeting-reminder",
+    "productName": "Pokémon Meeting Reminder",
+    "files": [
+      "**/*",
+      "!media/**",
+      "!browser-extension/**",
+      "!test/**",
+      "!scripts/**",
+      "!PLAN.md",
+      "!CLAUDE.local.md"
+    ],
+    "extraResources": [
+      {
+        "from": "media",
+        "to": "media",
+        "filter": [
+          "**/*",
+          "!bgm/README.md"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png"
+    }
   }
 }

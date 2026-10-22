@@ -5,3 +5,7 @@ dist/
 CLAUDE.local.md
 src/main/oauth-clients.local.json
 src/main/oauth-clients.example.json
+
+# Background music: kept locally, never committed (Sound Library terms).
+# Packaging copies it from the local media/ folder via extraResources.
+/media/bgm/*/
