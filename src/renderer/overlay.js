@@ -27,6 +27,7 @@ const HOVER_PERIOD_MS = 1250; // PAUSE_MS is a whole number of periods, so the b
 const TILT_SMOOTHING = 0.15; // per frame, so tilt eases in and out of the hover instead of snapping
 const PAUSE_MS = 2500;
 const BANNER_GAP_PX = 10;
+const POINTER_FRESH_MS = 1000;
 const TITLE_MAX = 40;
 const FADE_SAFETY_MS = 1500;
 const CRY_VOLUME = 0.5;
@@ -38,7 +39,10 @@ const stage = /** @type {HTMLElement} */ (document.getElementById('stage'));
 const actor = /** @type {HTMLElement} */ (document.getElementById('actor'));
 const sprite = /** @type {HTMLImageElement} */ (document.getElementById('sprite'));
 const banner = /** @type {HTMLElement} */ (document.getElementById('banner'));
-const bannerText = /** @type {HTMLElement} */ (document.getElementById('banner-text'));
+const bannerName = /** @type {HTMLElement} */ (document.getElementById('banner-name'));
+const bannerMeeting = /** @type {HTMLElement} */ (document.getElementById('banner-meeting'));
+const actions = /** @type {HTMLElement} */ (document.getElementById('banner-actions'));
+const joinBtn = /** @type {HTMLButtonElement} */ (document.getElementById('join'));
 const dismissBtn = /** @type {HTMLButtonElement} */ (document.getElementById('dismiss'));
 
 /**
@@ -51,6 +55,7 @@ const dismissBtn = /** @type {HTMLButtonElement} */ (document.getElementById('di
  *   musicDone(): void,
  *   sceneDone(): void,
  *   dismiss(): void,
+ *   join(): void,
  *   setClickable(clickable: boolean): void,
  * }}
  */
@@ -65,16 +70,37 @@ api.onMusic(({ url, loop }) => startMusic(url, loop));
 api.onMusicStop(() => stopMusic());
 
 // The window is click-through. Main forwards mouse moves anyway, so we ask to
-// become clickable only while the cursor is over the Dismiss button.
+// become clickable only while the cursor is over a banner button.
 let clickable = false;
+/** @type {{ x: number, y: number, at: number } | null} last cursor position in this window */
+let pointer = null;
 document.addEventListener('mousemove', (e) => {
-  const over = !dismissBtn.hidden && e.target === dismissBtn;
+  pointer = { x: e.clientX, y: e.clientY, at: performance.now() };
+  updateClickable();
+});
+document.documentElement.addEventListener('mouseleave', () => {
+  pointer = null;
+  updateClickable();
+});
+
+/**
+ * Re-checks what is under the cursor. Also called every frame, because the
+ * banner moves under a still cursor: it may only turn clickable on a recent
+ * cursor position, but always turns back off, so the window never keeps
+ * swallowing clicks once the button has moved away.
+ */
+function updateClickable() {
+  const el = pointer && document.elementFromPoint(pointer.x, pointer.y);
+  const overButton = el instanceof HTMLButtonElement && !el.hidden;
+  const over = overButton && (clickable || performance.now() - /** @type {{ at: number }} */ (pointer).at < POINTER_FRESH_MS);
   if (over !== clickable) {
     clickable = over;
     api.setClickable(over);
   }
-});
+}
+
 dismissBtn.addEventListener('click', () => api.dismiss());
+joinBtn.addEventListener('click', () => api.join());
 
 /** @param {string} title */
 function truncate(title) {
@@ -84,17 +110,17 @@ function truncate(title) {
 
 /** @param {PassPayload} p */
 function renderBanner(p) {
-  bannerText.replaceChildren();
-  const name = document.createElement('span');
-  name.className = 'name';
-  name.textContent = `${p.shiny ? '✨ ' : ''}${p.displayName}: `;
+  bannerName.textContent = `${p.shiny ? '✨ ' : ''}${p.displayName}`;
   const when = p.minutesUntil <= 0 ? 'starting now' : `in ${p.minutesUntil} min`;
-  bannerText.append(name, `${truncate(p.meetingTitle)} · ${when}`);
+  bannerMeeting.textContent = `${truncate(p.meetingTitle)} · ${when}`;
   banner.classList.toggle('urgent', p.urgent);
   // Flyers tow the banner behind them; its tail points forward at the sprite.
   banner.classList.toggle('trail-left', p.isFlyer && p.direction === 'ltr');
   banner.classList.toggle('trail-right', p.isFlyer && p.direction === 'rtl');
   dismissBtn.hidden = !p.urgent;
+  joinBtn.hidden = !p.meetingLink;
+  joinBtn.textContent = p.meetingLink?.kind === 'join' ? 'Join' : 'Open invite';
+  actions.hidden = dismissBtn.hidden && joinBtn.hidden;
   banner.hidden = false;
 }
 
@@ -265,6 +291,7 @@ function playWalker(p) {
     const bx = Math.min(Math.max(x + size / 2 - bw / 2, 8), W - bw - 8);
     const by = y - bh - BANNER_GAP_PX;
     banner.style.transform = `translate3d(${bx}px, ${by}px, 0)`;
+    updateClickable();
   }
 
   /** @param {number} now */
@@ -337,6 +364,7 @@ function playFlyer(p) {
     const bx = ltr ? x - BANNER_GAP_PX - bannerW : x + size + BANNER_GAP_PX;
     const by = y + size / 2 - bh / 2;
     banner.style.transform = `translate3d(${bx}px, ${by}px, 0)`;
+    updateClickable();
   }
 
   /** @param {number} now */

@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
 const path = require('node:path');
-const { app, dialog, shell, safeStorage, powerMonitor } = require('electron');
+const { app, dialog, shell, safeStorage, powerMonitor, Notification } = require('electron');
 const { createTray } = require('./tray');
 const { createOverlayQueue } = require('./overlay');
 const { createSettings } = require('./settings');
@@ -13,12 +13,23 @@ const { createRegistry } = require('./calendar/registry');
 const { createReminderScheduler } = require('../shared/reminder-scheduler');
 const { createPoller, mergeTitles } = require('./poller');
 const { loadBuiltInClients, resolveGoogleClient } = require('./oauth-clients');
-const { createMeetingNotifier } = require('./notifications');
 
 const APP_ID = 'com.kevinc.pokemon-meeting-reminder';
 const openDevTools = process.argv.includes('--devtools');
 // `--species=charizard` forces who appears in test scenes (handy for checking flyers / left-facing GIFs).
 const forcedSpecies = process.argv.find((a) => a.startsWith('--species='))?.slice('--species='.length) || null;
+
+/**
+ * Button target for a reminder: the first meeting's video call, else its
+ * calendar invite. A merged reminder ("Standup + 1 more") links the first one.
+ * @param {import('./calendar/types').CalendarEvent[]} events
+ * @returns {import('./overlay').MeetingLink | null}
+ */
+function meetingLinkOf([first]) {
+  if (first?.joinUrl) return { url: first.joinUrl, kind: 'join' };
+  if (first?.link) return { url: first.link, kind: 'invite' };
+  return null;
+}
 
 const GOOGLE_SETUP = [
   'Google Calendar needs an OAuth client of your own (free):',
@@ -70,31 +81,25 @@ if (!app.requestSingleInstanceLock()) {
      * Plays one reminder scene.
      * @param {string} meetingTitle
      * @param {number} minutesUntil  0 = the meeting is starting now (urgent: parks until dismissed)
-     * @param {string | null} [species]  overrides the favorite
+     * @param {{ species?: string | null, meetingLink?: import('./overlay').MeetingLink | null }} [opts]
+     *   species overrides the favorite; meetingLink adds the Join / Open invite button
      */
-    function playReminder(meetingTitle, minutesUntil, species = null) {
+    function playReminder(meetingTitle, minutesUntil, { species = null, meetingLink = null } = {}) {
       const prefs = settings.get();
       const pick = pickSpecies({ ...prefs, favoriteSpecies: species ?? prefs.favoriteSpecies });
-      overlays.enqueue(buildScene(pick, { meetingTitle, minutesUntil, mediaDir: mediaDir() }));
+      overlays.enqueue(buildScene(pick, { meetingTitle, minutesUntil, mediaDir: mediaDir(), meetingLink }));
     }
 
-    const notifier = createMeetingNotifier((url) => shell.openExternal(url));
-    /** @param {Parameters<typeof notifier.show>[0]} meeting */
-    const notify = (meeting) => {
-      if (settings.get().nativeNotification) notifier.show(meeting);
-    };
-
-    /** @param {number} minutesUntil */
-    const playTest = (minutesUntil) => playReminder('Test meeting', minutesUntil, forcedSpecies);
-    /** Test menu items also send a toast; clicking it opens Google Calendar. @param {number} minutesUntil */
-    const testReminder = (minutesUntil) => {
-      playTest(minutesUntil);
-      notify({ title: 'Test meeting', minutesUntil, link: 'https://calendar.google.com/' });
-    };
+    /** Test scenes get an "Open invite" button that opens Google Calendar. @param {number} minutesUntil */
+    const playTest = (minutesUntil) =>
+      playReminder('Test meeting', minutesUntil, {
+        species: forcedSpecies,
+        meetingLink: { url: 'https://calendar.google.com/', kind: 'invite' },
+      });
 
     function syncPrefs() {
-      const { favoriteSpecies, forceShiny, nativeNotification } = settings.get();
-      tray?.setPrefs({ favoriteSpecies, forceShiny, nativeNotification });
+      const { favoriteSpecies, forceShiny } = settings.get();
+      tray?.setPrefs({ favoriteSpecies, forceShiny });
     }
 
     function accounts() {
@@ -123,11 +128,12 @@ if (!app.requestSingleInstanceLock()) {
           const title = mergeTitles(group.map((d) => d.event.title));
           const minutesUntil =
             kind === 'start' ? 0 : Math.max(1, Math.round((group[0].event.start.getTime() - now) / 60_000));
-          playReminder(title, minutesUntil);
-          // One toast per meeting, so each one opens its own join link.
-          for (const { event } of group) {
-            const mins = kind === 'start' ? 0 : Math.max(1, Math.round((event.start.getTime() - now) / 60_000));
-            notify({ title: event.title, minutesUntil: mins, joinUrl: event.joinUrl, link: event.link });
+          playReminder(title, minutesUntil, { meetingLink: meetingLinkOf(group.map((d) => d.event)) });
+          if (settings.get().nativeNotification && Notification.isSupported()) {
+            new Notification({
+              title: kind === 'start' ? `${title} is starting now` : `${title} in ${minutesUntil} min`,
+              silent: true,
+            }).show();
           }
         }
       },
@@ -178,8 +184,8 @@ if (!app.requestSingleInstanceLock()) {
 
     tray = createTray(
       {
-        onTestReminder: () => testReminder(5),
-        onTestMeetingNow: () => testReminder(0),
+        onTestReminder: () => playTest(5),
+        onTestMeetingNow: () => playTest(0),
         onDismiss: () => overlays.dismiss(),
         onPickFavorite: (key) => {
           settings.update({ favoriteSpecies: key });
@@ -191,10 +197,6 @@ if (!app.requestSingleInstanceLock()) {
           settings.update({ forceShiny: on });
           syncPrefs();
         },
-        onToggleNotification: (on) => {
-          settings.update({ nativeNotification: on });
-          syncPrefs();
-        },
         onConnect: (id) => void connect(id),
         onDisconnect: (id) => void disconnect(id),
         onCancelConnect: (id) => registry.sources.find((s) => s.id === id)?.cancelConnect(),
@@ -202,11 +204,7 @@ if (!app.requestSingleInstanceLock()) {
       },
       {
         speciesByGen: speciesByGen(),
-        prefs: {
-          favoriteSpecies: settings.get().favoriteSpecies,
-          forceShiny: settings.get().forceShiny,
-          nativeNotification: settings.get().nativeNotification,
-        },
+        prefs: { favoriteSpecies: settings.get().favoriteSpecies, forceShiny: settings.get().forceShiny },
         accounts: accounts(),
       },
     );

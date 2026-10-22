@@ -12,8 +12,14 @@
   <body>
     <div id="stage">
       <div id="banner" class="banner" hidden>
-        <span id="banner-text"></span>
-        <button id="dismiss" type="button" hidden>Dismiss</button>
+        <div class="banner-text">
+          <span id="banner-name" class="name"></span>
+          <span id="banner-meeting" class="meeting"></span>
+        </div>
+        <div id="banner-actions" class="actions">
+          <button id="join" type="button" hidden>Join</button>
+          <button id="dismiss" type="button" hidden>Dismiss</button>
+        </div>
       </div>
       <div id="actor"><img id="sprite" alt="" draggable="false" /></div>
     </div>

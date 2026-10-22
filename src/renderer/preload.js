@@ -32,6 +32,10 @@ contextBridge.exposeInMainWorld('overlayApi', {
   dismiss() {
     ipcRenderer.send('scene:dismiss');
   },
+  /** Opens the current meeting's link (main knows which) and ends the reminder. */
+  join() {
+    ipcRenderer.send('scene:join');
+  },
   /** @param {boolean} clickable */
   setClickable(clickable) {
     ipcRenderer.send('overlay:clickable', clickable);

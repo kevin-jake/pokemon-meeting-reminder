@@ -71,3 +71,10 @@ test('the committed manifest groups into five generations and every species has 
     assert.ok(scene.cry, `no cry for ${entry.key} (#${entry.dex})`);
   }
 });
+
+test('buildScene carries the meeting link for the banner button', () => {
+  const pick = { entry: manifest[0], shiny: false, direction: /** @type {const} */ ('ltr') };
+  const meetingLink = { url: 'https://meet.google.com/abc-defg-hij', kind: /** @type {const} */ ('join') };
+  assert.deepEqual(buildScene(pick, { meetingTitle: 'x', minutesUntil: 5, mediaDir, meetingLink }).meetingLink, meetingLink);
+  assert.equal(buildScene(pick, { meetingTitle: 'x', minutesUntil: 5, mediaDir }).meetingLink, null);
+});

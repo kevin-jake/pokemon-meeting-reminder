@@ -1,7 +1,8 @@
 // @ts-check
 'use strict';
 const path = require('node:path');
-const { BrowserWindow, ipcMain, screen } = require('electron');
+const { BrowserWindow, ipcMain, screen, shell } = require('electron');
+const { safeHttpsUrl } = require('./calendar/meeting-links');
 
 /**
  * @typedef {object} ScenePayload
@@ -19,6 +20,13 @@ const { BrowserWindow, ipcMain, screen } = require('electron');
  * @property {string} meetingTitle
  * @property {number} minutesUntil  0 = meeting starts now
  * @property {boolean} urgent       cross the monitors URGENT_PASSES times, then park until dismissed
+ * @property {MeetingLink | null} meetingLink  shown as a Join / Open invite button on the banner
+ */
+
+/**
+ * @typedef {object} MeetingLink
+ * @property {string} url          https only
+ * @property {'join' | 'invite'} kind  join = video call, invite = the event in the calendar
  */
 
 /**
@@ -215,7 +223,7 @@ function createOverlayQueue(options = {}) {
   /** @type {ScenePayload[]} */
   const pending = [];
   let running = false;
-  /** @type {{ promise: Promise<void>, resolve: () => void, done: boolean } | null} */
+  /** @type {{ promise: Promise<void>, resolve: () => void, done: boolean, payload: ScenePayload } | null} */
   let current = null;
 
   function dismiss() {
@@ -227,6 +235,13 @@ function createOverlayQueue(options = {}) {
 
   // The Dismiss button in any overlay window.
   ipcMain.on('scene:dismiss', dismiss);
+  // The Join / Open invite button. The renderer never sends a URL: main opens
+  // the link of the scene it is playing, then ends the reminder.
+  ipcMain.on('scene:join', () => {
+    const url = safeHttpsUrl(current?.payload.meetingLink?.url);
+    if (url) void shell.openExternal(url);
+    dismiss();
+  });
   // The renderer toggles click-through while the cursor is over the Dismiss button.
   ipcMain.on('overlay:clickable', (event, /** @type {boolean} */ clickable) => {
     const win = BrowserWindow.fromWebContents(event.sender);
@@ -243,7 +258,7 @@ function createOverlayQueue(options = {}) {
       const promise = new Promise((r) => {
         resolve = () => r(undefined);
       });
-      current = { promise, resolve, done: false };
+      current = { promise, resolve, done: false, payload: next };
       const ctx = {
         openDevTools: Boolean(options.openDevTools),
         dismissed: promise,

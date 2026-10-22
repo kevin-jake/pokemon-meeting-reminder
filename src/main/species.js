@@ -32,10 +32,10 @@ function pickSpecies(prefs, rng = Math.random, manifest = MANIFEST) {
 /**
  * Turns a pick into the payload the overlay plays.
  * @param {ReturnType<typeof pickSpecies>} pick
- * @param {{ meetingTitle: string, minutesUntil: number, mediaDir: string, rng?: () => number }} opts
+ * @param {{ meetingTitle: string, minutesUntil: number, mediaDir: string, meetingLink?: import('./overlay').MeetingLink | null, rng?: () => number }} opts
  * @returns {import('./overlay').ScenePayload}
  */
-function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, mediaDir, rng = Math.random }) {
+function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, mediaDir, meetingLink = null, rng = Math.random }) {
   const urgent = minutesUntil <= 0;
   const variant = shiny ? 'shiny' : 'default';
   const spriteDir = path.join(mediaDir, `gen${entry.gen}`, entry.key);
@@ -61,6 +61,7 @@ function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, m
     meetingTitle,
     minutesUntil,
     urgent,
+    meetingLink,
   };
 }
 

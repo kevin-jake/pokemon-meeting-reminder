@@ -12,7 +12,6 @@ const { app, Tray, Menu, nativeImage } = require('electron');
  * @property {() => void} onDismiss
  * @property {(key: string | null) => void} onPickFavorite  null = random Pokémon
  * @property {(on: boolean) => void} onToggleShiny
- * @property {(on: boolean) => void} onToggleNotification
  * @property {(sourceId: string) => void} onConnect
  * @property {(sourceId: string) => void} onDisconnect
  * @property {(sourceId: string) => void} onCancelConnect
@@ -32,7 +31,6 @@ const { app, Tray, Menu, nativeImage } = require('electron');
  * @typedef {object} TrayPrefs
  * @property {string | null} favoriteSpecies
  * @property {boolean} forceShiny
- * @property {boolean} nativeNotification  also show a clickable Windows notification
  */
 
 /** Builds the 16 px tray image with a 32 px representation for 200% scaling. */
@@ -46,7 +44,7 @@ function loadTrayIcon() {
 
 /** @param {ManifestEntry} e */
 function speciesLabel(e) {
-  return `#${String(e.dex).padStart(3, '0')} ${e.name}${e.isFlyer ? ' (flies)' : ''}`;
+  return `#${String(e.dex).padStart(3, '0')} ${e.name}`;
 }
 
 /**
@@ -144,12 +142,6 @@ function createTray(handlers, init) {
         {
           label: `Favorite Pokémon: ${favorite ? favorite.name : 'Random'}${prefs.forceShiny ? ' ✨' : ''}`,
           submenu: favoriteSubmenu(init.speciesByGen, prefs, handlers),
-        },
-        {
-          label: 'Show Windows notification too (click to join)',
-          type: 'checkbox',
-          checked: prefs.nativeNotification,
-          click: (item) => handlers.onToggleNotification(item.checked),
         },
         { type: 'separator' },
         { label: 'Quit', click: handlers.onQuit },

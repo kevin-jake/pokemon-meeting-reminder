@@ -48,8 +48,8 @@ body {
   align-items: center;
   gap: 12px;
   max-width: 600px;
-  padding: 10px 18px;
-  border-radius: 999px;
+  padding: 8px 10px 8px 18px;
+  border-radius: 22px;
   background: var(--pill);
   color: #fff;
   font: 600 16px/1.2 'Segoe UI', system-ui, sans-serif;
@@ -96,8 +96,32 @@ body {
   border-right-color: var(--pill);
 }
 
+/* Two rows: who is visiting, then the meeting. */
+.banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
 .banner .name {
   color: #ffd84a;
+  font-size: 13px;
+}
+
+.banner .meeting {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 4px;
+}
+
+.actions[hidden] {
+  display: none;
 }
 
 .banner.urgent {
@@ -109,16 +133,28 @@ body {
   animation: pop 0.35s ease-out;
 }
 
-/* The only element that receives clicks; main toggles click-through when the cursor is over it. */
-#dismiss {
+/* The only elements that receive clicks; main toggles click-through while the cursor is over one. */
+.actions button {
   pointer-events: auto;
   cursor: pointer;
-  padding: 6px 14px;
+  padding: 8px 14px;
   border: 0;
   border-radius: 999px;
+  font: 700 14px/1 'Segoe UI', system-ui, sans-serif;
+}
+
+#join {
+  background: #ffd84a;
+  color: #1c1c20;
+}
+
+#join:hover {
+  background: #ffe788;
+}
+
+#dismiss {
   background: #fff;
   color: #8a1620;
-  font: 700 14px/1 'Segoe UI', system-ui, sans-serif;
 }
 
 #dismiss:hover {
