@@ -9,11 +9,10 @@ const { mediaDir } = require('./media');
 const { pickSpecies, buildScene, speciesByGen } = require('./species');
 const { createSecureStore } = require('./secure-store');
 const { createGoogleAccounts } = require('./calendar/google-accounts');
-const { createMicrosoftAccounts } = require('./calendar/microsoft-accounts');
 const { createRegistry } = require('./calendar/registry');
 const { createReminderScheduler } = require('../shared/reminder-scheduler');
 const { createPoller, mergeTitles } = require('./poller');
-const { loadBuiltInClients, resolveGoogleClient, resolveMicrosoftClient } = require('./oauth-clients');
+const { loadBuiltInClients, resolveGoogleClient } = require('./oauth-clients');
 
 const APP_ID = 'com.kevinc.pokemon-meeting-reminder';
 const openDevTools = process.argv.includes('--devtools');
@@ -42,21 +41,6 @@ const GOOGLE_SETUP = [
   '',
   'Or set PMR_GOOGLE_CLIENT_ID / PMR_GOOGLE_CLIENT_SECRET in the environment.',
   'To build it into the app for everyone you share it with, put them in src/main/oauth-clients.local.json instead (format documented in oauth-clients.js).',
-].join('\n');
-
-const MICROSOFT_SETUP = [
-  'Microsoft 365 / Outlook needs an Azure app registration of your own (free):',
-  '',
-  '1. portal.azure.com → Microsoft Entra ID → App registrations → New registration.',
-  '   Supported account types: "Any organizational directory and personal Microsoft accounts".',
-  '2. Authentication → Add a platform → "Mobile and desktop applications" → custom redirect URI http://localhost.',
-  '   Under Advanced settings set "Allow public client flows" to Yes.',
-  '3. API permissions → Microsoft Graph → Delegated → Calendars.Read.',
-  '4. Paste the Application (client) ID into settings.json under "microsoft" (clientId), then Connect Microsoft 365 again.',
-  '',
-  'Or set PMR_MS_CLIENT_ID in the environment.',
-  'To build it into the app for everyone you share it with, put it in src/main/oauth-clients.local.json instead (format documented in oauth-clients.js).',
-  'Work accounts may need an admin to approve the app the first time.',
 ].join('\n');
 
 // One tray icon only: a second launch pings the first instance and exits.
@@ -90,22 +74,7 @@ if (!app.requestSingleInstanceLock()) {
       store,
       openExternal: (url) => shell.openExternal(url),
     });
-    const microsoft = createMicrosoftAccounts({
-      getConfig: () => {
-        const m = settings.get().microsoft;
-        return { ...m, clientId: resolveMicrosoftClient(m, process.env, builtInClients) };
-      },
-      store,
-      openExternal: (url) => shell.openExternal(url),
-    });
-    /** Account lists by provider id, with what the setup dialog needs. */
-    const providers = {
-      google: { accounts: google, name: 'Google', setup: GOOGLE_SETUP },
-      microsoft: { accounts: microsoft, name: 'Microsoft 365', setup: MICROSOFT_SETUP },
-    };
-    /** Source ids are `<provider>:<key>`. @param {string} id */
-    const providerOf = (id) => providers[/** @type {keyof typeof providers} */ (id.split(':')[0])];
-    const registry = createRegistry(() => [...google.sources(), ...microsoft.sources()]);
+    const registry = createRegistry(() => google.sources());
     const scheduler = createReminderScheduler({ alertMinutes: settings.get().alertMinutesBefore });
 
     /**
@@ -137,7 +106,7 @@ if (!app.requestSingleInstanceLock()) {
       return registry
         .sources()
         .filter((s) => s.isEnabled())
-        .map((s) => ({ id: s.id, provider: s.id.split(':')[0], name: s.name, state: s.state(), label: s.accountLabel() }));
+        .map((s) => ({ id: s.id, provider: 'google', name: s.name, state: s.state(), label: s.accountLabel() }));
     }
     const syncAccounts = () => tray?.setAccounts(accounts());
 
@@ -175,18 +144,16 @@ if (!app.requestSingleInstanceLock()) {
 
     /**
      * Runs a browser sign-in (new account or reconnect) and reports the outcome.
-     * @param {typeof providers[keyof typeof providers]} provider
      * @param {(onStarted: () => void) => Promise<import('./calendar/types').CalendarSource | undefined>} signIn
      */
-    async function runSignIn(provider, signIn) {
-      const { name } = provider;
-      if (!provider.accounts.isConfigured()) {
+    async function runSignIn(signIn) {
+      if (!google.isConfigured()) {
         settings.update({}); // make sure settings.json exists before offering to open it
         const { response } = await dialog.showMessageBox({
           type: 'info',
-          title: `Connect ${name}`,
-          message: `${name} is not set up yet`,
-          detail: provider.setup,
+          title: 'Connect Google',
+          message: 'Google is not set up yet',
+          detail: GOOGLE_SETUP,
           buttons: ['Open settings file', 'Close'],
           defaultId: 0,
           cancelId: 1,
@@ -198,11 +165,11 @@ if (!app.requestSingleInstanceLock()) {
         // onStarted shows the "waiting for browser sign-in…" row.
         const source = await signIn(syncAccounts);
         const who = source?.accountLabel();
-        tray?.notify(`${name} connected${who ? ` as ${who}` : ''}.`);
+        tray?.notify(`Google connected${who ? ` as ${who}` : ''}.`);
       } catch (err) {
-        console.warn(`${name} sign-in failed:`, err);
+        console.warn('Google sign-in failed:', err);
         const message = err instanceof Error ? err.message : String(err);
-        if (message !== 'Sign-in cancelled') dialog.showErrorBox(`Could not connect ${name}`, message);
+        if (message !== 'Sign-in cancelled') dialog.showErrorBox('Could not connect Google', message);
       }
       syncAccounts();
       void poller.pollNow();
@@ -210,7 +177,7 @@ if (!app.requestSingleInstanceLock()) {
 
     /** @param {string} id */
     async function disconnect(id) {
-      await providerOf(id)?.accounts.remove(id);
+      await google.remove(id);
       syncAccounts();
       void poller.pollNow();
     }
@@ -230,20 +197,14 @@ if (!app.requestSingleInstanceLock()) {
           settings.update({ forceShiny: on });
           syncPrefs();
         },
-        onAddAccount: (providerId) => {
-          const provider = providerOf(providerId);
-          if (provider) void runSignIn(provider, (onStarted) => provider.accounts.add(onStarted));
-        },
-        onReconnect: (id) => {
-          const provider = providerOf(id);
-          if (!provider) return;
-          void runSignIn(provider, async (onStarted) => {
-            await provider.accounts.reconnect(id, onStarted);
-            return provider.accounts.find(id);
-          });
-        },
+        onAddAccount: () => void runSignIn((onStarted) => google.add(onStarted)),
+        onReconnect: (id) =>
+          void runSignIn(async (onStarted) => {
+            await google.reconnect(id, onStarted);
+            return google.find(id);
+          }),
         onDisconnect: (id) => void disconnect(id),
-        onCancelConnect: (id) => providerOf(id)?.accounts.find(id)?.cancelConnect(),
+        onCancelConnect: (id) => google.find(id)?.cancelConnect(),
         onQuit: () => app.quit(),
       },
       {

@@ -1,29 +1,26 @@
 // @ts-check
 'use strict';
-const { meetingKey } = require('../../shared/reminder-scheduler');
 
 /** @typedef {import('./types').CalendarEvent} CalendarEvent */
 /** @typedef {import('./types').CalendarSource} CalendarSource */
 
 /**
  * Drops events that share a start time and title (case- and
- * whitespace-insensitive), e.g. the same invite on a Google and a Microsoft
- * calendar. The first occurrence wins but borrows a join / invite link it
- * lacks from the copies it replaces; the result is sorted by start time.
+ * whitespace-insensitive), e.g. the same invite on two calendars. The first
+ * occurrence wins; the result is sorted by start time.
  * @param {CalendarEvent[]} events
  */
 function dedupeEvents(events) {
-  /** @type {Map<string, CalendarEvent>} */
-  const byKey = new Map();
+  const seen = new Set();
+  /** @type {CalendarEvent[]} */
+  const out = [];
   for (const e of [...events].sort((a, b) => a.start.getTime() - b.start.getTime())) {
-    const key = meetingKey(e);
-    const kept = byKey.get(key);
-    if (!kept) byKey.set(key, e);
-    else if ((!kept.joinUrl && e.joinUrl) || (!kept.link && e.link)) {
-      byKey.set(key, { ...kept, joinUrl: kept.joinUrl || e.joinUrl, link: kept.link || e.link });
-    }
+    const key = `${e.start.getTime()}|${e.title.trim().toLowerCase()}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(e);
   }
-  return [...byKey.values()];
+  return out;
 }
 
 /**

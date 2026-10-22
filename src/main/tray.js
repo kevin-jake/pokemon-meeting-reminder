@@ -12,7 +12,7 @@ const { app, Tray, Menu, nativeImage } = require('electron');
  * @property {() => void} onDismiss
  * @property {(key: string | null) => void} onPickFavorite  null = random Pokémon
  * @property {(on: boolean) => void} onToggleShiny
- * @property {(providerId: string) => void} onAddAccount  'google' or 'microsoft'
+ * @property {(providerId: string) => void} onAddAccount  e.g. 'google'
  * @property {(sourceId: string) => void} onReconnect
  * @property {(sourceId: string) => void} onDisconnect
  * @property {(sourceId: string) => void} onCancelConnect
@@ -23,7 +23,7 @@ const { app, Tray, Menu, nativeImage } = require('electron');
  * One calendar account row in the menu.
  * @typedef {object} TrayAccount
  * @property {string} id
- * @property {string} provider  'google' or 'microsoft'
+ * @property {string} provider  e.g. 'google'
  * @property {string} name      provider display name
  * @property {import('./calendar/types').SourceState} state
  * @property {string | null} label  signed-in account, e.g. an email address
@@ -50,10 +50,7 @@ function speciesLabel(e) {
 }
 
 /** Calendar providers that get an "Add … account" item. */
-const PROVIDERS = [
-  { id: 'google', name: 'Google' },
-  { id: 'microsoft', name: 'Microsoft 365' },
-];
+const PROVIDERS = [{ id: 'google', name: 'Google' }];
 
 /**
  * One submenu per connected account.
@@ -81,8 +78,8 @@ function accountItem(a, handlers) {
 }
 
 /**
- * Per provider: account rows followed by "Connect Google…" (no account yet)
- * or "Add another Google account…".
+ * Account rows followed by "Connect Google…" (no account yet) or
+ * "Add another Google account…".
  * @param {TrayAccount[]} accounts
  * @param {TrayHandlers} handlers
  * @returns {Electron.MenuItemConstructorOptions[]}

@@ -83,20 +83,6 @@ test('prune forgets meetings that started over an hour ago', () => {
 test('events from different sources with the same id are tracked separately', () => {
   const s = createReminderScheduler({ alertMinutes: 5 });
   const a = ev('x', T0 + 2 * MIN);
-  // Same provider id by coincidence, different meeting.
-  const b = { ...a, source: 'microsoft', title: 'Another meeting' };
+  const b = { ...a, source: 'microsoft' };
   assert.equal(s.ingest([a, b], T0).due.length, 2);
-});
-
-test('the same meeting on two calendars fires once, even when the copy that fired drops out', () => {
-  const s = createReminderScheduler({ alertMinutes: 5 });
-  const google = { ...ev('g', T0 + 3 * MIN, 'Standup'), source: 'google:a' };
-  const microsoft = { ...ev('m', T0 + 3 * MIN, ' standup '), source: 'microsoft:b' };
-  assert.deepEqual(kinds(s.ingest([google], T0)), ['g:warn']);
-  // Google failed this poll, so only the Microsoft copy is left.
-  assert.deepEqual(kinds(s.ingest([microsoft], T0 + MIN)), []);
-  assert.deepEqual(kinds(s.ingest([microsoft], T0 + 3 * MIN)), ['m:start']);
-  assert.deepEqual(kinds(s.ingest([google], T0 + 3 * MIN + 1000)), []);
-  // A different meeting at the same time still fires.
-  assert.deepEqual(kinds(s.ingest([{ ...microsoft, id: 'x', title: '1:1' }], T0 + 3 * MIN + 2000)), ['x:start']);
 });

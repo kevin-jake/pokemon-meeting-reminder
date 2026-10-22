@@ -15,20 +15,10 @@ const page = (title, body) =>
  * redirect (`?code=…&state=…`). Listen first, then build the auth URL from
  * the returned redirectUri. The server closes itself after the first valid
  * callback, a provider error, the timeout, or close().
- * `redirectHost` is the host written into the redirect URI when it differs
- * from the one listened on (Azure only accepts `localhost`); an empty
- * `callbackPath` redirects to the bare origin (`http://localhost:PORT`, which
- * is what an Azure `http://localhost` registration matches).
- * @param {{ expectedState: string, host?: string, redirectHost?: string, callbackPath?: string, timeoutMs?: number }} opts
+ * @param {{ expectedState: string, host?: string, callbackPath?: string, timeoutMs?: number }} opts
  * @returns {Promise<{ port: number, redirectUri: string, waitForCode: () => Promise<string>, close: () => void }>}
  */
-async function startLoopback({
-  expectedState,
-  host = '127.0.0.1',
-  redirectHost = host,
-  callbackPath = '/callback',
-  timeoutMs = DEFAULT_TIMEOUT_MS,
-}) {
+async function startLoopback({ expectedState, host = '127.0.0.1', callbackPath = '/callback', timeoutMs = DEFAULT_TIMEOUT_MS }) {
   /** @type {(code: string) => void} */
   let resolveCode = () => {};
   /** @type {(err: Error) => void} */
@@ -44,7 +34,7 @@ async function startLoopback({
 
   const server = http.createServer((req, res) => {
     const url = new URL(req.url ?? '/', `http://${host}`);
-    if (url.pathname !== (callbackPath || '/')) {
+    if (url.pathname !== callbackPath) {
       res.writeHead(404).end();
       return;
     }
@@ -88,7 +78,7 @@ async function startLoopback({
 
   return {
     port,
-    redirectUri: `http://${redirectHost}:${port}${callbackPath}`,
+    redirectUri: `http://${host}:${port}${callbackPath}`,
     waitForCode: () => codePromise,
     close: () => finish(new Error('Sign-in cancelled')),
   };
