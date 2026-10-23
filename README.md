@@ -21,7 +21,7 @@ meeting starts it comes back, plays the battle theme and stays until you click
 - **Join** button on the banner when the invite has a video call link. It opens
   in the Chrome / Edge / Brave profile you chose for that calendar.
 - About 650 Pokémon from generations 1–5. Flyers fly and the rest walk, and 1 in
-  64 is shiny. Pick up to six favorites or limit the generations.
+  10 is shiny. Pick up to six favorites or limit the generations.
 - The Pokémon walks across every monitor and stops on the one under your mouse.
   Click-through, so it never steals focus.
 - Cries and optional background music, each with its own volume.
