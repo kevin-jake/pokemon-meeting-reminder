@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
 const path = require('node:path');
-const { BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { isValidIgnoredTitles } = require('../shared/ignored-meetings');
 const { MAX_FAVORITES } = require('./species');
 
@@ -103,6 +103,8 @@ function createSettingsWindow({ getState, update, action, openDevTools = false }
       minWidth: 480,
       minHeight: 420,
       title: 'Settings · Pokémon Meeting Reminder',
+      // Without this the taskbar shows the Electron logo (always in dev, where the exe is electron.exe).
+      icon: path.join(app.getAppPath(), 'assets', 'icon.png'),
       autoHideMenuBar: true,
       show: false,
       webPreferences: {

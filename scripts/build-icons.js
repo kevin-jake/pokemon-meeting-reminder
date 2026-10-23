@@ -4,6 +4,7 @@
  * Crops frame 0 of media/pokeball_sprite_sheet.png (6 stacked 64x64 frames),
  * trims the transparent border and writes pixel-perfect upscales:
  *   build/icon.png               256 px (electron-builder converts to .ico)
+ *   assets/icon.png              256 px (window icon; build/ isn't packaged)
  *   assets/tray/pokeball-16.png  16 px
  *   assets/tray/pokeball-32.png  32 px (used as the @2x tray image)
  * Outputs are committed, so sharp is only needed when re-running this script.
@@ -23,6 +24,7 @@ async function main() {
   /** @type {Array<[string, number]>} */
   const outputs = [
     [path.join(root, 'build', 'icon.png'), 256],
+    [path.join(root, 'assets', 'icon.png'), 256],
     [path.join(root, 'assets', 'tray', 'pokeball-16.png'), 16],
     [path.join(root, 'assets', 'tray', 'pokeball-32.png'), 32],
   ];
