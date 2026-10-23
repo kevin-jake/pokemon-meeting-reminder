@@ -30,21 +30,41 @@ meeting starts it comes back, plays the battle theme and stays until you click
 
 ## Install
 
-Run one of the files from a release build (see [Build](#build)):
+Needs Windows 10 or 11. Setup takes about five minutes.
 
-- **`Pokémon Meeting Reminder Setup <version>.exe`** installs for the current
-  user (no admin rights) and adds Start menu and desktop shortcuts.
-- **`Pokémon Meeting Reminder <version> Portable.exe`** runs without installing.
+1. **Download** the latest version from the
+   [Releases page](https://github.com/kevin-jake/pokemon-meeting-reminder/releases/latest):
+   - **`Pokémon Meeting Reminder Setup <version>.exe`** (recommended) installs
+     for the current user, needs no admin rights, and adds Start menu and
+     desktop shortcuts.
+   - **`Pokémon Meeting Reminder <version> Portable.exe`** runs without
+     installing, e.g. from a USB stick or a work PC where you can't install
+     apps.
+2. **Run it.** The exe isn't code-signed, so Windows may show "Windows
+   protected your PC". Click **More info → Run anyway**.
+3. **Find the tray icon.** The app has no main window. It lives in the tray as
+   the Poké Ball by the clock (it may be in the `^` overflow area; drag it out
+   to keep it visible). Right-click it for the next meeting, test reminders,
+   **Settings…** and **Quit**.
+4. **Connect a calendar** in **Settings → Calendars**. Pick whichever suits you
+   (details in [Connect a calendar](#connect-a-calendar)):
+   - **Quickest:** paste your calendar's private
+     [iCal link](#calendar-link-ical-no-sign-in). Works for Google and Outlook,
+     no sign-in.
+   - **Google account:** [sign in with Google](#google-calendar-sign-in) for
+     reminders that update within a minute.
+   - **Work Outlook / Teams** where sign-in or iCal links are blocked: use the
+     [browser extension](#outlook--teams-in-the-browser).
+5. **Try it:** right-click the tray icon and choose **Test reminder**. A Pokémon
+   should walk across your taskbar.
+6. **Optional:** in Settings, turn on **Launch at startup**, pick your favorite
+   Pokémon, and set the early-warning time (5 minutes by default). To add music,
+   see [Background music](#background-music).
 
-Both use the same settings and sign-ins as `npm start`
-(`%APPDATA%\pokemon-meeting-reminder`), so you can switch between them.
-
-**SmartScreen:** the exe isn't code-signed, so Windows may show "Windows
-protected your PC". Click **More info → Run anyway**.
-
-The app lives in the tray (the Poké Ball by the clock; it may be in the `^`
-overflow area). Right-click it for the next meeting, test reminders,
-**Settings…** and **Quit**.
+The installer and the portable exe share the same settings and sign-ins
+(`%APPDATA%\pokemon-meeting-reminder`), so you can switch between them. To
+update, download the new version and run it over the old one; your settings are
+kept. To uninstall, use **Settings → Apps → Installed apps** in Windows.
 
 ## Connect a calendar
 
