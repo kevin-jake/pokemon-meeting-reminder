@@ -1,6 +1,6 @@
 {
   "name": "pokemon-meeting-reminder",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Windows tray app that sends a Pokémon across your desktop before meetings.",
   "main": "src/main/main.js",
   "private": true,

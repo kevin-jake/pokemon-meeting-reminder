@@ -109,7 +109,7 @@ body {
   border-right-color: var(--pill);
 }
 
-/* Two rows: who is visiting, then the meeting. */
+/* Rows: who is visiting, the meeting, then (small) the account it came from. */
 .banner-text {
   display: flex;
   flex-direction: column;
@@ -125,6 +125,18 @@ body {
 .banner .meeting {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.banner .account {
+  font-size: 10px;
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.banner .account[hidden] {
+  display: none;
 }
 
 .actions {

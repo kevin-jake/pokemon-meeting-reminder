@@ -82,11 +82,11 @@ function spriteUrl(entry, mediaDir) {
 /**
  * Turns a pick into the payload the overlay plays.
  * @param {ReturnType<typeof pickSpecies>} pick
- * @param {{ meetingTitle: string, minutesUntil: number, mediaDir: string, meetingLink?: import('./overlay').MeetingLink | null, cryVolume?: number, musicVolume?: number, rng?: () => number }} opts
+ * @param {{ meetingTitle: string, minutesUntil: number, mediaDir: string, meetingLink?: import('./overlay').MeetingLink | null, account?: string | null, cryVolume?: number, musicVolume?: number, rng?: () => number }} opts
  *   cryVolume / musicVolume: 0–1, 0 leaves that sound out
  * @returns {import('./overlay').ScenePayload}
  */
-function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, mediaDir, meetingLink = null, cryVolume = 0.5, musicVolume = 1, rng = Math.random }) {
+function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, mediaDir, meetingLink = null, account = null, cryVolume = 0.5, musicVolume = 1, rng = Math.random }) {
   const urgent = minutesUntil <= 0;
   const variant = shiny ? 'shiny' : 'default';
   const spriteDir = path.join(mediaDir, `gen${entry.gen}`, entry.key);
@@ -121,6 +121,7 @@ function buildScene({ entry, shiny, direction }, { meetingTitle, minutesUntil, m
     minutesUntil,
     urgent,
     meetingLink,
+    account,
   };
 }
 

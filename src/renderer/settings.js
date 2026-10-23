@@ -425,7 +425,23 @@ function showVolume(id) {
 document.addEventListener('input', (e) => {
   const t = e.target;
   if (t instanceof HTMLInputElement && (t.id === 'cryVolume' || t.id === 'musicVolume')) showVolume(t.id);
+  // Save the skip list while typing too: closing the window doesn't fire `change`.
+  if (t instanceof HTMLTextAreaElement && t.id === 'ignoredTitles') {
+    if (saveIgnoredTimer) clearTimeout(saveIgnoredTimer);
+    saveIgnoredTimer = setTimeout(() => saveIgnored(t), 500);
+  }
 });
+
+/** @type {ReturnType<typeof setTimeout> | null} */
+let saveIgnoredTimer = null;
+
+/** One title per line; main checks the list's shape and caps. @param {HTMLTextAreaElement} t */
+function saveIgnored(t) {
+  if (saveIgnoredTimer) clearTimeout(saveIgnoredTimer);
+  saveIgnoredTimer = null;
+  const titles = [...new Set(t.value.split(/\r?\n/).map((l) => l.trim()).filter(Boolean))];
+  return api.update({ ignoredTitles: titles.slice(0, 200).map((l) => l.slice(0, 200)) });
+}
 
 async function refresh() {
   const state = await api.getState();
@@ -436,9 +452,7 @@ async function refresh() {
 document.addEventListener('change', (e) => {
   const t = e.target;
   if (t instanceof HTMLTextAreaElement && t.id === 'ignoredTitles') {
-    // One title per line; main checks the list's shape and caps.
-    const titles = [...new Set(t.value.split(/\r?\n/).map((l) => l.trim()).filter(Boolean))];
-    void api.update({ ignoredTitles: titles.slice(0, 200).map((l) => l.slice(0, 200)) }).then(refresh);
+    void saveIgnored(t).then(refresh);
     return;
   }
   if (!(t instanceof HTMLInputElement || t instanceof HTMLSelectElement)) return;

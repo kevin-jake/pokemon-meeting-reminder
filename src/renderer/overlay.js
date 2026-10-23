@@ -56,6 +56,7 @@ const sprite = /** @type {HTMLImageElement} */ (document.getElementById('sprite'
 const banner = /** @type {HTMLElement} */ (document.getElementById('banner'));
 const bannerName = /** @type {HTMLElement} */ (document.getElementById('banner-name'));
 const bannerMeeting = /** @type {HTMLElement} */ (document.getElementById('banner-meeting'));
+const bannerAccount = /** @type {HTMLElement} */ (document.getElementById('banner-account'));
 const actions = /** @type {HTMLElement} */ (document.getElementById('banner-actions'));
 const joinBtn = /** @type {HTMLButtonElement} */ (document.getElementById('join'));
 const dismissBtn = /** @type {HTMLButtonElement} */ (document.getElementById('dismiss'));
@@ -254,6 +255,8 @@ function renderBanner(p) {
   bannerName.textContent = `${p.shiny ? '✨ ' : ''}${p.displayName}`;
   const when = p.minutesUntil <= 0 ? 'starting now' : `in ${p.minutesUntil} min`;
   bannerMeeting.textContent = `${truncate(p.meetingTitle)} · ${when}`;
+  bannerAccount.textContent = p.account ? `from ${p.account}` : '';
+  bannerAccount.hidden = !p.account;
   banner.classList.toggle('urgent', p.urgent);
   // Flyers tow the banner behind them; its tail points forward at the sprite.
   banner.classList.toggle('trail-left', p.isFlyer && p.direction === 'ltr');

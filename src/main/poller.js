@@ -9,9 +9,6 @@ const { createTitleFilter } = require('../shared/ignored-meetings');
 /** Longest single setTimeout we arm for a precise reminder; the regular poll covers anything later. */
 const MAX_TIMER_MS = 10 * 60_000;
 
-/** @param {Date} d */
-const hhmm = (d) => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-
 /**
  * Tray status line for the current state.
  * @param {{ events: CalendarEvent[], now: number, connected: number, failed: string[], lookaheadMinutes: number }} s
@@ -25,7 +22,7 @@ function statusText({ events, now, connected, failed, lookaheadMinutes }) {
     return `No meetings in the next ${span}${suffix}`;
   }
   const mins = Math.max(1, Math.round((upcoming.start.getTime() - now) / 60_000));
-  return `Next: ${upcoming.title} at ${hhmm(upcoming.start)} (in ${mins} min)${suffix}`;
+  return `Next: ${upcoming.title} in ${mins} min${suffix}`;
 }
 
 /**

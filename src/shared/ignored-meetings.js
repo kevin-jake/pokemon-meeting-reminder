@@ -6,7 +6,9 @@ const MAX_PATTERNS = 200;
 const MAX_PATTERN_LENGTH = 200;
 
 /** @param {string} s */
-const normalize = (s) => s.trim().replace(/\s+/g, ' ').toLowerCase();
+// Invisible format characters (zero-width spaces, BOMs, direction marks) that calendars
+// and copy-paste slip into titles would otherwise make identical-looking titles differ.
+const normalize = (s) => s.normalize('NFKC').replace(/\p{Cf}/gu, '').trim().replace(/\s+/g, ' ').toLowerCase();
 
 /**
  * Turns the exception list into a title predicate. A pattern matches a whole

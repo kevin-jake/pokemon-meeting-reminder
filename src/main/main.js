@@ -137,7 +137,12 @@ if (!app.requestSingleInstanceLock()) {
       onToast: (toast) => {
         if (!settings.get().browserBridge.toastReminders || isMuted(settings.get().mute, Date.now())) return;
         const reminder = toastReminder(toast, poller.events(), Date.now());
-        if (reminder && !createTitleFilter(settings.get().ignoredTitles)(reminder.title)) playReminder(reminder.title, reminder.minutesUntil);
+        if (!reminder) return;
+        // Toasts put the meeting title on a line of its own, next to "in 5 min" and the like.
+        const ignored = createTitleFilter(settings.get().ignoredTitles);
+        const lines = `${toast.title}\n${toast.body}`.split('\n');
+        if (ignored(reminder.title) || lines.some((l) => ignored(l))) return;
+        playReminder(reminder.title, reminder.minutesUntil, { account: bridge.source.accountLabel() });
       },
       onPortChanged: (port) => settings.update({ browserBridge: { ...settings.get().browserBridge, port } }),
     });
@@ -149,14 +154,15 @@ if (!app.requestSingleInstanceLock()) {
      * Plays one reminder scene.
      * @param {string} meetingTitle
      * @param {number} minutesUntil  0 = the meeting is starting now (urgent: parks until dismissed)
-     * @param {{ species?: string | null, meetingLink?: import('./overlay').MeetingLink | null }} [opts]
-     *   species overrides the favorites and generations; meetingLink adds the Join / Open invite button
+     * @param {{ species?: string | null, meetingLink?: import('./overlay').MeetingLink | null, account?: string | null }} [opts]
+     *   species overrides the favorites and generations; meetingLink adds the Join / Open invite button;
+     *   account is the banner's "from …" footer
      */
-    function playReminder(meetingTitle, minutesUntil, { species = null, meetingLink = null } = {}) {
+    function playReminder(meetingTitle, minutesUntil, { species = null, meetingLink = null, account = null } = {}) {
       const prefs = settings.get();
       const pick = pickSpecies(species ? { pokemonMode: 'favorites', favoriteSpecies: [species] } : prefs);
       overlays.enqueue(
-        buildScene(pick, { meetingTitle, minutesUntil, mediaDir: mediaDir(), meetingLink, cryVolume: prefs.cryVolume, musicVolume: prefs.musicVolume }),
+        buildScene(pick, { meetingTitle, minutesUntil, mediaDir: mediaDir(), meetingLink, account, cryVolume: prefs.cryVolume, musicVolume: prefs.musicVolume }),
       );
     }
 
@@ -169,7 +175,21 @@ if (!app.requestSingleInstanceLock()) {
       playReminder('Test meeting', minutesUntil, {
         species,
         meetingLink: { url: 'https://calendar.google.com/', kind: 'invite', source: null },
+        account: 'Test calendar',
       });
+
+    /**
+     * Labels of the accounts the meetings came from, e.g. "Google · me@example.com".
+     * @param {import('./calendar/types').CalendarEvent[]} events
+     */
+    function accountOf(events) {
+      const labels = new Set();
+      for (const e of events) {
+        const s = registry.sources().find((src) => src.id === e.source);
+        if (s) labels.add(s.accountLabel() ?? s.name);
+      }
+      return labels.size ? [...labels].join(', ') : null;
+    }
 
     function accounts() {
       return registry
@@ -218,7 +238,7 @@ if (!app.requestSingleInstanceLock()) {
           const title = mergeTitles(group.map((d) => d.event.title));
           const minutesUntil =
             kind === 'start' ? 0 : Math.max(1, Math.round((group[0].event.start.getTime() - now) / 60_000));
-          playReminder(title, minutesUntil, { meetingLink: meetingLinkOf(group.map((d) => d.event)) });
+          playReminder(title, minutesUntil, { meetingLink: meetingLinkOf(group.map((d) => d.event)), account: accountOf(group.map((d) => d.event)) });
           if (settings.get().nativeNotification && Notification.isSupported()) {
             new Notification({
               title: kind === 'start' ? `${title} is starting now` : `${title} in ${minutesUntil} min`,

@@ -31,9 +31,9 @@ test('statusText covers not connected, idle and next meeting', () => {
   const base = { now: NOW, connected: 1, failed: [], lookaheadMinutes: 60 };
   assert.equal(statusText({ ...base, events: [], connected: 0 }), 'Not connected');
   assert.equal(statusText({ ...base, events: [] }), 'No meetings in the next hour');
-  assert.equal(statusText({ ...base, events: [ev('Standup', NOW + 12 * MIN)] }), 'Next: Standup at 09:12 (in 12 min)');
+  assert.equal(statusText({ ...base, events: [ev('Standup', NOW + 12 * MIN)] }), 'Next: Standup in 12 min');
   // In-progress meetings are skipped for "next".
-  assert.equal(statusText({ ...base, events: [ev('Now', NOW - MIN), ev('Later', NOW + 30 * MIN)], failed: ['Google'] }), 'Next: Later at 09:30 (in 30 min) · Google unavailable');
+  assert.equal(statusText({ ...base, events: [ev('Now', NOW - MIN), ev('Later', NOW + 30 * MIN)], failed: ['Google'] }), 'Next: Later in 30 min · Google unavailable');
 });
 
 test('mergeTitles keeps the "+ N more" suffix within the banner cap', () => {
@@ -82,7 +82,7 @@ test('poller fires due reminders, reports status and keeps cached events when ev
   });
   await poller.pollNow();
   assert.deepEqual(fired, ['a:warn']);
-  assert.equal(statuses.at(-1), 'Next: a at 09:03 (in 3 min)');
+  assert.equal(statuses.at(-1), 'Next: a in 3 min');
   fail = true;
   now = NOW + 3 * MIN;
   await poller.pollNow();
@@ -110,7 +110,7 @@ test('poller: meetings on the ignore list get no reminder and are skipped in the
   });
   await poller.pollNow();
   assert.deepEqual(fired, []);
-  assert.equal(statuses.at(-1), 'Next: Sync at 09:20 (in 20 min)');
+  assert.equal(statuses.at(-1), 'Next: Sync in 20 min');
   // Toast matching still sees the ignored meeting.
   assert.deepEqual(poller.events().map((e) => e.id), ['focus', 'sync']);
   // Taking it off the list brings the reminder back without a fetch.

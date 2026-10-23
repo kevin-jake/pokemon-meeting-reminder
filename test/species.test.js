@@ -100,6 +100,8 @@ test('buildScene carries the meeting link for the banner button', () => {
   const meetingLink = { url: 'https://meet.google.com/abc-defg-hij', kind: /** @type {const} */ ('join') };
   assert.deepEqual(buildScene(pick, { meetingTitle: 'x', minutesUntil: 5, mediaDir, meetingLink }).meetingLink, meetingLink);
   assert.equal(buildScene(pick, { meetingTitle: 'x', minutesUntil: 5, mediaDir }).meetingLink, null);
+  assert.equal(buildScene(pick, { meetingTitle: 'x', minutesUntil: 5, mediaDir, account: 'Google · me@example.com' }).account, 'Google · me@example.com');
+  assert.equal(buildScene(pick, { meetingTitle: 'x', minutesUntil: 5, mediaDir }).account, null);
 });
 
 test('pickBallColumn: Poké 55 %, Great 20 %, Ultra 13 %, Master 2 %, the rest share 10 %', () => {

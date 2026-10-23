@@ -23,6 +23,7 @@ const { BrowserWindow, ipcMain, screen } = require('electron');
  * @property {number} minutesUntil  0 = meeting starts now
  * @property {boolean} urgent       cross the monitors URGENT_PASSES times, then park until dismissed
  * @property {MeetingLink | null} meetingLink  shown as a Join / Open invite button on the banner
+ * @property {string | null} account  calendar account the meeting came from, shown as the banner's footer
  */
 
 /**

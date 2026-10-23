@@ -12,6 +12,8 @@ test('createTitleFilter matches whole titles, ignoring case and extra whitespace
   assert.equal(ignored('Focus time'), false);
   assert.equal(ignored('Focus time (company-wide) prep'), false);
   assert.equal(ignored(''), false);
+  // Invisible characters calendars slip into titles don't stop a match.
+  assert.equal(ignored('​Focus time (company-wide)﻿'), true);
 });
 
 test('createTitleFilter treats * as a wildcard and everything else literally', () => {
