@@ -34,12 +34,14 @@ Needs Windows 10 or 11. Setup takes about five minutes.
 
 1. **Download** the latest version from the
    [Releases page](https://github.com/kevin-jake/pokemon-meeting-reminder/releases/latest):
-   - **`Pokémon Meeting Reminder Setup <version>.exe`** (recommended) installs
+   - **`pokemon-meeting-reminder-setup-<version>.exe`** (recommended) installs
      for the current user, needs no admin rights, and adds Start menu and
      desktop shortcuts.
-   - **`Pokémon Meeting Reminder <version> Portable.exe`** runs without
-     installing, e.g. from a USB stick or a work PC where you can't install
-     apps.
+   - **`pokemon-meeting-reminder-<version>-win.zip`** is the portable app: no
+     install, e.g. for a USB stick or a work PC where you can't install apps.
+     See [Portable app](#portable-app).
+   - **`pokemon-meeting-reminder-<version>.exe`** is the same portable app as a
+     single file. It's slow to start; see [Portable app](#portable-app).
 2. **Run it.** The exe isn't code-signed, so Windows may show "Windows
    protected your PC". Click **More info → Run anyway**.
 3. **Find the tray icon.** The app has no main window. It lives in the tray as
@@ -61,10 +63,28 @@ Needs Windows 10 or 11. Setup takes about five minutes.
    Pokémon, and set the early-warning time (5 minutes by default). To add music,
    see [Background music](#background-music).
 
-The installer and the portable exe share the same settings and sign-ins
+The installer and both portable versions share the same settings and sign-ins
 (`%APPDATA%\pokemon-meeting-reminder`), so you can switch between them. To
 update, download the new version and run it over the old one; your settings are
 kept. To uninstall, use **Settings → Apps → Installed apps** in Windows.
+
+### Portable app
+
+- **Zip (recommended for portable use):** right-click the zip → **Extract
+  All…**, pick a folder you'll keep (e.g. `Documents\Pokémon Meeting
+  Reminder`), and run **`Pokémon Meeting Reminder.exe`** inside it. It starts as
+  fast as the installed app. Keep the whole folder together; the exe doesn't
+  work on its own.
+- **Single-file exe:** just run it. On every launch it unpacks the whole app to
+  a temp folder first and deletes it again when you quit, so it can take a
+  minute or more before the tray icon appears. Nothing shows while it unpacks,
+  so give it time: launching it again starts a second unpack.
+- **Update:** quit the app (tray icon → **Quit**), then replace the folder with
+  the new zip's contents, or replace the single exe.
+- **Launch at startup** points at the exe you last started, so after moving the
+  folder or the exe, start it once from the new place.
+- **Remove:** quit the app and delete the folder or exe. To also remove your
+  settings and sign-ins, delete `%APPDATA%\pokemon-meeting-reminder`.
 
 ## Connect a calendar
 
@@ -157,7 +177,8 @@ No music ships with the app. The [Pokémon Game Sound Library](https://soundlibr
 only allows personal use of files you download there yourself. Put tracks in
 `media\bgm\normal\` (early warning) and `media\bgm\battle\` (meeting start,
 looped). See [media/bgm/README.md](media/bgm/README.md). In an installed build
-the folder is `resources\media\bgm` in the install folder.
+or the portable zip the folder is `resources\media\bgm` in the app folder. The
+single-file portable exe can't take extra music.
 
 ## Good to know
 
@@ -213,7 +234,7 @@ npm run build-icons       # build/icon.png and assets/tray/*.png
 ## Build
 
 ```powershell
-npm run dist              # dist\…Setup <version>.exe and dist\…Portable.exe
+npm run dist              # dist\…Setup <version>.exe, dist\…Portable.exe and dist\…Portable.zip
 npm run dist:dir          # unpacked app only, in dist\win-unpacked (faster for testing)
 ```
 
