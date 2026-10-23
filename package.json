@@ -68,10 +68,15 @@
     "win": {
       "target": [
         "nsis",
-        "portable"
+        "portable",
+        "zip"
       ],
-      "icon": "build/icon.png"
+      "icon": "build/icon.png",
+      "artifactName": "${productName} ${version} Portable.${ext}"
     },
+    "electronLanguages": [
+      "en-US"
+    ],
     "asar": true,
     "directories": {
       "output": "dist"

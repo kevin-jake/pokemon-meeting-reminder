@@ -80,7 +80,8 @@ app.setPath('userData', path.join(app.getPath('appData'), 'pokemon-meeting-remin
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
-  app.setAppUserModelId(APP_ID);
+
+  app.setAppUserModelId(app.isPackaged ? APP_ID : `${APP_ID}.dev`);
 
   /** @type {ReturnType<typeof createTray> | null} */
   let tray = null;
