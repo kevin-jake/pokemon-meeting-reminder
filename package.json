@@ -16,7 +16,8 @@
     "build-icons": "node scripts/build-icons.js",
     "test": "node --test test/",
     "dist": "electron-builder --win",
-    "dist:dir": "electron-builder --win --dir"
+    "dist:dir": "electron-builder --win --dir",
+    "release": "electron-builder --win --publish always"
   },
   "devDependencies": {
     "electron": "^45.0.0",
@@ -73,6 +74,12 @@
     "asar": true,
     "directories": {
       "output": "dist"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "kevin-jake",
+      "repo": "pokemon-meeting-reminder",
+      "releaseType": "draft"
     },
     "nsis": {
       "oneClick": false,
