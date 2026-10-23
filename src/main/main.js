@@ -17,6 +17,7 @@ const { createRegistry } = require('./calendar/registry');
 const { createBrowserBridge, toastReminder, newPairingToken, pairingCode } = require('./calendar/browser-bridge');
 const { createReminderScheduler } = require('../shared/reminder-scheduler');
 const { createTitleFilter } = require('../shared/ignored-meetings');
+const { MUTE_PRESETS, isMuted, isPending, isValidMute, muteFor, describeMute, nextMuteChange } = require('../shared/mute');
 const { createPoller, mergeTitles } = require('./poller');
 const { loadBuiltInClients, resolveGoogleClient } = require('./oauth-clients');
 
@@ -134,7 +135,7 @@ if (!app.requestSingleInstanceLock()) {
       getConfig: () => settings.get().browserBridge,
       onMeetingsChanged: () => void poller.pollNow(),
       onToast: (toast) => {
-        if (!settings.get().browserBridge.toastReminders) return;
+        if (!settings.get().browserBridge.toastReminders || isMuted(settings.get().mute, Date.now())) return;
         const reminder = toastReminder(toast, poller.events(), Date.now());
         if (reminder && !createTitleFilter(settings.get().ignoredTitles)(reminder.title)) playReminder(reminder.title, reminder.minutesUntil);
       },
@@ -208,6 +209,8 @@ if (!app.requestSingleInstanceLock()) {
         }
       },
       onReminders: (due, now) => {
+        // Muted: the scheduler has already marked these as fired, so they are skipped, not postponed.
+        if (isMuted(settings.get().mute, now)) return;
         // Meetings starting now first: they loop until dismissed and matter most.
         for (const kind of /** @type {const} */ (['start', 'warn'])) {
           const group = due.filter((d) => d.kind === kind);
@@ -325,6 +328,29 @@ if (!app.requestSingleInstanceLock()) {
       void poller.pollNow();
     }
 
+    /** @type {ReturnType<typeof setTimeout> | null} */
+    let muteTimer = null;
+    /**
+     * Shows the mute state in the tray and Settings, forgets a mute that has
+     * ended, and re-runs this when the mute next starts or ends.
+     */
+    function syncMute() {
+      const now = Date.now();
+      const { mute } = settings.get();
+      if (mute && !isPending(mute, now)) settings.update({ mute: null });
+      tray?.setMuteStatus(describeMute(settings.get().mute, now));
+      settingsWindow?.notify();
+      if (muteTimer) clearTimeout(muteTimer);
+      muteTimer = null;
+      const next = nextMuteChange(settings.get().mute, now);
+      if (next !== null) muteTimer = setTimeout(syncMute, Math.min(next - now + 50, 2 ** 31 - 1));
+    }
+    /** @param {import('../shared/mute').Mute | null} mute */
+    const setMute = (mute) => {
+      settings.update({ mute });
+      syncMute();
+    };
+
     /** @param {string} text @param {string} done @param {string} failed */
     const copy = (text, done, failed) =>
       clipboard
@@ -340,6 +366,9 @@ if (!app.requestSingleInstanceLock()) {
     const actions = {
       testReminder: (minutes) => playTest(Number(minutes) === 0 ? 0 : 5),
       dismiss: () => overlays.dismiss(),
+      muteFor: (minutes) => void (MUTE_PRESETS.includes(minutes) && setMute(muteFor(minutes, Date.now()))),
+      muteRange: (range) => void (isValidMute(range, Date.now()) && setMute({ from: range.from, until: range.until })),
+      unmute: () => setMute(null),
       addGoogle: (profileId) => void addGoogle(typeof profileId === 'string' ? profileId : null),
       addIcal: () => void addCalendarLink(),
       reconnect: (id) => {
@@ -392,6 +421,7 @@ if (!app.requestSingleInstanceLock()) {
         settings: settings.get(),
         accounts: accounts(),
         browserBridge: bridge.statusLabel(),
+        muteStatus: describeMute(settings.get().mute, Date.now()),
         profiles,
         speciesByGen: speciesByGen().map(([gen, list]) => [gen, list.map((e) => ({ key: e.key, name: e.name, sprite: spriteUrl(e, mediaDir()) }))]),
         isPackaged: app.isPackaged,
@@ -424,6 +454,9 @@ if (!app.requestSingleInstanceLock()) {
         onTestReminder: () => playTest(5),
         onTestMeetingNow: () => playTest(0),
         onDismiss: () => overlays.dismiss(),
+        onMute: actions.muteFor,
+        onUnmute: () => setMute(null),
+        onOpenMuteSettings: () => settingsWindow?.open('reminders'),
         onOpenSettings: () => settingsWindow?.open(),
         onReconnect: actions.reconnect,
         onDisconnect: actions.disconnect,
@@ -435,11 +468,15 @@ if (!app.requestSingleInstanceLock()) {
     );
 
     syncLoginItem();
+    syncMute();
     void bridge.start().then(() => settingsWindow?.notify());
     app.on('before-quit', () => bridge.stop());
     poller.start();
     // Timers drift or stall across sleep; catch up on anything missed as soon as the user is back.
-    powerMonitor.on('resume', () => void poller.pollNow());
+    powerMonitor.on('resume', () => {
+      syncMute();
+      void poller.pollNow();
+    });
     powerMonitor.on('unlock-screen', () => void poller.pollNow());
     app.on('before-quit', () => poller.stop());
 

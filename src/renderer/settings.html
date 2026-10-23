@@ -90,6 +90,44 @@
           </header>
 
           <div class="group">
+            <h2>Mute</h2>
+            <div class="status-card">
+              <span class="status-dot" id="muteDot"></span>
+              <div class="mute-status">
+                <span class="setting-title" id="muteStatus"></span>
+                <p class="status">Muted reminders are skipped, not saved for later. Previews below still play.</p>
+              </div>
+              <button type="button" data-action="unmute" id="unmute">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>
+                Unmute
+              </button>
+            </div>
+            <div class="setting">
+              <div class="setting-text">
+                <span class="setting-title">Mute for a while</span>
+                <p class="setting-desc">Silence every reminder starting now, then switch back on by itself.</p>
+              </div>
+              <div class="row">
+                <button type="button" data-action="muteFor" data-arg="30">30 min</button>
+                <button type="button" data-action="muteFor" data-arg="60">1 hour</button>
+                <button type="button" data-action="muteFor" data-arg="120">2 hours</button>
+              </div>
+            </div>
+            <div class="setting stacked">
+              <div class="setting-text">
+                <span class="setting-title">Custom time range</span>
+                <p class="setting-desc">Mute between two times, for example over a workshop or a day off. Up to 14 days.</p>
+              </div>
+              <div class="row">
+                <label class="inline-control" for="muteFrom">From <input type="datetime-local" id="muteFrom" /></label>
+                <label class="inline-control" for="muteUntil">to <input type="datetime-local" id="muteUntil" /></label>
+                <button type="button" class="primary" id="muteRange">Mute</button>
+              </div>
+              <p class="setting-desc note" id="muteRangeHint"></p>
+            </div>
+          </div>
+
+          <div class="group">
             <h2>Timing</h2>
             <div class="setting">
               <div class="setting-text">

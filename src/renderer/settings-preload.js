@@ -14,4 +14,8 @@ contextBridge.exposeInMainWorld('settingsApi', {
   onChanged(cb) {
     ipcRenderer.on('settings:changed', () => cb());
   },
+  /** @param {(section: string) => void} cb  main asks for a pane (e.g. the tray's custom mute) */
+  onSection(cb) {
+    ipcRenderer.on('settings:section', (_event, section) => cb(String(section)));
+  },
 });

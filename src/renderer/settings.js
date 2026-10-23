@@ -16,6 +16,7 @@
  *   update(patch: object): Promise<void>,
  *   action(name: string, arg?: unknown): Promise<void>,
  *   onChanged(cb: () => void): void,
+ *   onSection(cb: (section: string) => void): void,
  * }}
  */
 const api = /** @type {any} */ (window).settingsApi;
@@ -326,6 +327,48 @@ document.addEventListener('pointerdown', (e) => {
   if (!$('pickerPop').hidden && e.target instanceof Node && !$('picker').contains(e.target)) closePicker();
 });
 
+/* ---------- Mute ---------- */
+
+/** Longest custom mute; main checks the same cap (MAX_MUTE_MS in shared/mute.js). */
+const MAX_MUTE_DAYS = 14;
+
+/** ms → the "YYYY-MM-DDTHH:MM" local time a datetime-local input takes. @param {number} t */
+function toLocalInput(t) {
+  const d = new Date(t);
+  const pad = (/** @type {number} */ n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+/** @param {SettingsState} state */
+function renderMute(state) {
+  const muted = state.muteStatus !== null;
+  $('muteStatus').textContent = state.muteStatus ?? 'Reminders are on';
+  $('muteDot').className = `status-dot${muted ? ' muted' : ' ok'}`;
+  $('unmute').hidden = !muted;
+  // Suggest the next hour until the user picks their own times.
+  const from = checkbox('muteFrom');
+  const until = checkbox('muteUntil');
+  if (!from.value && !until.value) {
+    const start = Math.ceil(Date.now() / 60_000) * 60_000;
+    from.value = toLocalInput(start);
+    until.value = toLocalInput(start + 60 * 60_000);
+  }
+}
+
+/** Sends the custom range, or explains what is wrong with it. */
+function muteRange() {
+  const from = new Date(checkbox('muteFrom').value).getTime();
+  const until = new Date(checkbox('muteUntil').value).getTime();
+  const now = Date.now();
+  let problem = '';
+  if (Number.isNaN(from) || Number.isNaN(until)) problem = 'Pick both a start and an end time.';
+  else if (until <= from) problem = 'The end time must be after the start time.';
+  else if (until <= now) problem = 'That time range is already over.';
+  else if (until - Math.max(from, now) > MAX_MUTE_DAYS * 24 * 60 * 60_000) problem = `A mute can last at most ${MAX_MUTE_DAYS} days.`;
+  $('muteRangeHint').textContent = problem;
+  if (!problem) void api.action('muteRange', { from, until }).then(refresh);
+}
+
 /** @param {SettingsState} state */
 function render(state) {
   const s = state.settings;
@@ -349,6 +392,7 @@ function render(state) {
   const ignored = /** @type {HTMLTextAreaElement} */ ($('ignoredTitles'));
   if (document.activeElement !== ignored) ignored.value = s.ignoredTitles.join('\n');
 
+  renderMute(state);
   renderPokemon(state);
 
   $('accounts').replaceChildren(...state.accounts.map((a) => accountRow(a, state)));
@@ -461,6 +505,10 @@ document.addEventListener('click', (e) => {
     saveFavorites(favorites.filter((k) => k !== t.dataset.unpick));
     return;
   }
+  if (t.id === 'muteRange') {
+    muteRange();
+    return;
+  }
   if (t.dataset.section) {
     showSection(t.dataset.section);
     return;
@@ -480,7 +528,9 @@ try {
 } catch {
   // Storage unavailable: start on General.
 }
-showSection(lastSection ?? 'general');
+// Main can ask for a pane: in the URL hash on open, or by message once open.
+showSection(location.hash.slice(1) || lastSection || 'general');
 
+api.onSection(showSection);
 api.onChanged(() => void refresh());
 void refresh();

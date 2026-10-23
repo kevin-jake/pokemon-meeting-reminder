@@ -352,6 +352,15 @@ select {
   max-width: 100%;
 }
 
+input[type='datetime-local'] {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 8px;
+}
+
 textarea {
   padding: 8px 10px;
   resize: vertical;
@@ -400,6 +409,7 @@ button.danger:hover {
 select:focus-visible,
 button:focus-visible,
 textarea:focus-visible,
+input[type='datetime-local']:focus-visible,
 .switch:focus-visible {
   outline: 2px solid var(--accent-strong);
   outline-offset: 2px;
@@ -450,6 +460,32 @@ textarea:focus-visible,
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+}
+
+/* ---------- Mute ---------- */
+
+/* The status card heads the Mute group, so the row under it starts the card. */
+.group > .status-card + .setting {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.mute-status {
+  flex: 1;
+  min-width: 0;
+}
+
+.status-card > button {
+  flex: none;
+  align-self: center;
+}
+
+.status-dot.muted {
+  background: var(--accent-strong);
+}
+
+.row .inline-control {
+  margin-top: 0;
 }
 
 /* ---------- Outlook / Teams status ---------- */

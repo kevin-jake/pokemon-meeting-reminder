@@ -140,6 +140,7 @@ options the window doesn't show:
 | `favoriteSpecies` | `[]` | Up to 6 keys, e.g. `"pikachu"` |
 | `generations` | `[1,2,3,4,5]` | Generations random mode picks from |
 | `ignoredTitles` | `["Focus time (company-wide)"]` | One title per entry, `*` wildcard |
+| `mute` | `null` | `{ "from", "until" }` in ms since epoch; set from **Settings → Reminders → Mute** or the tray's **Mute reminders** |
 | `nativeNotification` | `false` | Also show a Windows notification |
 | `launchAtStartup` | `false` | Installed or portable build only |
 | `pollIntervalSec` | `60` | How often calendars are checked |

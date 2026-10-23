@@ -14,6 +14,7 @@ const RENDERER_DIR = path.join(__dirname, '..', 'renderer');
  * @property {import('./settings').Settings} settings
  * @property {Array<{ id: string, provider: string, name: string, state: import('./calendar/types').SourceState, label: string | null }>} accounts
  * @property {string | null} browserBridge  status row text, null when switched off
+ * @property {string | null} muteStatus  "Reminders muted until 14:30", null when not muted
  * @property {import('./browsers').BrowserProfile[]} profiles
  * @property {Array<[number, Array<{ key: string, name: string, sprite: string }>]>} speciesByGen  sprite is a file:// URL
  * @property {boolean} isPackaged  "Launch at startup" only works for an installed build
@@ -91,10 +92,12 @@ function createSettingsWindow({ getState, update, action, openDevTools = false }
     if (mine(event) && typeof name === 'string') action(name, arg);
   });
 
-  function open() {
+  /** @param {string} [section]  pane to show, e.g. 'reminders'; default: the one last open */
+  function open(section) {
     if (win && !win.isDestroyed()) {
       if (win.isMinimized()) win.restore();
       win.focus();
+      if (section) win.webContents.send('settings:section', section);
       return;
     }
     win = new BrowserWindow({
@@ -119,7 +122,7 @@ function createSettingsWindow({ getState, update, action, openDevTools = false }
       win = null;
     });
     if (openDevTools) win.webContents.openDevTools({ mode: 'detach' });
-    void win.loadFile(path.join(RENDERER_DIR, 'settings.html'));
+    void win.loadFile(path.join(RENDERER_DIR, 'settings.html'), section ? { hash: section } : {});
   }
 
   return {

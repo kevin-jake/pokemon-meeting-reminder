@@ -2,12 +2,16 @@
 'use strict';
 const path = require('node:path');
 const { app, Tray, Menu, nativeImage } = require('electron');
+const { MUTE_PRESETS, presetLabel } = require('../shared/mute');
 
 /**
  * @typedef {object} TrayHandlers
  * @property {() => void} onTestReminder      5-minute warning scene
  * @property {() => void} onTestMeetingNow    meeting-start scene (loops until dismissed)
  * @property {() => void} onDismiss
+ * @property {(minutes: number) => void} onMute  one of MUTE_PRESETS
+ * @property {() => void} onUnmute
+ * @property {() => void} onOpenMuteSettings  Settings ▸ Reminders, for a custom mute range
  * @property {() => void} onOpenSettings      adding accounts, Pokémon, browser profiles… live in the Settings window
  * @property {(sourceId: string) => void} onReconnect
  * @property {(sourceId: string) => void} onDisconnect
@@ -81,12 +85,15 @@ function createTray(handlers, init) {
   const tray = new Tray(loadTrayIcon());
   let status = 'Starting…';
   let accounts = init.accounts;
+  /** @type {string | null} */
+  let muteStatus = null;
 
   function rebuild() {
-    tray.setToolTip(`Pokémon Meeting Reminder\n${status}`);
+    tray.setToolTip(`Pokémon Meeting Reminder\n${status}${muteStatus ? `\n${muteStatus}` : ''}`);
     tray.setContextMenu(
       Menu.buildFromTemplate([
         { label: status, enabled: false },
+        ...(muteStatus ? [{ label: muteStatus, enabled: false }] : []),
         { type: 'separator' },
         {
           label: accounts.length ? `Accounts (${accounts.length})` : 'Accounts: none connected',
@@ -98,6 +105,15 @@ function createTray(handlers, init) {
         },
         { type: 'separator' },
         { label: 'Dismiss reminder', click: handlers.onDismiss },
+        {
+          label: muteStatus ? 'Mute reminders (muted)' : 'Mute reminders',
+          submenu: [
+            ...MUTE_PRESETS.map((m) => ({ label: `For ${presetLabel(m)}`, click: () => handlers.onMute(m) })),
+            { label: 'Custom time range…', click: handlers.onOpenMuteSettings },
+            { type: /** @type {const} */ ('separator') },
+            { label: 'Unmute', enabled: muteStatus !== null, click: handlers.onUnmute },
+          ],
+        },
         {
           label: 'Test reminder',
           submenu: [
@@ -122,6 +138,12 @@ function createTray(handlers, init) {
     setStatus(text) {
       if (text === status) return;
       status = text;
+      rebuild();
+    },
+    /** @param {string | null} text  null = not muted */
+    setMuteStatus(text) {
+      if (text === muteStatus) return;
+      muteStatus = text;
       rebuild();
     },
     /** @param {TrayAccount[]} next */
