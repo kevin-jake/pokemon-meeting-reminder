@@ -175,6 +175,20 @@ npm run build-manifest    # src/shared/species-manifest.json (flyers from script
 npm run build-icons       # build/icon.png and assets/tray/*.png
 ```
 
+### Project layout
+
+| Path | |
+| --- | --- |
+| `src/main/` | Electron main process: tray, poller, overlay and Settings windows, settings, encrypted storage |
+| `src/main/calendar/` | Calendar sources: Google (OAuth + PKCE), iCal links, browser-extension bridge |
+| `src/renderer/` | Overlay and Settings window pages |
+| `src/shared/` | Code used by both sides: reminder scheduling, title filters, scene math, species manifest |
+| `browser-extension/` | Edge / Chrome extension for Outlook on the web and Teams |
+| `media/` | Sprites and cries by generation, plus local background music |
+| `scripts/` | Media, manifest and icon build scripts |
+| `vendor/` | Upstream vscode-pokemon data the manifest is built from |
+| `test/` | Unit tests and fixtures |
+
 ## Build
 
 ```powershell

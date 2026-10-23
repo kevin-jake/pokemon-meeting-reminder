@@ -9,3 +9,7 @@ src/main/oauth-clients.example.json
 # Background music: kept locally, never committed (Sound Library terms).
 # Packaging copies it from the local media/ folder via extraResources.
 /media/bgm/*/
+
+# Local Claude Code state and planning notes
+.claude/
+PLAN.md
