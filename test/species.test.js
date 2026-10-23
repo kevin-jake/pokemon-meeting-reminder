@@ -31,6 +31,15 @@ test('pickSpecies picks among the favorites that are still in the manifest', () 
   assert.equal(pickSpecies({ pokemonMode: 'favorites', favoriteSpecies: ['gone'] }, seq([0.5, 0.9]), manifest).entry.key, 'lugia');
 });
 
+test('pickSpecies: mixed mode sends a favorite 60% of the time, else a random pick', () => {
+  const prefs = { pokemonMode: /** @type {const} */ ('mixed'), favoriteSpecies: ['togekiss'], generations: [2] };
+  // First roll: under 0.6 picks from the favorites, otherwise from the enabled generations.
+  assert.equal(pickSpecies(prefs, seq([0.59, 0, 0.9]), manifest).entry.key, 'togekiss');
+  assert.equal(pickSpecies(prefs, seq([0.6, 0, 0.9]), manifest).entry.key, 'lugia');
+  // No favorites left: always random.
+  assert.equal(pickSpecies({ ...prefs, favoriteSpecies: ['gone'] }, seq([0, 0.9]), manifest).entry.key, 'lugia');
+});
+
 test('pickSpecies: random mode only picks from the enabled generations', () => {
   assert.equal(pickSpecies({ pokemonMode: 'random', generations: [4] }, seq([0, 0.9]), manifest).entry.key, 'togekiss');
   assert.equal(pickSpecies({ pokemonMode: 'random', generations: [1, 2] }, seq([0.99, 0.9]), manifest).entry.key, 'lugia');

@@ -7,8 +7,8 @@ const { app } = require('electron');
 /**
  * @typedef {object} Settings
  * @property {number} alertMinutesBefore
- * @property {'random' | 'favorites'} pokemonMode  a random Pokémon each time, or one of the favorites
- * @property {string[]} favoriteSpecies  up to 6 manifest keys, used in "favorites" mode
+ * @property {'random' | 'favorites' | 'mixed'} pokemonMode  a random Pokémon each time, one of the favorites, or favorites 60% / random 40%
+ * @property {string[]} favoriteSpecies  up to 6 manifest keys, used in "favorites" and "mixed" modes
  * @property {number[]} generations  generations random mode picks from
  * @property {boolean} launchAtStartup
  * @property {boolean} nativeNotification

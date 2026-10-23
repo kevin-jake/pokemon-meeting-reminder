@@ -16,6 +16,7 @@ test('migrate turns the old single favorite into a list and drops forceShiny', (
 
 test('sanitizePatch checks the Pokémon settings', () => {
   assert.deepEqual(sanitizePatch({ pokemonMode: 'favorites' }), { pokemonMode: 'favorites' });
+  assert.deepEqual(sanitizePatch({ pokemonMode: 'mixed' }), { pokemonMode: 'mixed' });
   assert.deepEqual(sanitizePatch({ pokemonMode: 'shiny' }), {});
   assert.deepEqual(sanitizePatch({ favoriteSpecies: ['pikachu', 'mr-mime'] }), { favoriteSpecies: ['pikachu', 'mr-mime'] });
   assert.deepEqual(sanitizePatch({ favoriteSpecies: [] }), { favoriteSpecies: [] });

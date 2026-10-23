@@ -32,7 +32,7 @@ const EDITABLE = {
   launchAtStartup: (/** @type {unknown} */ v) => typeof v === 'boolean',
   cryVolume: isVolume,
   musicVolume: isVolume,
-  pokemonMode: (/** @type {unknown} */ v) => v === 'random' || v === 'favorites',
+  pokemonMode: (/** @type {unknown} */ v) => v === 'random' || v === 'favorites' || v === 'mixed',
   favoriteSpecies: (/** @type {unknown} */ v) =>
     Array.isArray(v) &&
     v.length <= MAX_FAVORITES &&

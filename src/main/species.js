@@ -43,21 +43,26 @@ function pickBallColumn(rng = Math.random) {
 
 /** Most favorites the Settings page lets you pin. */
 const MAX_FAVORITES = 6;
+/** In "mixed" mode, how often a favorite shows up instead of a random Pokémon. */
+const MIXED_FAVORITE_ODDS = 0.6;
 
 /**
  * Chooses who appears. In "favorites" mode: one of the pinned favorites that
- * is still in the manifest. Otherwise (or when none of them is left): a
+ * is still in the manifest. In "mixed" mode: a favorite 60% of the time and a
+ * random pick the rest. Otherwise (or when none of them is left): a
  * uniformly random species from the enabled generations, or from every
  * generation when none of those is in the manifest. Shiny 1 in 10, but only
  * for species that ship shiny GIFs.
- * @param {{ pokemonMode?: 'random' | 'favorites', favoriteSpecies?: string[], generations?: number[] }} prefs
+ * @param {{ pokemonMode?: 'random' | 'favorites' | 'mixed', favoriteSpecies?: string[], generations?: number[] }} prefs
  * @param {() => number} [rng]
  * @param {ManifestEntry[]} [manifest]
  */
 function pickSpecies(prefs, rng = Math.random, manifest = MANIFEST) {
-  const favorites = prefs.pokemonMode === 'favorites' ? manifest.filter((e) => prefs.favoriteSpecies?.includes(e.key)) : [];
+  const usesFavorites = prefs.pokemonMode === 'favorites' || prefs.pokemonMode === 'mixed';
+  const favorites = usesFavorites ? manifest.filter((e) => prefs.favoriteSpecies?.includes(e.key)) : [];
   const inGens = manifest.filter((e) => prefs.generations?.includes(e.gen) ?? true);
-  const pool = favorites.length ? favorites : inGens.length ? inGens : manifest;
+  const favoriteTurn = favorites.length > 0 && (prefs.pokemonMode !== 'mixed' || rng() < MIXED_FAVORITE_ODDS);
+  const pool = favoriteTurn ? favorites : inGens.length ? inGens : manifest;
   const entry = pool[Math.floor(rng() * pool.length)];
   const shiny = entry.hasShiny && rng() < SHINY_ODDS;
   /** @type {'ltr' | 'rtl'} */
@@ -131,4 +136,4 @@ function speciesByGen(manifest = MANIFEST) {
   return [...groups.entries()].sort(([a], [b]) => a - b);
 }
 
-module.exports = { MANIFEST, BALL_ATLAS_COLUMNS, pickBallColumn, MAX_FAVORITES, pickSpecies, spriteUrl, buildScene, speciesByGen };
+module.exports = { MANIFEST, BALL_ATLAS_COLUMNS, pickBallColumn, MAX_FAVORITES, MIXED_FAVORITE_ODDS, pickSpecies, spriteUrl, buildScene, speciesByGen };

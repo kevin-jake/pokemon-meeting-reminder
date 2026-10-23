@@ -116,7 +116,7 @@ options the window doesn't show:
 | --- | --- | --- |
 | `alertMinutesBefore` | `5` | Early warning, in minutes |
 | `cryVolume` / `musicVolume` | `0.5` / `1` | 0–1, `0` mutes |
-| `pokemonMode` | `"random"` | `"random"` or `"favorites"` |
+| `pokemonMode` | `"random"` | `"random"`, `"favorites"`, or `"mixed"` (favorites 60%, random 40%) |
 | `favoriteSpecies` | `[]` | Up to 6 keys, e.g. `"pikachu"` |
 | `generations` | `[1,2,3,4,5]` | Generations random mode picks from |
 | `ignoredTitles` | `["Focus time (company-wide)"]` | One title per entry, `*` wildcard |

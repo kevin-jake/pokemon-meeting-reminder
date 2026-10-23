@@ -198,7 +198,7 @@ function renderPokemon(state) {
   const s = state.settings;
   buildPicker(state.speciesByGen);
   favorites = s.favoriteSpecies.filter((k) => speciesInfo.has(k));
-  const favoritesMode = s.pokemonMode === 'favorites';
+  const favoritesMode = s.pokemonMode === 'favorites' || s.pokemonMode === 'mixed';
   select('pokemonMode').value = s.pokemonMode;
   $('favoritesSetting').hidden = !favoritesMode;
   if (!favoritesMode) closePicker();
@@ -223,9 +223,7 @@ function renderPokemon(state) {
   const left = MAX_FAVORITES - favorites.length;
   $('favoritesHint').textContent = !favorites.length
     ? `Pick up to ${MAX_FAVORITES}. Until you do, reminders send a random Pokémon. A short preview plays for each one you add.`
-    : full
-      ? 'Each reminder sends one of these. Remove one to pick another.'
-      : `Each reminder sends one of these. You can add ${left} more.`;
+    : `${s.pokemonMode === 'mixed' ? '6 in 10 reminders send one of these, the rest a random Pokémon.' : 'Each reminder sends one of these.'} ${full ? 'Remove one to pick another.' : `You can add ${left} more.`}`;
   $('pickerLabel').textContent = full ? `All ${MAX_FAVORITES} chosen` : 'Add a favorite';
   /** @type {HTMLButtonElement} */ ($('pickerToggle')).disabled = full;
   if (full) closePicker();
